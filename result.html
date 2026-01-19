@@ -84,56 +84,22 @@ h2{ text-align:center; font-weight:500; }
 
 <body>
 
-  <div class="app-container">
-    <div class="content">
-
-      <h2>GSR Tool – Ergebnis</h2>
-
-      <div class="note">
-        Die erste Einschätzung Ihres Gründerzeithauses basiert auf wenigen Angaben. Sie zeigt typische Merkmale,
-        grundsätzliche Möglichkeiten und bekannte Einschränkungen.
-        Sie ersetzt keine Planung und keine Kostenschätzung.
-      </div>
-
-      <!-- LOADER -->
-      <div id="loader">
-        <div class="spinner"></div>
-        <div class="note">Auswertung läuft …</div>
-      </div>
-
-      <!-- ERGEBNIS -->
-      <div id="resultText" class="result-box" style="display:none;"></div>
-
-      <div class="note">
-        Die Aussagen sind bewusst vorsichtig formuliert.
-        Ob und wie Maßnahmen sinnvoll umsetzbar sind,
-        muss immer am konkreten Gebäude geprüft werden.
-      </div>
-
-      <p>
-        <a href="index.html">Zurück zum Start</a>
-      </p>
-
-    </div>
+  <div id="loader">
+    <div>Auswertung läuft …</div>
   </div>
 
-<script>
-  alert("SCRIPT LÄUFT");
+  <div id="resultText" style="display:none;"></div>
 
-  const loader = document.getElementById("loader");
-  const resultBox = document.getElementById("resultText");
+  <script>
+    alert("SCRIPT LÄUFT JETZT");
 
-  if (loader) {
+    const loader = document.getElementById("loader");
+    const resultBox = document.getElementById("resultText");
+
     loader.style.display = "none";
-  }
-
-  if (resultBox) {
     resultBox.style.display = "block";
-    resultBox.innerText = "TEST OK – Script wird ausgeführt.";
-  }
-</script>
-
-  
+    resultBox.innerText = "TEST OK – Script wird jetzt ausgeführt.";
+  </script>
 
 </body>
 </html>
