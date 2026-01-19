@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Erste Einschätzung – Gründerzeithaus</title>
+<title>GSR Tool – Ergebnis</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -84,100 +84,87 @@ h2{ text-align:center; font-weight:500; }
 
 <body>
 
-<div class="app-container">
-  <div class="content">
+  <div class="app-container">
+    <div class="content">
 
+      <h2>GSR Tool – Ergebnis</h2>
 
-<h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
+      <div class="note">
+        Die erste Einschätzung Ihres Gründerzeithauses basiert auf wenigen Angaben. Sie zeigt typische Merkmale,
+        grundsätzliche Möglichkeiten und bekannte Einschränkungen.
+        Sie ersetzt keine Planung und keine Kostenschätzung.
+      </div>
 
-    <div class="note">
-      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
-      grundsätzliche Möglichkeiten und bekannte Einschränkungen.
-      Sie ersetzt keine Planung und keine Kostenschätzung.
+      <!-- LOADER -->
+      <div id="loader">
+        <div class="spinner"></div>
+        <div class="note">Auswertung läuft …</div>
+      </div>
+
+      <!-- ERGEBNIS -->
+      <div id="resultText" class="result-box" style="display:none;"></div>
+
+      <div class="note">
+        Die Aussagen sind bewusst vorsichtig formuliert.
+        Ob und wie Maßnahmen sinnvoll umsetzbar sind,
+        muss immer am konkreten Gebäude geprüft werden.
+      </div>
+
+      <p>
+        <a href="index.html">Zurück zum Start</a>
+      </p>
+
     </div>
-
-    <!-- LOADER -->
-    <div id="loader">
-      <div class="spinner"></div>
-      <div class="note">Auswertung läuft …</div>
-    </div>
-
-    <!-- ERGEBNIS -->
-    <div id="resultText" class="result-box" style="display:none;"></div>
-
-    <div class="note">
-      Die Aussagen sind bewusst vorsichtig formuliert.
-      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
-      muss immer am konkreten Gebäude geprüft werden.
-    </div>
-
   </div>
-</div>
-<script>
 
+  <script>
+    const RESULT_KEY = "gzh_result_text";
 
-/* =====================================================
-   RESULT + LOADER – FINALER TEST
-   - absoluter Pfad
-   - POST mit JSON
-   - TEXT zuerst (robust)
-===================================================== */
+    const loader    = document.getElementById("loader");
+    const resultBox = document.getElementById("resultText");
 
-const RESULT_KEY = "gzh_result_text";
+    if (!loader || !resultBox) {
+      console.error("DOM elements missing");
+    } else {
 
-const loader    = document.getElementById("loader");
-const resultBox = document.getElementById("resultText");
+      loader.style.display = "block";
+      resultBox.style.display = "none";
 
-// Sicherheitscheck
-if (!loader || !resultBox) {
-  console.error("DOM elements missing");
-} else {
+      fetch("/wien/gzh/user_data/save_user_data.php", {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          input: {}
+        })
+      })
+      .then(r => r.text())
+      .then(txt => {
+        loader.style.display = "none";
+        resultBox.style.display = "block";
 
-  // Initial: Loader sichtbar, Box versteckt
-  loader.style.display = "block";
-  resultBox.style.display = "none";
+        resultBox.innerText = txt || "LEERE SERVERANTWORT";
 
-  // PHP aufrufen – REALER PFAD laut URL
-  fetch("/wien/gzh/user_data/save_user_data.php", {
-    method: "POST",                       // wichtig: POST
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json"  // wir senden JSON
-    },
-    body: JSON.stringify({
-      input: {}                           // minimal gültig
-    })
-  })
-  .then(r => r.text())                    // zuerst TEXT, immer sicher
-  .then(txt => {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
+        try {
+          const res = JSON.parse(txt);
+          if (res && res.screen_text) {
+            localStorage.setItem(RESULT_KEY, res.screen_text);
+            resultBox.innerText = res.screen_text;
+          }
+        } catch (e) {
+          // absichtlich leer
+        }
+      })
+      .catch(() => {
+        loader.style.display = "none";
+        resultBox.style.display = "block";
+        resultBox.innerText = "KEINE SERVERANTWORT";
+      });
 
-    // Rohantwort anzeigen (ehrlich)
-    resultBox.innerText = txt || "LEERE SERVERANTWORT";
-
-    // optional: JSON auswerten
-    try {
-      const res = JSON.parse(txt);
-      if (res && res.screen_text) {
-        localStorage.setItem(RESULT_KEY, res.screen_text);
-        resultBox.innerText = res.screen_text;
-      }
-    } catch (e) {
-      // absichtlich nichts – Text bleibt sichtbar
     }
-  })
-  .catch(() => {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "KEINE SERVERANTWORT";
-  });
-
-}
-
-
-</script>
-
+  </script>
 
 </body>
 </html>
