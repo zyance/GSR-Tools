@@ -118,78 +118,18 @@ h2{ text-align:center; font-weight:500; }
   </div>
 
 <script>
-  const RESULT_KEY = "gzh_result_text";
+  alert("SCRIPT LÄUFT");
 
-  const loader    = document.getElementById("loader");
+  const loader = document.getElementById("loader");
   const resultBox = document.getElementById("resultText");
 
-  if (!loader || !resultBox) {
-    console.error("DOM elements missing");
-  } else {
+  if (loader) {
+    loader.style.display = "none";
+  }
 
-    // Initialzustand
-    loader.style.display = "block";
-    resultBox.style.display = "none";
-
-    // ================================
-    // HARTER TESTMODUS (GitHub Pages)
-    // ================================
-    const TEST_MODE = true;   // <- SPÄTER einfach auf false setzen
-
-    if (TEST_MODE) {
-
-      const fakeResult =
-        localStorage.getItem(RESULT_KEY) ||
-        "TESTERGEBNIS\n\n" +
-        "– Ihr Gebäude ist grundsätzlich sanierungsfähig.\n" +
-        "– Eine thermische Sanierung ist technisch möglich.\n" +
-        "– Der Heizwärmebedarf kann deutlich reduziert werden.\n" +
-        "– Die Auswahl der Maßnahmen muss objektspezifisch erfolgen.\n\n" +
-        "Hinweis: Dies ist ein Testmodus ohne Serveranbindung.";
-
-      loader.style.display = "none";
-      resultBox.style.display = "block";
-      resultBox.innerText = fakeResult;
-
-      return;
-    }
-
-    // ================================
-    // ECHTER SERVERMODUS (später)
-    // ================================
-    fetch("/wien/gzh/user_data/save_user_data.php", {
-      method: "POST",
-      cache: "no-store",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        input: {}
-      })
-    })
-    .then(r => r.text())
-    .then(txt => {
-      loader.style.display = "none";
-      resultBox.style.display = "block";
-
-      resultBox.innerText = txt || "LEERE SERVERANTWORT";
-
-      try {
-        const res = JSON.parse(txt);
-        if (res && res.screen_text) {
-          localStorage.setItem(RESULT_KEY, res.screen_text);
-          resultBox.innerText = res.screen_text;
-        }
-      } catch (e) {
-        // absichtlich leer
-      }
-    })
-    .catch(() => {
-      loader.style.display = "none";
-      resultBox.style.display = "block";
-      resultBox.innerText = "KEINE SERVERANTWORT";
-    });
-
+  if (resultBox) {
+    resultBox.style.display = "block";
+    resultBox.innerText = "TEST OK – Script wird ausgeführt.";
   }
 </script>
 
