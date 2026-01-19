@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Main Menu – Datenprojekte</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;500&display=swap" rel="stylesheet">
+<style>
+/* ==============================
+   Page & Body
+============================== */
+body {
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 300;
+    background: #7093a9; /* Baukult */
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    color: #333;
+}
+.page-container {
+    width: 100%;
+    max-width: 1200px;
+    background: #fff;
+    padding: 30px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+
+/* ==============================
+   Headings
+============================== */
+h1 {
+    font-weight: 500;
+    margin-bottom: 20px;
+}
+
+/* ==============================
+   Info Box + Button
+============================== */
+.info-box {
+    width: 45%;
+    min-width: 250px;
+    background: #f9f9f9;
+    padding: 20px;
+    border-left: 6px solid #007bff;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 0.95rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.button-main {
+    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 500;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    text-align: center;
+}
+.button-main:hover { opacity: 0.85; }
+
+/* ==============================
+   Responsive for Tablet Portrait
+============================== */
+@media (max-width: 768px) {
+    .page-container { padding: 20px 15px; }
+    .info-box { width: 100%; }
+}
+</style>
+</head>
+<body>
+<div class="page-container">
+    <h1>Main Menu</h1>
+
+    <!-- ==============================
+         INFO BOX FOR USER + BUTTON
+         ==============================
+         Einstiegspunkt für Datenprojekte
+         Aktuell verfügbar: "Daten der Stadt Wien"
+         Künftige Projekte können hier ergänzt werden
+    -->
+    <div class="info-box">
+        <div>Hier geht es zu den verfügbaren Daten der Stadt Wien.</div>
+        <a href="wien_daten.html" class="button-main">Daten von Wien</a>
+    </div>
+</div>
+</body>
+</html>
+
