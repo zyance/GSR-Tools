@@ -131,15 +131,12 @@ h2{ text-align:center; font-weight:500; }
     loader.style.display = "block";
     resultBox.style.display = "none";
 
-    const host = location.hostname;
+    // ================================
+    // HARTER TESTMODUS (GitHub Pages)
+    // ================================
+    const TEST_MODE = true;   // <- SPÄTER einfach auf false setzen
 
-    const isGitHubPages =
-      host.endsWith("github.io") ||
-      host === "zyance.github.io" ||
-      host === "localhost";
-
-    // === FALL 1: GitHub Pages → Fake-Ergebnis ===
-    if (isGitHubPages) {
+    if (TEST_MODE) {
 
       const fakeResult =
         localStorage.getItem(RESULT_KEY) ||
@@ -157,7 +154,9 @@ h2{ text-align:center; font-weight:500; }
       return;
     }
 
-    // === FALL 2: Echter Server (san.app / Baukult) ===
+    // ================================
+    // ECHTER SERVERMODUS (später)
+    // ================================
     fetch("/wien/gzh/user_data/save_user_data.php", {
       method: "POST",
       cache: "no-store",
