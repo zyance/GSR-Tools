@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Erste Einschätzung – Gründerzeithaus</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/style.css">
+
+<style>
+:root{
+  --bg-main:#5c88a1;
+  --bg-box:#f2f2f2;
+  --text-main:#333;
+  --text-note:#555;
+}
+
+html{ font-size:20px; }
+
+body{
+  margin:0;
+  font-family:"Fira Sans", Arial, sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+  display:flex;
+  justify-content:center;
+  padding:20px 0;
+}
+
+.app-container{
+  width:100%;
+  max-width:600px;
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
+
+.content{ padding:24px; }
+
+h2{ text-align:center; font-weight:500; }
+
+.note{
+  font-style:italic;
+  color:var(--text-note);
+  text-align:center;
+  margin:18px 0;
+}
+
+.result-box{
+  background:var(--bg-box);
+  padding:20px;
+  border-radius:6px;
+  margin:24px 0;
+  white-space:pre-wrap;
+  line-height:1.6;
+}
+
+#loader{
+  text-align:center;
+  padding:20px;
+}
+
+.spinner{
+  width:40px;
+  height:40px;
+  border:4px solid #ccc;
+  border-top:4px solid #7090a7;
+  border-radius:50%;
+  margin:0 auto 12px;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+  from{ transform:rotate(0deg); }
+  to{ transform:rotate(360deg); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app-container">
+  <div class="content">
+
+
+<h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
+
+    <div class="note">
+      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
+      grundsätzliche Möglichkeiten und bekannte Einschränkungen.
+      Sie ersetzt keine Planung und keine Kostenschätzung.
+    </div>
+
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="spinner"></div>
+      <div class="note">Auswertung läuft …</div>
+    </div>
+
+    <!-- ERGEBNIS -->
+    <div id="resultText" class="result-box" style="display:none;"></div>
+
+    <div class="note">
+      Die Aussagen sind bewusst vorsichtig formuliert.
+      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
+      muss immer am konkreten Gebäude geprüft werden.
+    </div>
+
+  </div>
+</div>
+<script>
+
+
+/* =====================================================
+   RESULT + LOADER – FINALER TEST
+   - absoluter Pfad
+   - POST mit JSON
+   - TEXT zuerst (robust)
+===================================================== */
+
+const RESULT_KEY = "gzh_result_text";
+
+const loader    = document.getElementById("loader");
+const resultBox = document.getElementById("resultText");
+
+// Sicherheitscheck
+if (!loader || !resultBox) {
+  console.error("DOM elements missing");
+} else {
+
+  // Initial: Loader sichtbar, Box versteckt
+  loader.style.display = "block";
+  resultBox.style.display = "none";
+
+  // PHP aufrufen – REALER PFAD laut URL
+  fetch("/wien/gzh/user_data/save_user_data.php", {
+    method: "POST",                       // wichtig: POST
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json"  // wir senden JSON
+    },
+    body: JSON.stringify({
+      input: {}                           // minimal gültig
+    })
+  })
+  .then(r => r.text())                    // zuerst TEXT, immer sicher
+  .then(txt => {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+
+    // Rohantwort anzeigen (ehrlich)
+    resultBox.innerText = txt || "LEERE SERVERANTWORT";
+
+    // optional: JSON auswerten
+    try {
+      const res = JSON.parse(txt);
+      if (res && res.screen_text) {
+        localStorage.setItem(RESULT_KEY, res.screen_text);
+        resultBox.innerText = res.screen_text;
+      }
+    } catch (e) {
+      // absichtlich nichts – Text bleibt sichtbar
+    }
+  })
+  .catch(() => {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText = "KEINE SERVERANTWORT";
+  });
+
+}
+
+
+</script>
+
+
+</body>
+</html>
