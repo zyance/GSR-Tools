@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="de">
-<head> 
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -75,17 +75,6 @@ h1,h2,h3{ font-weight:500; }
 
 .summary-box{ background:var(--hellgrau); }
 
-input[type="number"],input[type="text"]{
-  width:33%;
-  padding:8px;
-  font-size:1rem;
-  border:1px solid var(--mittelgrau);
-  border-radius:4px;
-  position:relative;
-  z-index:10;
-  pointer-events:auto;
-}
-
 button{
   background:var(--baukult);
   color:#fff;
@@ -98,108 +87,6 @@ button{
 }
 
 button:hover{ background:#5a7a91; }
-
-.grid-container{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:12px;
-}
-
-.grid-btn{
-  background:#cbddec;
-  border:1px solid var(--textgrau);
-  border-radius:6px;
-  padding:6px;
-  cursor:pointer;
-}
-
-.grid-btn.active{
-  background:#fff;
-  border:2px solid #000;
-}
-
-.grid-btn img{
-  width:100%;
-  display:block;
-  pointer-events:none;
-}
-
-.accordion-header{
-  background:var(--hellgrau);
-  padding:12px;
-  border-radius:6px;
-  display:flex;
-  justify-content:space-between;
-  font-weight:500;
-  cursor:pointer;
-}
-
-.accordion-content{
-  display:none;
-  padding-top:12px;
-}
-
-.accordion-content.open{ display:block; }
-
-input[type="range"]{
-  width:100%;
-  height:20px;
-  appearance:none;
-  border-radius:10px;
-  cursor:pointer;
-}
-
-.switch{
-  position:relative;
-  display:inline-block;
-  width:60px;
-  height:34px;
-}
-
-.switch input{
-  opacity:0;
-  width:0;
-  height:0;
-}
-
-.slider{
-  position:absolute;
-  inset:0;
-  background-color:#7090a7;
-  border-radius:15px;
-  transition:.3s;
-  pointer-events:none;
-}
-
-.slider:before{
-  content:"";
-  position:absolute;
-  width:26px;
-  height:26px;
-  left:4px;
-  bottom:4px;
-  background:#fff;
-  border-radius:50%;
-  transition:.3s;
-}
-
-input:checked + .slider:before{
-  transform:translateX(26px);
-}
-
-#summaryText ul{
-  list-style:none;
-  padding:0;
-  margin:0;
-  text-align:left;
-}
-
-#summaryText li{
-  padding:6px 0;
-  border-bottom:1px solid #ddd;
-}
-
-#summaryText li:last-child{ border-bottom:none; }
 
 #loader{
   text-align:center;
@@ -259,6 +146,8 @@ input:checked + .slider:before{
 
     <div class="note">
       Die erste Einschätzung Ihres Gründerzeithauses basiert auf wenigen Angaben.
+      Sie zeigt typische Merkmale, grundsätzliche Möglichkeiten und bekannte Einschränkungen.
+      Sie ersetzt keine Planung und keine Kostenschätzung.
     </div>
 
     <div id="loader">
@@ -270,6 +159,8 @@ input:checked + .slider:before{
 
     <div class="note">
       Die Aussagen sind bewusst vorsichtig formuliert.
+      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
+      muss immer am konkreten Gebäude geprüft werden.
     </div>
 
     <p>
@@ -280,21 +171,29 @@ input:checked + .slider:before{
 </div>
 
 <script>
-// =======================================
-// VIEW ROUTER
-// =======================================
+/* =====================================================
+   CONFIG
+===================================================== */
 
-const params = new URLSearchParams(window.location.search);
-const view = params.get("view") || "start";
+const TEST_MODE = true; // später auf false setzen
+const RESULT_KEY = "gzh_result_text";
+const RAW_KEY    = "gzh_raw_data";
+
+/* =====================================================
+   VIEW ROUTER
+===================================================== */
 
 document.addEventListener("DOMContentLoaded", function(){
+
+  const params = new URLSearchParams(window.location.search);
+  const view   = params.get("view") || "start";
 
   const startBlocks  = document.querySelectorAll(".view-start");
   const resultBlocks = document.querySelectorAll(".view-result");
 
   const isResult = view === "result";
 
-  startBlocks.forEach(el => el.style.display  = isResult ? "none" : "block");
+  startBlocks.forEach(el  => el.style.display = isResult ? "none" : "block");
   resultBlocks.forEach(el => el.style.display = isResult ? "block" : "none");
 
   if(isResult){
@@ -302,49 +201,83 @@ document.addEventListener("DOMContentLoaded", function(){
   }
 });
 
-// =======================================
-// STORAGE KEYS
-// =======================================
-
-const RESULT_KEY = "gzh_result_text";
-const RAW_KEY    = "gzh_raw_data";
-
-// =======================================
-// START → RESULT
-// =======================================
+/* =====================================================
+   START → RESULT
+===================================================== */
 
 window.weiter = function(){
-  localStorage.setItem(RESULT_KEY, "Auswertung läuft …");
+
+  localStorage.setItem(RESULT_KEY, "");
   localStorage.setItem(RAW_KEY, "{}");
+
   window.location.href = "index.html?view=result";
 };
 
-// =======================================
-// RESULT VIEW LOGIC
-// =======================================
+/* =====================================================
+   RESULT VIEW LOGIC
+===================================================== */
 
 function runResultView(){
 
   const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultText");
 
-  loader.style.display = "block";
+  if(!loader || !resultBox) return;
+
+  loader.style.display    = "block";
   resultBox.style.display = "none";
 
-  const fake =
-    localStorage.getItem(RESULT_KEY) ||
-    "TESTERGEBNIS\n\n" +
-    "– Ihr Gebäude ist grundsätzlich sanierungsfähig.\n" +
-    "– Eine thermische Sanierung ist technisch möglich.\n" +
-    "– Der Heizwärmebedarf kann deutlich reduziert werden.\n" +
-    "– Die Auswahl der Maßnahmen muss objektspezifisch erfolgen.\n\n" +
-    "Hinweis: Testmodus ohne Serveranbindung.";
+  if(TEST_MODE){
 
-  setTimeout(function(){
-    loader.style.display = "none";
+    const fakeResult =
+      "TESTERGEBNIS\n\n" +
+      "– Ihr Gebäude ist grundsätzlich sanierungsfähig.\n" +
+      "– Eine thermische Sanierung ist technisch möglich.\n" +
+      "– Der Heizwärmebedarf kann deutlich reduziert werden.\n" +
+      "– Die Auswahl der Maßnahmen muss objektspezifisch erfolgen.\n\n" +
+      "Hinweis: Dies ist ein Testmodus ohne Serveranbindung.";
+
+    setTimeout(function(){
+      loader.style.display    = "none";
+      resultBox.style.display = "block";
+      resultBox.innerText     = fakeResult;
+      localStorage.setItem(RESULT_KEY, fakeResult);
+    }, 800);
+
+    return;
+  }
+
+  /* SERVER MODE – später */
+  fetch("/wien/gzh/user_data/save_user_data.php", {
+    method: "POST",
+    cache: "no-store",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ input: {} })
+  })
+  .then(r => r.text())
+  .then(txt => {
+
+    loader.style.display    = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = fake;
-  }, 800);
+
+    resultBox.innerText = txt || "LEERE SERVERANTWORT";
+
+    try{
+      const res = JSON.parse(txt);
+      if(res && res.screen_text){
+        localStorage.setItem(RESULT_KEY, res.screen_text);
+        resultBox.innerText = res.screen_text;
+      }
+    }catch(e){
+      // absichtlich leer
+    }
+  })
+  .catch(function(){
+
+    loader.style.display    = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText     = "KEINE SERVERANTWORT";
+  });
 }
 </script>
 
