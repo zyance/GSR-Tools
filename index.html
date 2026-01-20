@@ -816,6 +816,11 @@ if (dachSwitch && pvInput) {
 
 /* =====================================================
    EXPORT & NAVIGATION – TESTFLOW: INDEX → PHP → RESULT
+   - baut definiertes Payload
+   - killt alte Daten
+   - speichert lokal (Single Source of Truth)
+   - pingt PHP mit exakt denselben Daten
+   - leitet zu result.html weiter (GitHub-tauglich)
 ===================================================== */
 
 window.weiter = function () {
@@ -837,18 +842,18 @@ window.weiter = function () {
       zustand: data.building_condition ?? null,
       fenster_typ: data.window_type ?? null,
       fensteralter_jahre: data.window_age_years ?? null,
-      heizung: data.heating ?? [],
+      heizung: Array.isArray(data.heating) ? data.heating : [],
       raumklima_celsius: data.indoor_temp_c ?? null,
       dachform: data.roof_type ?? null,
       dachausrichtung: data.roof_orientation ?? null,
-      ziele: data.goals ?? []
+      ziele: Array.isArray(data.goals) ? data.goals : []
     }
   };
 
-  // lokal speichern (Single Source of Truth)
+  // 🧠 lokal speichern (Single Source of Truth)
   localStorage.setItem("sanapp_data", JSON.stringify(payload));
 
-  // echter Server-Ping mit exakt denselben Daten
+  // 🛰 echter Server-Ping mit exakt denselben Daten
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
