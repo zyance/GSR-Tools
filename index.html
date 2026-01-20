@@ -822,21 +822,37 @@ window.weiter = function () {
 
   const data = collectData();
 
-  // lokal speichern (für result.html)
-  localStorage.setItem("sanapp_data", JSON.stringify({
-    eingaben: data
-  }));
+  // 🔥 ALTEN MÜLL WEG
+  localStorage.removeItem("sanapp_data");
 
-  // echter Server-Ping mit echten Daten
+  // 🔒 DEFINIERTES FORMAT (immer gleich!)
+  const payload = {
+    eingaben: {
+      bauphase: data.building_phase ?? null,
+      wohnflaeche_m2: data.living_area_m2 ?? null,
+      anzahl_geschosse: data.floors_total ?? null,
+      fenster_pro_geschoss: data.windows_per_floor ?? null,
+      postleitzahl: data.postal_code ?? null,
+      bebauung: data.building_type ?? null,
+      zustand: data.building_condition ?? null,
+      fenster_typ: data.window_type ?? null,
+      fensteralter_jahre: data.window_age_years ?? null,
+      heizung: data.heating ?? [],
+      raumklima_celsius: data.indoor_temp_c ?? null,
+      dachform: data.roof_type ?? null,
+      dachausrichtung: data.roof_orientation ?? null,
+      ziele: data.goals ?? []
+    }
+  };
+
+  // lokal speichern (Single Source of Truth)
+  localStorage.setItem("sanapp_data", JSON.stringify(payload));
+
+  // echter Server-Ping mit exakt denselben Daten
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      source: "github_test",
-      payload: data
-    })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
   })
   .then(r => r.text())
   .then(txt => {
@@ -846,7 +862,7 @@ window.weiter = function () {
     console.log("PHP FETCH ERROR:", err);
   });
 
-  // 👉 GITHUB-PFAD (NICHT SERVER-PFAD)
+  // 👉 GITHUB-PFAD
   window.location.href = "result.html";
 };
 
