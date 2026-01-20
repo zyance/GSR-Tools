@@ -139,44 +139,60 @@ if (!loader || !resultBox) {
   loader.style.display = "block";
   resultBox.style.display = "none";
 
-  /* =====================================================
-     CLIENT-LOAD: Userdaten aus dem Browser holen
-  ===================================================== */
-  const raw = localStorage.getItem(DATA_KEY);
+ 
+/* =====================================================
+   CLIENT-LOAD: Userdaten aus dem Browser holen (ROBUST)
+===================================================== */
+const raw = localStorage.getItem(DATA_KEY);
 
-  if (!raw) {
+if (!raw) {
+  loader.style.display = "none";
+  resultBox.style.display = "block";
+  resultBox.innerText =
+    "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
+} else {
+  try {
+    const data = JSON.parse(raw);
+
+    // Helper: sicherer String
+    const s = (v) => (v !== null && v !== undefined && v !== "" ? v : "–");
+
+    // Helper: sichere Zahl
+    const n = (v) => (Number.isFinite(v) ? v : 0);
+
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText =
-      "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
-  } else {
-    try {
-      const data = JSON.parse(raw);
 
-      // Loader aus, Ergebnis ein
-      loader.style.display = "none";
-      resultBox.style.display = "block";
-
-      // Menschlich lesbare Ausgabe (roh + ehrlich)
-      resultBox.innerHTML = `
-        <b>Bauphase:</b> ${data.eingaben.bauphase}<br>
-        <b>Wohnfläche:</b> ${data.eingaben.wohnflaeche_m2} m²<br>
-        <b>Geschosse:</b> ${data.eingaben.anzahl_geschosse}<br>
-        <b>Fenster pro Geschoss:</b> ${data.eingaben.fenster_pro_geschoss}<br>
-        <b>Postleitzahl:</b> ${data.eingaben.postleitzahl}<br>
-        <b>Bebauung:</b> ${data.eingaben.bebauung}<br>
-        <b>Dachform:</b> ${data.eingaben.dachform}<br>
-        <b>Dachausrichtung:</b> ${data.eingaben.dachausrichtung}<br>
-        <b>Fensteralter:</b> ${data.eingaben.fensteralter_jahre} Jahre<br>
-        <b>Raumklima:</b> ${data.eingaben.raumklima_celsius} °C
-      `;
-    } catch (e) {
-      loader.style.display = "none";
-      resultBox.style.display = "block";
-      resultBox.innerText = "Fehler beim Lesen der Eingabedaten.";
-      console.log(e);
-    }
+    resultBox.innerHTML = `
+      <b>Bauphase:</b> ${s(data.building_phase)}<br>
+      <b>Wohnfläche:</b> ${n(data.living_area_m2)} m²<br>
+      <b>Geschosse:</b> ${n(data.floors_total)}<br>
+      <b>Fenster pro Geschoss:</b> ${n(data.windows_per_floor)}<br>
+      <b>Postleitzahl:</b> ${n(data.postal_code)}<br>
+      <b>Bebauung:</b> ${s(data.building_type)}<br>
+      <b>Zustand:</b> ${s(data.building_condition)}<br>
+      <b>Fenster:</b> ${s(data.window_type)} (${n(data.window_age_years)} Jahre)<br>
+      <b>Heizung:</b> ${
+        data.heating && data.heating.length
+          ? data.heating.join(", ")
+          : "keine Angabe"
+      }<br>
+      <b>Raumklima:</b> ${n(data.indoor_temp_c)} °C<br>
+      <b>Dach:</b> ${s(data.roof_type)} / ${s(data.roof_orientation)}<br>
+      <b>Ziele:</b> ${
+        data.goals && data.goals.length
+          ? data.goals.join(", ")
+          : "keine Angabe"
+      }
+    `;
+  } catch (e) {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText = "Fehler beim Lesen der Eingabedaten.";
+    console.log("RAW FROM STORAGE (PARSE FAIL):", raw);
+    console.log(e);
   }
+}
 
   /* =====================================================
      SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
