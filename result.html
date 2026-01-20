@@ -114,6 +114,7 @@ h2{ text-align:center; font-weight:500; }
   </div>
 </div>
 
+
 <script>
 
 /* =====================================================
@@ -138,90 +139,90 @@ if (!loader || !resultBox) {
   loader.style.display = "block";
   resultBox.style.display = "none";
 
- /* =====================================================
-   CLIENT-LOAD: Userdaten aus dem Browser holen
-===================================================== */
-const raw = localStorage.getItem(DATA_KEY);
+  /* =====================================================
+     CLIENT-LOAD: Userdaten aus dem Browser holen
+  ===================================================== */
+  const raw = localStorage.getItem(DATA_KEY);
 
-if (!raw) {
-  loader.style.display = "none";
-  resultBox.style.display = "block";
-  resultBox.innerText =
-    "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
-} else {
-  try {
-    const data = JSON.parse(raw);
-
-    // Loader aus, Ergebnis ein
+  if (!raw) {
     loader.style.display = "none";
     resultBox.style.display = "block";
+    resultBox.innerText =
+      "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
+  } else {
+    try {
+      const data = JSON.parse(raw);
 
-    // Menschlich lesbare Ausgabe (roh + ehrlich)
-    resultBox.innerHTML = `
-      <b>Bauphase:</b> ${data.eingaben.bauphase}<br>
-      <b>Wohnfläche:</b> ${data.eingaben.wohnflaeche_m2} m²<br>
-      <b>Geschosse:</b> ${data.eingaben.anzahl_geschosse}<br>
-      <b>Fenster pro Geschoss:</b> ${data.eingaben.fenster_pro_geschoss}<br>
-      <b>Postleitzahl:</b> ${data.eingaben.postleitzahl}<br>
-      <b>Bebauung:</b> ${data.eingaben.bebauung}<br>
-      <b>Dachform:</b> ${data.eingaben.dachform}<br>
-      <b>Dachausrichtung:</b> ${data.eingaben.dachausrichtung}<br>
-      <b>Fensteralter:</b> ${data.eingaben.fensteralter_jahre} Jahre<br>
-      <b>Raumklima:</b> ${data.eingaben.raumklima_celsius} °C
-    `;
-  } catch (e) {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "Fehler beim Lesen der Eingabedaten.";
-    console.log(e);
-  }
-}
+      // Loader aus, Ergebnis ein
+      loader.style.display = "none";
+      resultBox.style.display = "block";
 
-
-/* =====================================================
-   SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
-   =====================================================
-
-const RESULT_KEY = "gzh_result_text";
-
-fetch("/wien/gzh/user_data/save_user_data.php", {
-  method: "POST",
-  cache: "no-store",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    input: {}   // hier später echte Daten einsetzen
-  })
-})
-.then(r => r.text())
-.then(txt => {
-  loader.style.display = "none";
-  resultBox.style.display = "block";
-
-  resultBox.innerText = txt || "LEERE SERVERANTWORT";
-
-  try {
-    const res = JSON.parse(txt);
-    if (res && res.screen_text) {
-      localStorage.setItem(RESULT_KEY, res.screen_text);
-      resultBox.innerText = res.screen_text;
+      // Menschlich lesbare Ausgabe (roh + ehrlich)
+      resultBox.innerHTML = `
+        <b>Bauphase:</b> ${data.eingaben.bauphase}<br>
+        <b>Wohnfläche:</b> ${data.eingaben.wohnflaeche_m2} m²<br>
+        <b>Geschosse:</b> ${data.eingaben.anzahl_geschosse}<br>
+        <b>Fenster pro Geschoss:</b> ${data.eingaben.fenster_pro_geschoss}<br>
+        <b>Postleitzahl:</b> ${data.eingaben.postleitzahl}<br>
+        <b>Bebauung:</b> ${data.eingaben.bebauung}<br>
+        <b>Dachform:</b> ${data.eingaben.dachform}<br>
+        <b>Dachausrichtung:</b> ${data.eingaben.dachausrichtung}<br>
+        <b>Fensteralter:</b> ${data.eingaben.fensteralter_jahre} Jahre<br>
+        <b>Raumklima:</b> ${data.eingaben.raumklima_celsius} °C
+      `;
+    } catch (e) {
+      loader.style.display = "none";
+      resultBox.style.display = "block";
+      resultBox.innerText = "Fehler beim Lesen der Eingabedaten.";
+      console.log(e);
     }
-  } catch (e) {
-    // absichtlich nichts – Text bleibt sichtbar
   }
-})
-.catch(() => {
-  loader.style.display = "none";
-  resultBox.style.display = "block";
-  resultBox.innerText = "KEINE SERVERANTWORT";
-});
 
-===================================================== */
+  /* =====================================================
+     SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
+     =====================================================
+
+  const RESULT_KEY = "gzh_result_text";
+
+  fetch("/wien/gzh/user_data/save_user_data.php", {
+    method: "POST",
+    cache: "no-store",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      input: {}   // hier später echte Daten einsetzen
+    })
+  })
+  .then(r => r.text())
+  .then(txt => {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+
+    resultBox.innerText = txt || "LEERE SERVERANTWORT";
+
+    try {
+      const res = JSON.parse(txt);
+      if (res && res.screen_text) {
+        localStorage.setItem(RESULT_KEY, res.screen_text);
+        resultBox.innerText = res.screen_text;
+      }
+    } catch (e) {
+      // absichtlich nichts – Text bleibt sichtbar
+    }
+  })
+  .catch(() => {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText = "KEINE SERVERANTWORT";
+  });
+
+  ===================================================== */
 
 }
 
 </script>
+
 
 
 </body>
