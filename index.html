@@ -822,19 +822,33 @@ window.weiter = function () {
 
   const data = collectData();
 
-  localStorage.setItem("gzh_raw_data", JSON.stringify(data));
+  // lokal speichern (für result.html)
+  localStorage.setItem("sanapp_data", JSON.stringify({
+    eingaben: data
+  }));
 
-  // optionaler Ping an echten Server
+  // echter Server-Ping mit echten Daten
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ ping: "index_alive" })
-  }).catch(() => { /* absichtlich leer */ });
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      source: "github_test",
+      payload: data
+    })
+  })
+  .then(r => r.text())
+  .then(txt => {
+    console.log("PHP RAW RESPONSE:", txt);
+  })
+  .catch(err => {
+    console.log("PHP FETCH ERROR:", err);
+  });
 
-  // 👉 RICHTIGER PFAD FÜR GITHUB
+  // 👉 GITHUB-PFAD (NICHT SERVER-PFAD)
   window.location.href = "result.html";
 };
-
 
 
 
