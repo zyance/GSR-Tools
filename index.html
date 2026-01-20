@@ -490,16 +490,17 @@ button:hover {
    ACCORDION – passend zu onclick im HTML
    ===================================================== */
 function toggleAccordion(header) {
-  const content = header.nextElementSibling;
+  const content = header.parentElement.querySelector(".accordion-content");
   const arrow = header.querySelector("span:last-child");
 
   if (!content) return;
 
   content.classList.toggle("open");
+
   if (arrow) {
     arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
   }
-} 
+}
   
 
 
