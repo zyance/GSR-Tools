@@ -820,27 +820,19 @@ if (dachSwitch && pvInput) {
 
 window.weiter = function () {
 
-  const testData = { ping: "index_alive" };
+  const data = collectData();
 
-  fetch("/wien/gzh/php/save_user_data.php", {
+  localStorage.setItem("gzh_raw_data", JSON.stringify(data));
+
+  // optionaler Ping an echten Server
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(testData)
-  })
-  .then(r => r.json())
-  .then(res => {
-    localStorage.setItem("php_test_result", JSON.stringify(res));
-    window.location.href = "/wien/gzh/result.html";
-  })
-  .catch(err => {
-    localStorage.setItem("php_test_result", JSON.stringify({
-      status: "error",
-      message: "fetch_failed"
-    }));
-    window.location.href = "/wien/gzh/result.html";
-  });
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ping: "index_alive" })
+  }).catch(() => { /* absichtlich leer */ });
+
+  // 👉 RICHTIGER PFAD FÜR GITHUB
+  window.location.href = "result.html";
 };
 
 
@@ -962,4 +954,4 @@ P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
 
 
 </body>
-</html>
+</html
