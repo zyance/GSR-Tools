@@ -484,22 +484,16 @@ button:hover {
 </div>
 
 
-<script> 
-
-console.log("JS geladen");  
+<script>   
 
 /* =====================================================
    ACCORDION – passend zu onclick im HTML
    ===================================================== */
 function toggleAccordion(header) {
-  console.log("Accordion click");
   const content = header.parentElement.querySelector(".accordion-content");
   const arrow = header.querySelector("span:last-child");
 
-  if (!content) {
-    console.log("Kein Content gefunden");
-    return;
-  }
+  if (!content) return;
 
   content.classList.toggle("open");
 
@@ -507,6 +501,7 @@ function toggleAccordion(header) {
     arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
   }
 }
+  
 
 
 /* =====================================================
@@ -564,13 +559,14 @@ if (raumtemp) {
 }
 
 /* =====================================================
-   CHECKBOX & RADIO
+   CHECKBOX & RADIO – robust
    ===================================================== */
-document
-  .querySelectorAll('input[type="checkbox"], input[type="radio"]')
-  .forEach(input => {
+const inputs = document.querySelectorAll('input[type="checkbox"], input[type="radio"]');
+if (inputs && inputs.length) {
+  inputs.forEach(input => {
     input.addEventListener("change", updateSummary);
   });
+}
 
 /* =====================================================
    DACHAUSRICHTUNG – Switch
