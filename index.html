@@ -1,14 +1,8 @@
 <!DOCTYPE html>
 <html lang="de">
-<head>
+<head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="assets/css/style.css">
 <title>Gründerzeithaus Sanierungs-Berater</title>
 
 <style>
@@ -19,267 +13,706 @@
   --baukult:#7090a7;
 }
 
-*{ box-sizing:border-box; }
-
-html{ font-size:20px; }
-
-body{
-  margin:0;
-  padding:20px 0;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:flex-start;
-  font-family:"Fira Sans", Arial, system-ui, sans-serif;
-  font-weight:300;
-  font-size:1rem;
-  line-height:1.5;
-  color:var(--textgrau);
-  background-color:#5c88a1;
+* {
+  box-sizing: border-box;
 }
 
-h1,h2,h3{ font-weight:500; }
-
-.note{
-  font-size:1rem;
-  color:#666;
-  line-height:1.5;
+body {
+  margin: 0;
+  background: #f0f0f0;
+  font-family: Arial, system-ui, sans-serif;
+  font-size: 16px; 
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  color: var(--textgrau);
+  padding: 20px 0;
 }
 
-.app-container{
-  width:100%;
-  max-width:600px;
-  background:#fff;
-  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+.container{ 
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 12px;  
+  padding: 0;
+  background: #fff;
 }
 
-.header-image img{
-  width:100%;
-  height:auto;
-  display:block;
+.box {
+  width: 92%;
+  margin: 3% auto;
+  padding: 3%;
+  border: 1px solid var(--hellgrau);
+  border-radius: 6px;
+  background: #fff;
 }
 
-.content{
-  padding:5%;
-  text-align:center;
+.summary-box {
+  background: var(--hellgrau) !important;
 }
 
-.box{
-  width:92%;
-  margin:3% auto;
-  padding:3%;
-  background:#fff;
-  border:1px solid var(--hellgrau);
-  border-radius:6px;
+.header-image img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 
-.summary-box{ background:var(--hellgrau); }
-
-button{
-  background:var(--baukult);
-  color:#fff;
-  border:none;
-  border-radius:6px;
-  padding:12px 24px;
-  font-size:1rem;
-  font-weight:500;
-  cursor:pointer;
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  background-color: #ffffff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
-button:hover{ background:#5a7a91; }
-
-#loader{
-  text-align:center;
-  padding:20px;
+h1, h2, h3 {
+  font-family: Arial, sans-serif;
+  color: var(--textgrau);
 }
 
-.spinner{
-  width:40px;
-  height:40px;
-  border:4px solid #ccc;
-  border-top:4px solid #7090a7;
-  border-radius:50%;
-  margin:0 auto 12px;
-  animation:spin 1s linear infinite;
+.header h1 { font-size: 1.4rem; text-align: center; }
+.header h2 { font-size: 1.3rem; }
+.header h3 { font-size: 1.1rem; }
+
+.note { 
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
 }
 
-@keyframes spin{
-  from{ transform:rotate(0deg); }
-  to{ transform:rotate(360deg); }
+.content {
+  padding: 5%;
+  text-align: center;
+}
+
+.content p {
+  color: #666666;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+input[type="number"], input[type="text"] {
+  font-size: 1rem;
+  padding: 8px;
+  width: 100%;
+  border: 1px solid var(--mittelgrau);
+  border-radius: 4px;
+}
+
+.grid-btn {
+  background: #cbddec;
+  border: 1px solid var(--textgrau);
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.grid-btn:hover {
+  background: #e0e0e0;
+}
+
+.grid-btn.active {
+  background: #ffffff;
+  border-color: #000;
+  border-width: 2px;
+}
+
+.grid-btn img {
+  width: 100%;
+  display: block;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.accordion-header {
+  background: var(--hellgrau);
+  padding: 12px;
+  cursor: pointer;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 6px;
+  user-select: none;
+}
+
+.accordion-header:hover {
+  background: var(--mittelgrau);
+}
+
+.accordion-content {
+  display: none;
+  padding-top: 12px;
+}
+
+.accordion-content.open {
+  display: block;
+}
+
+input[type="range"] {
+  width: 100%;
+  height: 16px;
+  border-radius: 8px;
+  appearance: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #333;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: #333;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin-top: 6px;
+}
+
+.scale span::before {
+  content: "|";
+  display: block;
+  font-size: 10px;
+}
+
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--textgrau);
+  margin-top: 4px;
+}
+
+.rating {
+  font-size: 1.1em;
+  margin-top: 6px;
+}
+
+.main-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.label {
+  font-size: 16px;
+  color: #333;
+  user-select: none;
+  font-weight: normal;
+  transition: font-weight 0.2s;
+  min-width: 80px;
+}
+
+.label-left { text-align: right; }
+.label-right { text-align: left; }
+
+.is-active {
+  font-weight: bold;
+  color: #000;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: #7090a7;
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+button {
+  background: var(--baukult);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+button:hover {
+  background: #5a7a91;
+}
+    .box button {
+  display: block;
+  margin: 0 auto;
+}
+
+#summaryText ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+#summaryText li {
+  padding: 6px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+#summaryText li:last-child {
+  border-bottom: none;
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= START VIEW ================= -->
-<div class="view-start app-container">
-
+<div class="app-container">
   <div class="header-image">
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
   </div>
 
   <div class="content">
-    <h2>Willkommen beim Gründerzeithaus-Helfer</h2>
+    <h2><b>„Willkommen beim Gründerzeithaus-Helfer!"</b></h2>
     <span class="note">
-      Diese App gibt nach wenigen Angaben eine erste Einschätzung.  
-      Sie ersetzt keine Planung und keine Kostenschätzung.
+      <i>"Wenn Sie für Ihr Gründerzeithaus in Wien ein <b>Bauwerksbuch</b> benötigen oder das Haus <b>umfassend sanieren</b> wollen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben – was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten. Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen."</i>
     </span>
+  </div> 
+
+  <div class="box">
+    <h3>Die 4 Bauphasen der Gründerzeit</h3>
+    <p class="note"><i>"Gibt einen ersten Überblick über das Alter des Gebäudes."</i></p>
+    <input type="hidden" id="bauphase">
+    <div class="grid-container">
+      <button type="button" class="grid-btn bauphase-btn" data-value="Vorgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhUJQbWEiAwi2YpJ0I3i34aj5FQRKXj-Aa2JN9VoI_pO8u_TW1RVqZ2y1fFtM_Xz1UiMBQLNKCak_SengSak4sxTXVAXIbavA8h2sM8Fd7GxiBzO4RbFHXGmqHaF5wyhk9vNsGV2hTHufyue2m2s7xKFW260864UI2ZSJB8g7yoL3Fi4wuBEZQnCTTqxSvi/s1600/GZH%201.png"/>
+      </button>
+      <button type="button" class="grid-btn bauphase-btn" data-value="Frühgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU-lTfM-GbSoXqmU-u24LAXatmvm7-I-yCleGa-c1vtgMJVmQc9uB6iTx60a6S5kXBdnctf2_TbHWvRKJcGEr9Zvs1Iiu5RhwMNCu_sYdhlR70TqqO7G_duPLcDrmuk5SkYj_srz2vZ2Ih0-BOf_u4kX1315-lnmup1kkpeUQApK6puZRhoHn-YIdqwISB/s1600/GZH%202.png"/>
+      </button>
+      <button type="button"class="grid-btn bauphase-btn" data-value="Hochgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc4dtrSvVD31xXKk3Rug97KO_eeTFzLT2MRphI_mJ8QKYQE-_VlaMmNsYDArBi8aVJQxUh6PuV3euSQ0KLbgMNvsIMHQvjVfITQD8WteeVmFKvKfwtI4FzKPCF-iHnDbT9RKPA9a9qc2jzQw3YY85GHJ8D9K1HQmomgk-osU1bqyg8BWp-4nDpRyjveNwH/s1600/GZH%203.png"/>
+      </button>
+      <button type="button" class="grid-btn bauphase-btn" data-value="Spätgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjrSkEcslltNNOj2-kxBQ5P4ARPIh_oHy4-HD7XSZjnw7QhMwWWSjqzfv61ukdjRsOV49sePy6IKA5oGm-VDfVdnv7hul-UUpG1EyrrLnu1ag9wetSR0ELGFn_wsMlvp00zMUkI5KEXpVq2evm2TwxewWe5xZFpjLPcZ0MfKkxvp9urwRDt5OsU_emqDwY7/s320/GZH%204.png"/>
+      </button>
+    </div>
+
+    <h3 style="margin-top: 24px;">Eigentümer und Bewohner:</h3>
+    <label><input type="checkbox" id="eigentuemer"> Allein- oder Mehrheitseigentümer:in</label><br>
+    <label><input type="checkbox" id="weg"> Eigentümergemeinschaft (WEG)</label><br>
+    <label><input type="checkbox" id="mieter"> Mieter:in</label><br> 
+    <label><input type="checkbox" id="hausverwaltung"> Hausverwaltung</label><br>
+    <label><input type="checkbox" id="energieberater"> Energieberater:in</label><br>
+  </div> 
+
+  <div class="box">
+    <h3>Angaben zum Gebäude</h3>
+    <p class="note"><i>"Die Eigenschaften des Gebäudes sind Grundlage aller Berechnungen."</i></p>
+    <label>Wohnfläche (m²)</label><br>
+    <input type="number" id="wohnflaeche"><br><br>
+    <label>Geschosse (inkl. EG)</label><br>
+    <input type="number" id="geschosse"><br><br>
+    <label>Fenster pro Geschoss</label><br>
+    <input type="number" id="fensterAnzahl"><br><br>
+    <label>Postleitzahl</label><br>
+    <input type="number" id="postleitzahl"><br><br>
+  </div>
+
+  <div class="box">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>Thermische Sanierung</span><span>▼</span>
+    </div>
+    <div class="accordion-content">
+      <h3>Die Bebauung des Grundstücks</h3>
+      <p class="note"><i>"Entscheidend für Wärmeverluste und Größe der Fassaden."</i></p>
+      <input type="hidden" id="bebauung">
+      <div class="grid-container">
+        <button type="button" class="grid-btn bebauung-btn" data-value="Freistehend">    
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhf9_tkMIji4Fw90CxZdIypq36VnUt_BvdS5TdyJnGWTsgTkyCQOnR7WVPxJPwXy4reqiq6zo7jxzBOCaqr53-Ryof2li9ilAtvTyPMF2JFm5hXBG1xRyCr1A5iHSbwh803EEwkURODNPvPHIPjeKUU2ze2IzKy50r5j758gwTjVlQfHkKAgmFyzbSJFRQA/s320/BAU_1.png"/> 
+        </button>
+        <button type="button" class="grid-btn bebauung-btn" data-value="Eckhaus">   
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQT8QYouomyMbKyoJg0OkZyWSqPqAsnJkVluCABhFkXnruSOMsP99pJMxivSk4HI6JxVyQbcyOBF7S-CHYKeByfoy8tzGCCR8P_yLNYzsz6X_yVMhyphenhyphen7qlZVvC3P2BXtlne33ncJ9gwm7pQhRLYS6urrHGdNAknGUO-FQOSz8h56Vm5iIcLhHVZcUIn33d5/s320/BAU_2.png"/>
+        </button>  
+        <button type="button" class="grid-btn bebauung-btn" data-value="Geschlossene Bauweise">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhtR4trn47VMw7LTCzHycsfRxTPdkjJ1iLC5tehQqLzyW4NmKnea8E3KVOgpf_jhwvIQMsCsNsCcBYcXDsBSdqBKhnNKHD6pxKPx6Fce93nDthHdMPhYLYoJAC6RYO1JrwTE1mQ0-HfZW_-BBCMRc31DAf6_Qpy8rTUubtp9Ftb1IA1R4F_-cKmaapp7O_r/s320/BAU_3.png"/>
+        </button>   
+        <button type="button" class="grid-btn bebauung-btn" data-value="Mit Hinterhaus">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjA8-IH0KQi74v_fHFrc6mw2mdQtF9VbfyBhlfUHstxVyDBnMR54PFe4qPQ8MR0Ou1nfl8W9lxRmTTMoKYuJNBgnHzsnViDZFeUDK9pBS0B3rYa2ieeTATUvVEt43ii_1YB1Cp9ENxR9e3xQHZtUMgi3vJ8uIxRZGlbkqIiTkqS8xqT_8CThQoMsozyXEyE/s320/BAU_4.png"/>
+        </button>
+      </div>  
+    
+      <h3>Zustand des Hauses:</h3>
+      <p class="note" style="margin-top: 20px;"><i>"Der Zustand entscheidet über den Umfang der Sanierungsarbeiten."</i></p>
+      <label><input type="radio" name="haus_zustand" value="schlecht"> dringend sanierungsbedürftig</label><br>
+      <label><input type="radio" name="haus_zustand" value="zufrieden"> zufriedenstellend</label><br>
+      <label><input type="radio" name="haus_zustand" value="sehr gut"> ausgezeichnet, gepflegt</label><br>
+
+      <h3>Art der Fenster:</h3>
+      <p class="note" style="margin-top: 20px;"><i>"Der Wärmeverlust über alte, undichte Fenster kann erheblich sein."</i></p>
+      <label><input type="radio" name="fenster_art" value="Kastenfenster"> Wiener Kastenfenster</label><br>
+      <label><input type="radio" name="fenster_art" value="2-fach"> 2-fach</label><br>
+      <label><input type="radio" name="fenster_art" value="3-fach"> 3-fach</label><br>
+
+      <h3 style="margin-top: 20px;">Alter der Fenster: <span id="fensterWert">25</span> Jahre</h3>
+      <input type="range" id="fensterAlter" min="1" max="50" value="25" style="background:linear-gradient(to right,#4caf50 1%,#4caf50 30%,#fbc02d 30%,#fbc02d 60%,#e53935 60%,#e53935 100%)">
+      <div class="slider-label"><span>Neuwertig</span><span>sehr alt</span></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>Heizung & Warmwasser</span><span>▼</span>
+    </div>
+    <div class="accordion-content">
+      <p class="note"><i>"Die Umstellung auf erneuerbare Energie ist oft Hauptziel der Sanierung."</i></p>
+      <h3>Bestehendes HZ und WW System</h3>
+      <label><input type="checkbox" id="fernwaerme"> Fernwärme, zentral</label><br>
+      <label><input type="checkbox" id="gas"> Gas / Öl, zentral</label><br>
+      <label><input type="checkbox" id="dezGas"> Gasthermen, dezentral</label><br>
+      <label><input type="checkbox" id="elektrisch"> Elektrisch, dezentral</label>
+
+      <h3 style="margin-top: 20px;">Wohnkomfort</h3>
+      <p class="note"><i>"Das subjektive Wärme- oder Kälteempfinden entscheidet über die Behaglichkeit."</i></p>
+      <h3>Raumklima: <span id="tempWert">21</span> °C</h3>
+      <input type="range" id="raumtemp" min="17" max="25" value="21" style="background:linear-gradient(to right,#b3e5fc 0%,#e57373 100%)">
+      <div class="scale"><span>17°</span><span>19°</span><span>21°</span><span>23°</span><span>25°</span></div>
+      <div class="rating">Empfinden: <span id="tempText">angenehm</span></div>
+    </div>
+  </div>
+
+  <div class="box">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>Photovoltaik-Anlage</span><span>▼</span>
+    </div>
+    <div class="accordion-content">
+      <h3>Die Dachform</h3>
+      <input type="hidden" id="dachform">
+      <p class="note"><i>"Gibt Auskunft über den Stromertrag eine PV-Anlage."</i></p>
+      <div class="grid-container">
+        <button type="button" class="grid-btn dachform-btn" data-value="Satteldach">        
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgQRtaL69qeHPxzfZvdug64juBuEkvjkGY3-bEC3C0uc07Pus0c3nRHlSgKn3BvnUzKpVh6G_RWBgcWjbVmCvYK17OISI9H3BaNi3f17KQ8m6CiQljzkgRdA5uJuIMfEruLlPrGJvrj6W3TneRBJcCXqU5IJUitvBSw08HIlHI2f5cjGeim8JgLmXkINF_k/s320/DACH_1.png"/>
+        </button>
+        <button type="button" class="grid-btn dachform-btn" data-value="Satteldach mit Gauben">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhp9eaBs2FIL7K04CdA0vq8Ddi2oibTa5PCcQR5dlZz-8-X8vUFTLL4CUaewqQL93FczbZTCQ4JhBv1-dBBU8P5fHAPI86xK_06-q1UDaYW3JJwi_GzIgjHoJgtcxIvVpIPlOz00IVURg9hwz5F_0VuUVuxJ8mg0d4qBcMpq7BZdQx52WIwreNh5U4wMmXx/s320/DACH_2.png"/>
+        </button>  
+        <button type="button" class="grid-btn dachform-btn" data-value="Mansarddach">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhT1wPuN97D1yW7hLl-rB7G4EwYUWIq8DeI42ffdW3OHIQkKLpo5GX3uBry1t2CnrpiKluplfFoPYFF87SLTigt6lYJQYltDYWukwNAztSy1ZefVEK9ktFd-ZPuhoxPNjtJtTwzGllxItu-2lAsOgzG8N8BJ0Ee_fUhZDkcwhURIwDVi0nKMEbM41ZyZJW7/s320/DACH_3.png"/>
+        </button>   
+        <button type="button" class="grid-btn dachform-btn" data-value="Walmdach">
+          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEha87YkqXQLZK8E43kfOdRd1NZ-EwaxuMDQjq3Lj_CumrS5EkBXGEnsle3FmmP433vr3ZU0dEDGsPEUPNp_sjT727DMGo1XgURFRvGmT8rJ7NnBTa-dvxpctALsK7eDOAsZAAcWk2grgC4lLvMMDa4CGQV8FrhiqL_nLJhjv7MdNAVzqVAYXlLnUFHy8iad/s320/DACH_4.png"/>
+        </button>
+      </div>
+
+      <h3 style="margin-top: 20px;">Dachausrichtung:</h3>
+      <input type="hidden" id="pv_ausrichtung" value="Süd">
+      <div class="main-wrapper">
+        <span id="label-sued" class="label label-left is-active">Süd</span>
+        <label class="switch">
+          <input type="checkbox" id="dachAusrichtung">
+          <span class="slider"></span>
+        </label>
+        <span id="label-ow" class="label label-right">Ost/West</span>
+      </div>  
+    </div>  
+  </div>  
+
+  <div class="box">
+    <div class="accordion-header" onclick="toggleAccordion(this)">
+      <span>Ziele</span><span>▼</span>
+    </div>
+    <div class="accordion-content">
+      <p class="note"><i>"Für die erfolgreiche Sanierung braucht es klare Ziele."</i></p>
+      <label><input type="checkbox" id="kosten_senken"> Kosten senken</label><br>
+      <label><input type="checkbox" id="komfort"> Komfort steigern</label><br>
+      <label><input type="checkbox" id="gaslos"> Raus aus Gas und Öl</label><br>
+      <label><input type="checkbox" id="klima"> Klimaschutz</label>
+    </div>
   </div>
 
   <div class="box summary-box">
     <h3>Zusammenfassung</h3>
+    <p class="note"><i>"Überprüfen Sie nochmal Ihre Eingaben."</i></p>
     <div id="summaryText">Noch keine Eingaben.</div>
-  </div>
-
-  <div class="box">
-    <button type="button" onclick="weiter()">Zur Auswertung</button>
-  </div>
-
+      </div>
+    <div class="box">      
+    <button onclick="weiter()">Zur Auswertung</button>
+</div>
 </div>
 
-<!-- ================= RESULT VIEW ================= -->
-<div class="view-result app-container" style="display:none;">
 
-  <div class="content">
-    <h2>GSR Tool – Ergebnis</h2>
-
-    <div class="note">
-      Die erste Einschätzung Ihres Gründerzeithauses basiert auf wenigen Angaben.
-      Sie zeigt typische Merkmale, grundsätzliche Möglichkeiten und bekannte Einschränkungen.
-      Sie ersetzt keine Planung und keine Kostenschätzung.
-    </div>
-
-    <div id="loader">
-      <div class="spinner"></div>
-      <div class="note">Auswertung läuft …</div>
-    </div>
-
-    <div id="resultText" class="box" style="display:none;"></div>
-
-    <div class="note">
-      Die Aussagen sind bewusst vorsichtig formuliert.
-      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
-      muss immer am konkreten Gebäude geprüft werden.
-    </div>
-
-    <p>
-      <a href="index.html">Zurück zum Start</a>
-    </p>
-  </div>
-
-</div>
-
-<script>
-/* =====================================================
-   CONFIG
-===================================================== */
-
-const TEST_MODE = true; // später auf false setzen
-const RESULT_KEY = "gzh_result_text";
-const RAW_KEY    = "gzh_raw_data";
+<script>   
 
 /* =====================================================
-   VIEW ROUTER
-===================================================== */
+   ACCORDION – passend zu onclick im HTML
+   ===================================================== */
+function toggleAccordion(header) {
+  const content = header.nextElementSibling;
+  const arrow = header.querySelector("span:last-child");
 
-document.addEventListener("DOMContentLoaded", function(){
+  if (!content) return;
 
-  const params = new URLSearchParams(window.location.search);
-  const view   = params.get("view") || "start";
-
-  const startBlocks  = document.querySelectorAll(".view-start");
-  const resultBlocks = document.querySelectorAll(".view-result");
-
-  const isResult = view === "result";
-
-  startBlocks.forEach(el  => el.style.display = isResult ? "none" : "block");
-  resultBlocks.forEach(el => el.style.display = isResult ? "block" : "none");
-
-  if(isResult){
-    runResultView();
+  content.classList.toggle("open");
+  if (arrow) {
+    arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
   }
-});
+} 
+  
+
 
 /* =====================================================
-   START → RESULT
-===================================================== */
+   GRID BUTTONS – Bauphase, Bebauung, Dachform
+   ===================================================== */
+function setupGridButtons(buttonClass, hiddenInputId) {
+  const buttons = document.querySelectorAll("." + buttonClass);
+  const hiddenInput = document.getElementById(hiddenInputId);
 
-window.weiter = function(){
+  if (!hiddenInput) return;
 
-  localStorage.setItem(RESULT_KEY, "");
-  localStorage.setItem(RAW_KEY, "{}");
+  buttons.forEach(btn => {
+    btn.addEventListener("click", function () {
+      // andere deaktivieren
+      buttons.forEach(b => b.classList.remove("active"));
 
-  window.location.href = "index.html?view=result";
-};
+      // diesen aktivieren
+      btn.classList.add("active");
 
-/* =====================================================
-   RESULT VIEW LOGIC
-===================================================== */
+      // Wert setzen
+      hiddenInput.value = btn.dataset.value || "";
 
-function runResultView(){
-
-  const loader    = document.getElementById("loader");
-  const resultBox = document.getElementById("resultText");
-
-  if(!loader || !resultBox) return;
-
-  loader.style.display    = "block";
-  resultBox.style.display = "none";
-
-  if(TEST_MODE){
-
-    const fakeResult =
-      "TESTERGEBNIS\n\n" +
-      "– Ihr Gebäude ist grundsätzlich sanierungsfähig.\n" +
-      "– Eine thermische Sanierung ist technisch möglich.\n" +
-      "– Der Heizwärmebedarf kann deutlich reduziert werden.\n" +
-      "– Die Auswahl der Maßnahmen muss objektspezifisch erfolgen.\n\n" +
-      "Hinweis: Dies ist ein Testmodus ohne Serveranbindung.";
-
-    setTimeout(function(){
-      loader.style.display    = "none";
-      resultBox.style.display = "block";
-      resultBox.innerText     = fakeResult;
-      localStorage.setItem(RESULT_KEY, fakeResult);
-    }, 800);
-
-    return;
-  }
-
-  /* SERVER MODE – später */
-  fetch("/wien/gzh/user_data/save_user_data.php", {
-    method: "POST",
-    cache: "no-store",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input: {} })
-  })
-  .then(r => r.text())
-  .then(txt => {
-
-    loader.style.display    = "none";
-    resultBox.style.display = "block";
-
-    resultBox.innerText = txt || "LEERE SERVERANTWORT";
-
-    try{
-      const res = JSON.parse(txt);
-      if(res && res.screen_text){
-        localStorage.setItem(RESULT_KEY, res.screen_text);
-        resultBox.innerText = res.screen_text;
-      }
-    }catch(e){
-      // absichtlich leer
-    }
-  })
-  .catch(function(){
-
-    loader.style.display    = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText     = "KEINE SERVERANTWORT";
+      updateSummary();
+    });
   });
 }
-</script>
 
+/* =====================================================
+   SLIDER – Fensteralter
+   ===================================================== */
+const fensterAlter = document.getElementById("fensterAlter");
+if (fensterAlter) {
+  fensterAlter.addEventListener("input", function () {
+    document.getElementById("fensterWert").textContent = this.value;
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   SLIDER – Raumtemperatur
+   ===================================================== */
+const raumtemp = document.getElementById("raumtemp");
+if (raumtemp) {
+  raumtemp.addEventListener("input", function () {
+    const wert = this.value;
+    document.getElementById("tempWert").textContent = wert;
+
+    let text = "angenehm";
+    if (wert < 20) text = "eher kühl";
+    if (wert > 22) text = "eher warm";
+    document.getElementById("tempText").textContent = text;
+
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   CHECKBOX & RADIO
+   ===================================================== */
+document
+  .querySelectorAll('input[type="checkbox"], input[type="radio"]')
+  .forEach(input => {
+    input.addEventListener("change", updateSummary);
+  });
+
+/* =====================================================
+   DACHAUSRICHTUNG – Switch
+   ===================================================== */
+const dachSwitch = document.getElementById("dachAusrichtung");
+if (dachSwitch) {
+  dachSwitch.addEventListener("change", function () {
+    const hidden = document.getElementById("pv_ausrichtung");
+    const sued = document.getElementById("label-sued");
+    const ow = document.getElementById("label-ow");
+
+    if (this.checked) {
+      hidden.value = "Ost/West";
+      ow.classList.add("is-active");
+      sued.classList.remove("is-active");
+    } else {
+      hidden.value = "Süd";
+      sued.classList.add("is-active");
+      ow.classList.remove("is-active");
+    }
+
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   DATEN SAMMELN – HIER WAR DER SYNTAX-FEHLER
+   ===================================================== */
+function collectData() {
+  return {
+    Bauphase: document.getElementById("bauphase")?.value || "–",
+    Wohnflaeche: document.getElementById("wohnflaeche")?.value || "–",
+    Geschosse: document.getElementById("geschosse")?.value || "–",
+    Fenster: document.getElementById("fensterAnzahl")?.value || "–",
+    Postleitzahl: document.getElementById("postleitzahl")?.value || "–",
+    Bebauung: document.getElementById("bebauung")?.value || "–",
+    Dachform: document.getElementById("dachform")?.value || "–",
+    Dachausrichtung: document.getElementById("pv_ausrichtung")?.value || "–",
+    Fensteralter: document.getElementById("fensterAlter")?.value || "–",
+    Raumklima: document.getElementById("raumtemp")?.value || "–"
+  };
+}
+
+/* =====================================================
+   SUMMARY
+   ===================================================== */
+function updateSummary() {
+  const d = collectData();
+
+  document.getElementById("summaryText").innerHTML = `
+    <ul>
+      <li><b>Bauphase:</b> ${d.Bauphase}</li>
+      <li><b>Wohnfläche:</b> ${d.Wohnflaeche} m²</li>
+      <li><b>Geschosse:</b> ${d.Geschosse}</li>
+      <li><b>Fenster pro Geschoss:</b> ${d.Fenster}</li>
+      <li><b>Postleitzahl:</b> ${d.Postleitzahl}</li>
+      <li><b>Bebauung:</b> ${d.Bebauung}</li>
+      <li><b>Dachform:</b> ${d.Dachform}</li>
+      <li><b>Dachausrichtung:</b> ${d.Dachausrichtung}</li>
+      <li><b>Fensteralter:</b> ${d.Fensteralter} Jahre</li>
+      <li><b>Raumklima:</b> ${d.Raumklima} °C</li>
+    </ul>
+  `;
+}
+
+/* =====================================================
+   INITIALISIERUNG
+   ===================================================== */
+setupGridButtons("bauphase-btn", "bauphase");
+setupGridButtons("bebauung-btn", "bebauung");
+setupGridButtons("dachform-btn", "dachform");
+
+document.getElementById("pv_ausrichtung").value = "Süd";
+updateSummary();
+document
+  .querySelectorAll('input[type="number"], input[type="text"]')
+  .forEach(input => {
+    input.addEventListener("input", updateSummary);
+  });
+
+
+/* =====================================================
+   EXPORT DATA – für Python / san_app.py
+   ===================================================== */
+function buildExportData() {
+  const d = collectData();
+
+  return {
+    projekt: "san.app",
+    phase: "P1",
+    quelle: "app.sunsunsun.at",
+    zeitstempel: new Date().toISOString(),
+
+    eingaben: {
+      bauphase: d.Bauphase,
+      wohnflaeche_m2: Number(d.Wohnflaeche),
+      anzahl_geschosse: Number(d.Geschosse),
+      fenster_pro_geschoss: Number(d.Fenster),
+      postleitzahl: Number(d.Postleitzahl),
+      bebauung: d.Bebauung,
+      dachform: d.Dachform,
+      dachausrichtung: d.Dachausrichtung,
+      fensteralter_jahre: Number(d.Fensteralter),
+      raumklima_celsius: Number(d.Raumklima)
+    }
+  };
+}  
+/* =====================================================
+   WEITER – Übergabe der Userdaten an den Server
+   Speicherung als JSON im Ordner /user_data
+   ===================================================== */
+function weiter() {
+
+  // 1. Daten aus dem Formular sammeln
+  const exportData = buildExportData();
+
+  // 2. Daten an den Server senden
+  fetch("save_user_data.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(exportData)
+  })
+
+  // 3. Antwort vom Server lesen
+ .then(response => {
+  if (!response.ok) {
+    throw new Error("Server nicht erreichbar");
+  }
+  return response.json();
+})
+
+  // 4. Rückmeldung auswerten
+  .then(result => {
+  if (result.status === "ok") {
+    // Hier kommt später die Weiterleitung oder Auswertung
+    alert("Daten wurden gespeichert.");
+  } else {
+    alert("Speichern fehlgeschlagen.");
+  }
+})
+
+  // 5. Falls technisch etwas schiefgeht
+  .catch(error => {
+    alert("Technischer Fehler beim Speichern.");
+    console.log(error);
+  });
+}
+
+</script>
 </body>
 </html>
+
