@@ -303,6 +303,9 @@ button:hover {
   border-bottom: none;
 }
 </style>
+
+
+
 </head>
 
 <body>
@@ -669,22 +672,91 @@ function buildExportData() {
     }
   };
 }  
+
+
 /* =====================================================
-   WEITER – DIREKTÜBERGABE AN result.html (OHNE SERVER)
-   - speichert Userdaten im Browser
-   - leitet zur Auswertung weiter
-   - Server-Logik bleibt auskommentiert für später
+   WEITER – PHP-PING-TEST (NOCH KEIN SPEICHERN)
+   - sendet Userdaten an PHP
+   - erwartet nur: { status: "php_ok" }
+   - speichert Daten trotzdem lokal (Fallback)
+   - leitet danach zu result.html weiter
    ===================================================== */
 function weiter() {
 
   // 1. Daten aus dem Formular sammeln
   const exportData = buildExportData();
 
-  // 2. Daten lokal im Browser speichern (Übergabe an result.html)
+  // 2. Immer lokal speichern (Backup / Debug)
   localStorage.setItem("sanapp_data", JSON.stringify(exportData));
 
-  // 3. Direkt zur Ergebnis-Seite wechseln
-  window.location.href = "result.html";
+  // 3. PHP nur anpingen (noch kein echtes Backend)
+  fetch("save_user_data.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(exportData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("PHP nicht erreichbar");
+    }
+    return response.json();
+  })
+  .then(result => {
+
+    // Nur Lebenszeichen prüfen
+    if (result.status === "php_ok") {
+      console.log("PHP-Verbindung OK");
+    } else {
+      console.log("PHP antwortet, aber Status unklar:", result);
+    }
+
+    // 4. Unabhängig vom PHP-Test weiter zur Ergebnis-Seite
+    window.location.href = "result.html";
+  })
+  .catch(error => {
+    console.log("PHP-Ping fehlgeschlagen, Fallback aktiv:", error);
+
+    // 5. Fallback: trotzdem weiter
+    window.location.href = "result.html";
+  });
+
+
+
+  /* =====================================================
+     SPÄTER: ECHTES SPEICHERN (NOCH DEAKTIVIERT)
+     =====================================================
+
+  fetch("save_user_data.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(exportData)
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Server nicht erreichbar");
+    }
+    return response.json();
+  })
+  .then(result => {
+    if (result.status === "ok") {
+      window.location.href = "result.html";
+    } else {
+      alert("Speichern fehlgeschlagen.");
+    }
+  })
+  .catch(error => {
+    alert("Technischer Fehler beim Speichern.");
+    console.log(error);
+  });
+
+  ===================================================== */
+}
+
+
 
 
 
