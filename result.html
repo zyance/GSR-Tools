@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>GSR Tool – Ergebnis</title>
+<title>Erste Einschätzung – Gründerzeithaus</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -81,94 +81,123 @@ h2{ text-align:center; font-weight:500; }
 }
 </style>
 </head>
+
 <body>
 
-  <div class="app-container">
-    <div class="content">
+<div class="app-container">
+  <div class="content">
 
-      <h2>GSR Tool – Ergebnis</h2>
 
-      <div class="note">
-        Die erste Einschätzung Ihres Gründerzeithauses basiert auf wenigen Angaben. Sie zeigt typische Merkmale,
-        grundsätzliche Möglichkeiten und bekannte Einschränkungen.
-        Sie ersetzt keine Planung und keine Kostenschätzung.
-      </div>
+<h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
 
-      <!-- LOADER -->
-      <div id="loader">
-        <div class="spinner"></div>
-        <div class="note">Auswertung läuft …</div>
-      </div>
-
-      <!-- ERGEBNIS -->
-      <div id="resultText" class="result-box" style="display:none;"></div>
-
-      <div class="note">
-        Die Aussagen sind bewusst vorsichtig formuliert.
-        Ob und wie Maßnahmen sinnvoll umsetzbar sind,
-        muss immer am konkreten Gebäude geprüft werden.
-      </div>
-
-      <p>
-        <a href="index.html">Zurück zum Start</a>
-      </p>
-
+    <div class="note">
+      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
+      grundsätzliche Möglichkeiten und bekannte Einschränkungen.
+      Sie ersetzt keine Planung und keine Kostenschätzung.
     </div>
+
+    <!-- LOADER -->
+    <div id="loader">
+      <div class="spinner"></div>
+      <div class="note">Auswertung läuft …</div>
+    </div>
+
+    <!-- ERGEBNIS -->
+    <div id="resultText" class="result-box" style="display:none;"></div>
+
+    <div class="note">
+      Die Aussagen sind bewusst vorsichtig formuliert.
+      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
+      muss immer am konkreten Gebäude geprüft werden.
+    </div>
+
   </div>
+</div>
 
 <script>
+
 /* =====================================================
-   RESULT VIEW – TEST + SERVER READY
+   RESULT + LOADER – CLIENT FIRST (SERVER READY LATER)
+   - liest Userdaten aus localStorage
+   - zeigt sie im Ergebnisfeld an
+   - Server-Fetch ist nur auskommentiert (für später)
 ===================================================== */
 
-document.addEventListener("DOMContentLoaded", function(){
+// gleicher Key wie in index.html
+const DATA_KEY = "sanapp_data";
 
-  const RESULT_KEY = "gzh_result_text";
-  const TEST_MODE  = true;   // später auf false setzen
+const loader    = document.getElementById("loader");
+const resultBox = document.getElementById("resultText");
 
-  const loader    = document.getElementById("loader");
-  const resultBox = document.getElementById("resultText");
+// Sicherheitscheck
+if (!loader || !resultBox) {
+  console.error("DOM elements missing");
+} else {
 
-  if (!loader || !resultBox) return;
-
-  // Initialzustand
-  loader.style.display    = "block";
+  // Initial: Loader sichtbar, Box versteckt
+  loader.style.display = "block";
   resultBox.style.display = "none";
 
-  if (TEST_MODE) {
+  /* =====================================================
+     CLIENT-LOAD: Userdaten aus dem Browser holen
+     ===================================================== */
+  const raw = localStorage.getItem(DATA_KEY);
 
-    const fakeResult =
-      localStorage.getItem(RESULT_KEY) ||
-      "TESTERGEBNIS\n\n" +
-      "– Ihr Gebäude ist grundsätzlich sanierungsfähig.\n" +
-      "– Eine thermische Sanierung ist technisch möglich.\n" +
-      "– Der Heizwärmebedarf kann deutlich reduziert werden.\n" +
-      "– Die Auswahl der Maßnahmen muss objektspezifisch erfolgen.\n\n" +
-      "Hinweis: Dies ist ein Testmodus ohne Serveranbindung.";
+  if (!raw) {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText = "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
+  } else {
 
-    setTimeout(function(){
-      loader.style.display    = "none";
+    try {
+      const data = JSON.parse(raw);
+
+      // Loader aus, Ergebnis ein
+      loader.style.display = "none";
       resultBox.style.display = "block";
-      resultBox.innerText     = fakeResult;
-      localStorage.setItem(RESULT_KEY, fakeResult);
-    }, 600);
 
-    return;
+      // Menschlich lesbare Ausgabe (roh + ehrlich)
+      resultBox.innerHTML = `
+        <b>Bauphase:</b> ${data.eingaben.bauphase}<br>
+        <b>Wohnfläche:</b> ${data.eingaben.wohnflaeche_m2} m²<br>
+        <b>Geschosse:</b> ${data.eingaben.anzahl_geschosse}<br>
+        <b>Fenster pro Geschoss:</b> ${data.eingaben.fenster_pro_geschoss}<br>
+        <b>Postleitzahl:</b> ${data.eingaben.postleitzahl}<br>
+        <b>Bebauung:</b> ${data.eingaben.bebauung}<br>
+        <b>Dachform:</b> ${data.eingaben.dachform}<br>
+        <b>Dachausrichtung:</b> ${data.eingaben.dachausrichtung}<br>
+        <b>Fensteralter:</b> ${data.eingaben.fensteralter_jahre} Jahre<br>
+        <b>Raumklima:</b> ${data.eingaben.raumklima_celsius} °C
+      `;
+
+    } catch (e) {
+      loader.style.display = "none";
+      resultBox.style.display = "block";
+      resultBox.innerText = "Fehler beim Lesen der Eingabedaten.";
+      console.log(e);
+    }
   }
 
-  // ================================
-  // SERVER MODUS (später)
-  // ================================
+
+  /* =====================================================
+     SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
+     =====================================================
+
+  const RESULT_KEY = "gzh_result_text";
+
   fetch("/wien/gzh/user_data/save_user_data.php", {
     method: "POST",
     cache: "no-store",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ input: {} })
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      input: {}   // hier später echte Daten einsetzen
+    })
   })
   .then(r => r.text())
   .then(txt => {
-
-    loader.style.display    = "none";
+    loader.style.display = "none";
     resultBox.style.display = "block";
 
     resultBox.innerText = txt || "LEERE SERVERANTWORT";
@@ -179,22 +208,22 @@ document.addEventListener("DOMContentLoaded", function(){
         localStorage.setItem(RESULT_KEY, res.screen_text);
         resultBox.innerText = res.screen_text;
       }
-    } catch(e) {
-      // absichtlich leer
+    } catch (e) {
+      // absichtlich nichts – Text bleibt sichtbar
     }
   })
-  .catch(function(){
-    loader.style.display    = "none";
+  .catch(() => {
+    loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText     = "KEINE SERVERANTWORT";
+    resultBox.innerText = "KEINE SERVERANTWORT";
   });
 
-});
+  ===================================================== */
+
+}
+
 </script>
 
-  
 
 </body>
-
-  
 </html>
