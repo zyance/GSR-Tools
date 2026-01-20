@@ -670,15 +670,28 @@ function buildExportData() {
   };
 }  
 /* =====================================================
-   WEITER – Übergabe der Userdaten an den Server
-   Speicherung als JSON im Ordner /user_data
+   WEITER – DIREKTÜBERGABE AN result.html (OHNE SERVER)
+   - speichert Userdaten im Browser
+   - leitet zur Auswertung weiter
+   - Server-Logik bleibt auskommentiert für später
    ===================================================== */
 function weiter() {
 
   // 1. Daten aus dem Formular sammeln
   const exportData = buildExportData();
 
-  // 2. Daten an den Server senden
+  // 2. Daten lokal im Browser speichern (Übergabe an result.html)
+  localStorage.setItem("sanapp_data", JSON.stringify(exportData));
+
+  // 3. Direkt zur Ergebnis-Seite wechseln
+  window.location.href = "result.html";
+
+
+
+  /* =====================================================
+     SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
+     =====================================================
+
   fetch("save_user_data.php", {
     method: "POST",
     headers: {
@@ -686,30 +699,26 @@ function weiter() {
     },
     body: JSON.stringify(exportData)
   })
-
-  // 3. Antwort vom Server lesen
- .then(response => {
-  if (!response.ok) {
-    throw new Error("Server nicht erreichbar");
-  }
-  return response.json();
-})
-
-  // 4. Rückmeldung auswerten
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Server nicht erreichbar");
+    }
+    return response.json();
+  })
   .then(result => {
-  if (result.status === "ok") {
-    // Hier kommt später die Weiterleitung oder Auswertung
-    alert("Daten wurden gespeichert.");
-  } else {
-    alert("Speichern fehlgeschlagen.");
-  }
-})
-
-  // 5. Falls technisch etwas schiefgeht
+    if (result.status === "ok") {
+      // Hier kommt später die Weiterleitung oder Auswertung
+      alert("Daten wurden gespeichert.");
+    } else {
+      alert("Speichern fehlgeschlagen.");
+    }
+  })
   .catch(error => {
     alert("Technischer Fehler beim Speichern.");
     console.log(error);
   });
+
+  ===================================================== */
 }
 
 </script>
