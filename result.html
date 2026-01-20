@@ -138,16 +138,19 @@ if (!loader || !resultBox) {
   loader.style.display = "block";
   resultBox.style.display = "none";
 
-  /* =====================================================
-     CLIENT-LOAD: Userdaten aus dem Browser holen
-     ===================================================== */
-  const raw = localStorage.getItem(DATA_KEY);
+ /* =====================================================
+   CLIENT-LOAD: Userdaten aus dem Browser holen
+===================================================== */
+const raw = localStorage.getItem(DATA_KEY);
 
-  if (!raw) {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
-  } else {
+if (!raw) {
+  loader.style.display = "none";
+  resultBox.style.display = "block";
+  resultBox.innerText =
+    "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
+} else {
+  // hier später JSON.parse(raw) und Anzeige
+}
 
     try {
       const data = JSON.parse(raw);
@@ -227,4 +230,3 @@ if (!loader || !resultBox) {
 
 </body>
 </html>
-
