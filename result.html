@@ -140,61 +140,42 @@ if (!loader || !resultBox) {
   resultBox.style.display = "none";
 
 
-
 /* =====================================================
-   CLIENT-LOAD: Userdaten aus dem Browser holen (ROBUST)
-   Single Source of Truth: sanapp_data
+   RESULT LOAD – SERVER FIRST
+   Single Source of Truth: sanapp_result
+   Quelle: PHP save_user_data.php
 ===================================================== */
 
-const DATA_KEY = "sanapp_data";
+const RESULT_KEY = "sanapp_result";
 
-const raw = localStorage.getItem(DATA_KEY);
+const raw = localStorage.getItem(RESULT_KEY);
 
 if (!raw) {
   loader.style.display = "none";
   resultBox.style.display = "block";
   resultBox.innerText =
-    "Keine Eingabedaten gefunden.\nBitte starten Sie den Sanierungsberater neu.";
+    "Kein Server-Ergebnis gefunden.\nBitte starten Sie den Sanierungsberater neu.";
 } else {
   try {
-    const payload = JSON.parse(raw);
-    const d = payload.eingaben || {};
+    const res = JSON.parse(raw);
 
     // Loader aus, Ergebnis ein
     loader.style.display = "none";
     resultBox.style.display = "block";
 
-    // Menschlich lesbare Ausgabe (NULL-sicher)
-    resultBox.innerHTML = `
-      Bauphase: ${d.bauphase ?? "–"}<br>
-      Wohnfläche: ${d.wohnflaeche_m2 ?? "–"} m²<br>
-      Geschosse: ${d.anzahl_geschosse ?? "–"}<br>
-      Fenster pro Geschoss: ${d.fenster_pro_geschoss ?? "–"}<br>
-      Postleitzahl: ${d.postleitzahl ?? "–"}<br>
-      Bebauung: ${d.bebauung ?? "–"}<br>
-      Zustand: ${d.zustand ?? "–"}<br>
-      Fenster: ${d.fenster_typ ?? "–"} (${d.fensteralter_jahre ?? "–"} Jahre)<br>
-      Heizung: ${
-        Array.isArray(d.heizung) && d.heizung.length
-          ? d.heizung.join(", ")
-          : "–"
-      }<br>
-      Raumklima: ${d.raumklima_celsius ?? "–"} °C<br>
-      Dach: ${d.dachform ?? "–"} / ${d.dachausrichtung ?? "–"}<br>
-      Ziele: ${
-        Array.isArray(d.ziele) && d.ziele.length
-          ? d.ziele.join(", ")
-          : "–"
-      }
-    `;
+    // 🟢 HIER kommt echtes Server-Ergebnis
+    resultBox.innerText =
+      res.screen_text || "Kein Ergebnistext vom Server.";
+
   } catch (e) {
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = "Fehler beim Lesen der Eingabedaten.";
-    console.log("RAW FROM STORAGE:", raw);
+    resultBox.innerText = "Fehler beim Lesen des Server-Ergebnisses.";
+    console.log("RAW SERVER RESULT:", raw);
     console.log("PARSE ERROR:", e);
   }
 }
+
 
   /* =====================================================
      SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
