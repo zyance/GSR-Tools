@@ -814,23 +814,24 @@ if (dachSwitch && pvInput) {
   updateRoofOrientation();
 }
 
+
 /* =====================================================
-   EXPORT & NAVIGATION – TESTFLOW: INDEX → PHP → RESULT
-   - baut definiertes Payload
-   - killt alte Daten
-   - speichert lokal (Single Source of Truth)
-   - pingt PHP mit exakt denselben Daten
-   - leitet zu result.html weiter (GitHub-tauglich)
+   EXPORT & NAVIGATION – SERVER FIRST
+   - sammelt Eingaben
+   - schickt sie an PHP
+   - speichert NUR die Server-Antwort
+   - leitet erst danach zu result.html weiter
 ===================================================== */
 
 window.weiter = function () {
 
   const data = collectData();
 
-  // 🔥 ALTEN MÜLL WEG
+  // 🔥 Alte Daten bereinigen
   localStorage.removeItem("sanapp_data");
+  localStorage.removeItem("sanapp_result");
 
-  // 🔒 DEFINIERTES FORMAT (immer gleich!)
+  // 🔒 Definiertes Payload-Format
   const payload = {
     eingaben: {
       bauphase: data.building_phase ?? null,
@@ -850,26 +851,38 @@ window.weiter = function () {
     }
   };
 
-  // 🧠 lokal speichern (Single Source of Truth)
+  // 🧠 Optional: Eingaben weiter lokal speichern (Debug / Fallback)
   localStorage.setItem("sanapp_data", JSON.stringify(payload));
 
-  // 🛰 echter Server-Ping mit exakt denselben Daten
+  // 🛰 Server aufrufen
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   })
-  .then(r => r.text())
-  .then(txt => {
-    console.log("PHP RAW RESPONSE:", txt);
+  .then(r => r.json())
+  .then(res => {
+
+    // 🔍 Server-Antwort prüfen
+    if (!res || res.status !== "php_ok") {
+      alert("Server-Fehler: PHP hat nicht korrekt geantwortet.");
+      console.log("SERVER RESPONSE:", res);
+      return;
+    }
+
+    // 🟢 Server-Ergebnis als neue Wahrheit speichern
+    localStorage.setItem("sanapp_result", JSON.stringify(res));
+
+    // 👉 Erst jetzt zur Ergebnis-Seite
+    window.location.href = "result.html";
+
   })
   .catch(err => {
     console.log("PHP FETCH ERROR:", err);
+    alert("Server nicht erreichbar.");
   });
-
-  // 👉 GITHUB-PFAD
-  window.location.href = "result.html";
 };
+
 
 
 
