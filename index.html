@@ -3,13 +3,16 @@
 <head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
 <link rel="stylesheet" href="assets/css/style.css">
 <title>Gründerzeithaus Sanierungs-Berater</title>
 
 <style>
+
 :root{
   --hellgrau:#f2f2f2;
   --mittelgrau:#b5b5b5;
@@ -17,21 +20,28 @@
   --baukult:#7090a7;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
-html { font-size: 20px; }
+html {
+  font-size: 20px;
+}
 
 body {
   margin: 0;
   padding: 20px 0;
   min-height: 100vh;
+
   display: flex;
   justify-content: center;
   align-items: flex-start;
+
   font-family: "Fira Sans", Arial, system-ui, sans-serif;
   font-weight: 300;
   font-size: 1rem;
   line-height: 1.5;
+
   color: var(--textgrau);
   background-color: #5c88a1;
 }
@@ -75,7 +85,9 @@ h1, h2, h3 {
   border-radius: 6px;
 }
 
-.summary-box { background: var(--hellgrau); }
+.summary-box {
+  background: var(--hellgrau);
+}
 
 input[type="number"],
 input[type="text"] {
@@ -101,7 +113,9 @@ button {
   cursor: pointer;
 }
 
-button:hover { background: #5a7a91; }
+button:hover {
+  background: #5a7a91;
+}
 
 .box button {
   display: block;
@@ -122,7 +136,9 @@ button:hover { background: #5a7a91; }
   cursor: pointer;
 }
 
-.grid-btn:hover { background: #e0e0e0; }
+.grid-btn:hover {
+  background: #e0e0e0;
+}
 
 .grid-btn.active {
   background: #ffffff;
@@ -147,14 +163,18 @@ button:hover { background: #5a7a91; }
   user-select: none;
 }
 
-.accordion-header:hover { background: var(--mittelgrau); }
+.accordion-header:hover {
+  background: var(--mittelgrau);
+}
 
 .accordion-content {
   display: none;
   padding-top: 12px;
 }
 
-.accordion-content.open { display: block; }
+.accordion-content.open {
+  display: block;
+}
 
 input[type="range"] {
   width: 100%;
@@ -174,8 +194,12 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
-#fensterAlter { direction: rtl; }
+/* Fensteralter: alt links, neu rechts */
+#fensterAlter {
+  direction: rtl;
+}
 
+/* Skala unter allen Slidern: gleichmäßig über Breite */
 .slider-scale {
   display: flex;
   justify-content: space-between;
@@ -183,6 +207,7 @@ input[type="range"]::-moz-range-thumb {
   margin-top: 4px;
 }
 
+/* Switch Dachausrichtung */
 .switch {
   position: relative;
   display: inline-block;
@@ -222,6 +247,7 @@ input:checked + .slider:before {
   transform: translateX(26px);
 }
 
+/* PV Dachausrichtung zentriert */
 .main-wrapper {
   display: flex;
   justify-content: center;
@@ -241,19 +267,20 @@ input:checked + .slider:before {
   border-bottom: 1px solid #ddd;
 }
 
-#summaryText li:last-child { border-bottom: none; }
+#summaryText li:last-child {
+  border-bottom: none;
+}
 
 #auswertungText {
   white-space: pre-wrap;
   line-height: 1.6;
   font-size: 1rem;
 }
+
 </style>
 </head>
 
 <body>
-
-
 
 <div class="app-container">
   <div class="header-image">
@@ -426,28 +453,18 @@ input:checked + .slider:before {
 
 </div>
 
-
-
-
-
-
-
 <script>
 
-/* =====================================================
-   DEIN GESAMTER JS-BLOCK – UNVERÄNDERT
-===================================================== */
-
+/* ACCORDION */
 function toggleAccordion(header) {
   var content = header.nextElementSibling;
   var arrow = header.querySelector("span:last-child");
   if (!content) return;
   content.classList.toggle("open");
-  if (arrow) {
-    arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
-  }
+  if (arrow) arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
 }
 
+/* HELPER */
 function getString(id) {
   var el = document.getElementById(id);
   if (!el) return null;
@@ -456,8 +473,7 @@ function getString(id) {
 
 function getNumber(id) {
   var el = document.getElementById(id);
-  if (!el) return null;
-  if (el.value === "") return null;
+  if (!el || el.value === "") return null;
   var n = Number(el.value);
   return Number.isFinite(n) ? n : null;
 }
@@ -467,6 +483,7 @@ function getRadio(name) {
   return checked ? checked.value : null;
 }
 
+/* COLLECT */
 function collectData() {
 
   var heating = [];
@@ -492,6 +509,7 @@ function collectData() {
   };
 }
 
+/* SUMMARY */
 function updateSummary() {
   var d = collectData();
   var box = document.getElementById("summaryText");
@@ -506,7 +524,7 @@ function updateSummary() {
     "<li>PLZ: " + (d.postal_code ?? "–") + "</li>" +
     "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
     "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
-    "<li>Fenster: " + (d.window_type ?? "–") +
+    "<li>Fenster: " + (d.window_type ?? "–") + 
       (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
     "</li>" +
     "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "–") + "</li>" +
@@ -515,54 +533,22 @@ function updateSummary() {
     "</ul>";
 }
 
-/* =====================================================
-   HIER DER FEHLENDE BLOCK – EINGEBAUT
-===================================================== */
-function weiter() {
+/* SLIDER EVENTS */
+document.getElementById("fensterAlter")?.addEventListener("input", function(){
+  document.getElementById("fensterWert").textContent = this.value;
+  updateSummary();
+});
 
-  // Eingaben sammeln
-  const data = collectData();
+document.getElementById("raumtemp")?.addEventListener("input", function(){
+  document.getElementById("tempWert").textContent = this.value;
+  var txt = "angenehm";
+  if (this.value < 20) txt = "eher kühl";
+  if (this.value > 22) txt = "eher warm";
+  document.getElementById("tempText").textContent = txt;
+  updateSummary();
+});
 
-  // An PHP senden – ab public_html korrekt
-  fetch("/php/save_user_data.php", {
-    method: "POST",                        // POST-Request
-    headers: {
-      "Content-Type": "application/json"  // Wir senden JSON
-    },
-    body: JSON.stringify({                // Payload für PHP
-      eingaben: data
-    })
-  })
-
-  // Antwort als JSON lesen
-  .then(r => r.json())
-
-  // Server-Antwort prüfen
-  .then(res => {
-
-    if (!res || res.status !== "php_ok") {
-      alert("Server-Fehler: PHP hat nicht korrekt geantwortet.");
-      console.log("SERVER RESPONSE:", res);
-      return;
-    }
-
-    // Ergebnis speichern
-    localStorage.setItem("sanapp_result", JSON.stringify(res));
-
-    // Weiter zur Ergebnis-Seite
-    window.location.href = "result.html";
-  })
-
-  // Netzwerk- oder Pfad-Fehler
-  .catch(err => {
-    console.log("FETCH FEHLER:", err);
-    alert("Server-Fehler beim Senden der Daten.");
-  });
-}
-
-/* =====================================================
-   GRID BUTTONS – FEHLENDER BLOCK
-===================================================== */
+/* GRID BUTTONS */
 function setupGridButtons(buttonClass, hiddenInputId) {
   var buttons = document.querySelectorAll("." + buttonClass);
   var hiddenInput = document.getElementById(hiddenInputId);
@@ -578,22 +564,64 @@ function setupGridButtons(buttonClass, hiddenInputId) {
   });
 }
 
-// Aktivieren der drei Grid-Gruppen
 setupGridButtons("bauphase-btn", "bauphase");
 setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
 
-/* =====================================================
-   INITIALIZE
-===================================================== */
+/* ROOF SWITCH */
+var dachSwitch = document.getElementById("dachAusrichtung");
+var pvInput = document.getElementById("pv_ausrichtung");
+var labelSued = document.getElementById("label-sued");
+var labelOW = document.getElementById("label-ow");
+
+function updateRoofOrientation() {
+  if (dachSwitch.checked) {
+    pvInput.value = "Ost/West";
+    labelOW.classList.add("is-active");
+    labelSued.classList.remove("is-active");
+  } else {
+    pvInput.value = "Süd";
+    labelSued.classList.add("is-active");
+    labelOW.classList.remove("is-active");
+  }
+  updateSummary();
+}
+
+dachSwitch.addEventListener("change", updateRoofOrientation);
+updateRoofOrientation();
+
+/* INIT */
 updateSummary();
 
-document
-  .querySelectorAll('input')
-  .forEach(el => {
-    el.addEventListener("change", updateSummary);
-    el.addEventListener("input", updateSummary);
+document.querySelectorAll('input').forEach(el => {
+  el.addEventListener("change", updateSummary);
+  el.addEventListener("input", updateSummary);
+});
+
+/* =====================================================
+   ZUR AUSWERTUNG – FINAL MIT RICHTIGEM PFAD
+===================================================== */
+function weiter() {
+
+  const data = collectData();
+
+  console.log("SENDE AN SERVER:", data);
+
+fetch("php/save_user_data.php", {", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ eingaben: data })
+  })
+  .then(r => r.text())
+  .then(txt => {
+    console.log("SERVER ANTWORT:", txt);
+    alert("Server-Antwort erhalten. Siehe Console.");
+  })
+  .catch(err => {
+    console.log("FETCH FEHLER:", err);
+    alert("Server nicht erreichbar oder Pfad falsch.");
   });
+}
 
 </script>
 
