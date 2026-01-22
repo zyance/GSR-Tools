@@ -367,13 +367,13 @@ function weiter() {
   // Eingaben sammeln
   const data = collectData();
 
-  // An PHP senden (relativer Pfad, korrekt)
-  fetch("php/save_user_data.php", {
-    method: "POST",
+  // An PHP senden – ab public_html korrekt
+  fetch("/php/save_user_data.php", {
+    method: "POST",                        // POST-Request
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json"  // Wir senden JSON
     },
-    body: JSON.stringify({
+    body: JSON.stringify({                // Payload für PHP
       eingaben: data
     })
   })
