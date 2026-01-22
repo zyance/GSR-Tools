@@ -561,6 +561,29 @@ function weiter() {
 }
 
 /* =====================================================
+   GRID BUTTONS – FEHLENDER BLOCK
+===================================================== */
+function setupGridButtons(buttonClass, hiddenInputId) {
+  var buttons = document.querySelectorAll("." + buttonClass);
+  var hiddenInput = document.getElementById(hiddenInputId);
+  if (!hiddenInput) return;
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      buttons.forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      hiddenInput.value = btn.dataset.value || "";
+      updateSummary();
+    });
+  });
+}
+
+// Aktivieren der drei Grid-Gruppen
+setupGridButtons("bauphase-btn", "bauphase");
+setupGridButtons("building-btn", "building_type");
+setupGridButtons("dachform-btn", "dachform");
+
+/* =====================================================
    INITIALIZE
 ===================================================== */
 updateSummary();
