@@ -607,7 +607,7 @@ function weiter() {
 
   console.log("SENDE AN SERVER:", data);
 
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+  fetch("php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ eingaben: data })
