@@ -18,7 +18,6 @@
 
 /* =====================================================
    GRUNDVARIABLEN
-   zentrale Farben für die App
 ===================================================== */
 :root{
   --hellgrau:#f2f2f2;
@@ -30,10 +29,10 @@
 /* =====================================================
    TYPOGRAFIE
 ===================================================== */
-
 html {
-  font-size: 18px; /* Basis für rem-Werte */
+  font-size: 18px;
 }
+
 h1, h2, h3 {
   font-family: "Fira Sans", Arial, sans-serif;
   font-weight: 500;
@@ -47,10 +46,10 @@ h1, h2, h3 {
 }
 
 /* =====================================================
-   BASIS-EINSTELLUNGEN
+   BASIS
 ===================================================== */
 * {
-  box-sizing: border-box; /* saubere Breitenberechnung */
+  box-sizing: border-box;
 }
 
 body {
@@ -68,10 +67,8 @@ body {
   line-height: 1.5;
 
   color: var(--textgrau);
-  background-color: #5c88a1; /* baukult Hintergrund */
+  background-color: #5c88a1;
 }
-
-
 
 /* =====================================================
    APP-RAHMEN
@@ -95,7 +92,7 @@ body {
 }
 
 /* =====================================================
-   BOXEN (Abschnitte)
+   BOXEN
 ===================================================== */
 .box {
   width: 92%;
@@ -122,7 +119,6 @@ input[type="text"] {
   border: 1px solid var(--mittelgrau);
   border-radius: 4px;
 
-  /* Inputs müssen IMMER klickbar sein */
   position: relative;
   z-index: 10;
   pointer-events: auto;
@@ -155,7 +151,7 @@ button:hover {
 }
 
 /* =====================================================
-   GRID-BUTTONS (Bauphase, Dachform etc.)
+   GRID-BUTTONS
 ===================================================== */
 .grid-container {
   display: grid;
@@ -181,15 +177,14 @@ button:hover {
   border-width: 2px;
 }
 
-/* Grid-Buttons: Bild ist rein visuell, Interaktion läuft über den Button */
 .grid-btn img {
   width: 100%;
   display: block;
-  pointer-events: none; /* verhindert Hover/Klick-Blockade */
+  pointer-events: none;
 }
 
 /* =====================================================
-   ACCORDION (auf/zu Bereiche)
+   ACCORDION
 ===================================================== */
 .accordion-header {
   background: var(--hellgrau);
@@ -218,42 +213,23 @@ button:hover {
 }
 
 /* =====================================================
-   SLIDER (Fensteralter, Raumtemperatur)
+   SLIDER – ALLGEMEIN
 ===================================================== */
-
-/* Wrapper: nicht mehr fix 300px, sondern volle Breite */
 .slider-wrapper {
   width: 100%;
   max-width: 100%;
 }
 
-/* Label-Zeile über dem Slider */
-.labels {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-.labels .left {
-  text-align: left;
-}
-
-.labels .right {
-  text-align: right;
-}
-
-/* Grundstil für alle Range-Slider (ohne Farbverlauf!) */
 input[type="range"] {
   -webkit-appearance: none;
   width: 100%;
   height: 20px;
   border-radius: 10px;
   outline: none;
-  background: #ddd; /* neutraler Fallback */
+  background: #ddd;
 }
 
-/* Slider-Knopf – WebKit */
+/* Thumb WebKit */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 24px;
@@ -264,7 +240,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
 }
 
-/* Slider-Knopf – Firefox */
+/* Thumb Firefox */
 input[type="range"]::-moz-range-thumb {
   width: 24px;
   height: 24px;
@@ -275,8 +251,9 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* =====================================================
-   SPEZIAL: Fensteralter
-   Links = sehr alt (rot), rechts = neu (grün)
+   SLIDER SPEZIAL: FENSTERALTER
+   Links = 50 Jahre (alt, rot)
+   Rechts = 1 Jahr (neu, grün)
 ===================================================== */
 #fensterAlter {
   background: linear-gradient(to right,
@@ -290,8 +267,7 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* =====================================================
-   SPEZIAL: Raumtemperatur
-   Links = kalt (blau), rechts = warm (rot)
+   SLIDER SPEZIAL: RAUMTEMPERATUR
 ===================================================== */
 #raumtemp {
   background: linear-gradient(to right,
@@ -303,7 +279,6 @@ input[type="range"]::-moz-range-thumb {
   );
 }
 
-/* Skala unter dem Slider */
 .scale {
   display: flex;
   justify-content: space-between;
@@ -311,27 +286,21 @@ input[type="range"]::-moz-range-thumb {
   font-size: 14px;
 }
 
-/* Wrapper für Dachausrichtung: Süd – Switch – Ost/West */
+/* =====================================================
+   SWITCH DACH
+===================================================== */
 .main-wrapper {
   display: flex;
-  align-items: center;        /* vertikal sauber auf einer Linie */
-  justify-content: center;  /* horizontal zentriert */
-  gap: 12px;                /* Abstand zwischen Text und Switch */
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
 }
-
-
-/* =====================================================
-   SWITCH (Dachausrichtung Süd / Ost-West)
-===================================================== */
 
 .switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
-  z-index: 1;
-
-  /* sorgt dafür, dass er sauber auf der Textlinie sitzt */
   vertical-align: middle;
 }
 
@@ -341,7 +310,6 @@ input[type="range"]::-moz-range-thumb {
   height: 0;
 }
 
-/* Sichtbarer Slider-Hintergrund */
 .slider {
   position: absolute;
   inset: 0;
@@ -351,7 +319,6 @@ input[type="range"]::-moz-range-thumb {
   pointer-events: none;
 }
 
-/* beweglicher Punkt – exakt geometrisch zentriert */
 .slider:before {
   content: "";
   position: absolute;
@@ -367,14 +334,12 @@ input[type="range"]::-moz-range-thumb {
   transition: .3s;
 }
 
-/* Position bei "checked" – nur horizontal verschoben */
 input:checked + .slider:before {
   transform: translate(26px, -50%);
 }
 
-
 /* =====================================================
-   ZUSAMMENFASSUNG
+   SUMMARY
 ===================================================== */
 #summaryText ul {
   list-style: none;
@@ -393,7 +358,7 @@ input:checked + .slider:before {
 }
 
 /* =====================================================
-   AUSWERTUNGSTEXT
+   AUSWERTUNG
 ===================================================== */
 #auswertungText {
   white-space: pre-wrap;
@@ -404,7 +369,6 @@ input:checked + .slider:before {
 /* =====================================================
    ROWS
 ===================================================== */
-
 .row-2 {
   display: flex;
   gap: 20px;
@@ -425,9 +389,10 @@ input:checked + .slider:before {
 
 <body>
 <!-- ANFANG BODY -->
+<div class="app-container">
+<form id="mainForm" onsubmit="return false;">
 
 <!-- HEADER IMAGE -->
-<div class="app-container">
   <div class="header-image">
     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
   </div>
@@ -762,6 +727,8 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 <p class="disclaimer">
   * Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen.
 </p>
+</form>
+</div>
 
 <!-- ENDE BODY -->
 
@@ -799,21 +766,37 @@ const collectData = () => {
   const heating = [];
   ["fernwaerme","gas","dezGas","elektrisch"].forEach(id=>{
     if(document.getElementById(id)?.checked){
-      heating.push(id==="fernwaerme"?"Fernwärme":id==="gas"?"Gas / Öl zentral":id==="dezGas"?"Gasthermen dezentral":"Elektrisch");
+      heating.push(
+        id==="fernwaerme" ? "Fernwärme" :
+        id==="gas"        ? "Gas / Öl zentral" :
+        id==="dezGas"    ? "Gasthermen dezentral" :
+                           "Elektrisch"
+      );
     }
   });
 
   const goals = [];
   ["kosten_senken","komfort","gaslos","klima"].forEach(id=>{
     if(document.getElementById(id)?.checked){
-      goals.push(id==="kosten_senken"?"Kosten senken":id==="komfort"?"Komfort steigern":id==="gaslos"?"Raus aus Gas und Öl":"Klimaschutz");
+      goals.push(
+        id==="kosten_senken" ? "Kosten senken" :
+        id==="komfort"      ? "Komfort steigern" :
+        id==="gaslos"       ? "Raus aus Gas und Öl" :
+                               "Klimaschutz"
+      );
     }
   });
 
   const roles = [];
   ["eigentuemer","weg","mieter","hausverwaltung","energieberater"].forEach(id=>{
     if(document.getElementById(id)?.checked){
-      roles.push(id==="eigentuemer"?"Eigentümer:in":id==="weg"?"WEG":id==="mieter"?"Mieter:in":id==="hausverwaltung"?"Hausverwaltung":"Energieberater:in");
+      roles.push(
+        id==="eigentuemer"    ? "Eigentümer:in" :
+        id==="weg"           ? "WEG" :
+        id==="mieter"        ? "Mieter:in" :
+        id==="hausverwaltung"? "Hausverwaltung" :
+                                "Energieberater:in"
+      );
     }
   });
 
@@ -839,17 +822,22 @@ const collectData = () => {
 /* =====================================================
    SUMMARY
 ===================================================== */
-const displayVal = (val, unit="") => val!=null&&val!==""?val+unit:"–";
+const displayVal = (val, unit="") => val!=null && val!=="" ? val+unit : "–";
+
 const updateSummary = () => {
   const d = collectData();
   const box = document.getElementById("summaryText");
   if(!box) return;
+
   if(!d.building_phase && d.living_area_m2==null && d.floors_total==null){
-    box.innerHTML="Noch keine Eingaben."; return;
+    box.innerHTML = "Noch keine Eingaben.";
+    return;
   }
-  const heatingList = d.heating.length?d.heating.join(", "):"keine Angabe";
-  const goalsList = d.goals.length?d.goals.join(", "):"keine Angabe";
-  box.innerHTML=`
+
+  const heatingList = d.heating.length ? d.heating.join(", ") : "keine Angabe";
+  const goalsList   = d.goals.length   ? d.goals.join(", ")   : "keine Angabe";
+
+  box.innerHTML = `
     <ul>
       <li>Bauphase: ${d.building_phase ?? "–"}</li>
       <li>Wohnfläche: ${displayVal(d.living_area_m2," m²")}</li>
@@ -858,7 +846,7 @@ const updateSummary = () => {
       <li>Postleitzahl: ${displayVal(d.postal_code)}</li>
       <li>Bebauung: ${d.building_type ?? "–"}</li>
       <li>Zustand: ${d.building_condition ?? "–"}</li>
-      <li>Fenster: ${d.window_type ?? "–"}${d.window_age_years!=null?` (${d.window_age_years} Jahre)`:""}</li>
+      <li>Fenster: ${d.window_type ?? "–"}${d.window_age_years!=null ? ` (${d.window_age_years} Jahre)` : ""}</li>
       <li>Heizung: ${heatingList}</li>
       <li>Raumklima: ${displayVal(d.indoor_temp_c," °C")}</li>
       <li>Dach: ${d.roof_type ?? "–"} / ${d.roof_orientation ?? "–"}</li>
@@ -870,38 +858,49 @@ const updateSummary = () => {
 /* =====================================================
    GRID BUTTONS
 ===================================================== */
-const setupGridButtons=(buttonClass,hiddenId)=>{
-  const buttons=document.querySelectorAll(`.${buttonClass}`);
-  const hidden=document.getElementById(hiddenId);
+const setupGridButtons = (buttonClass, hiddenId) => {
+  const buttons = document.querySelectorAll(`.${buttonClass}`);
+  const hidden  = document.getElementById(hiddenId);
   if(!hidden) return;
-  buttons.forEach(btn=>btn.addEventListener("click",()=>{
-    buttons.forEach(b=>b.classList.remove("active"));
-    btn.classList.add("active");
-    hidden.value=btn.dataset.value||"";
-    updateSummary();
-  }));
+
+  buttons.forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      buttons.forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      hidden.value = btn.dataset.value || "";
+      updateSummary();
+    });
+  });
 };
 
 /* =====================================================
    INIT AFTER DOM
 ===================================================== */
-
 document.addEventListener("DOMContentLoaded", () => {
 
-  // Sliders: Fensteralter
+  // Grid-Buttons initialisieren
+  setupGridButtons("bauphase-btn", "bauphase");
+  setupGridButtons("building-btn", "building_type");
+  setupGridButtons("dachform-btn", "dachform");
+
+  // Slider: Fensteralter (links = 50 alt, rechts = 1 neu)
   const fensterSlider = document.getElementById("fensterAlter");
-  const fensterWert  = document.getElementById("fensterWert");
+  const fensterWert   = document.getElementById("fensterWert");
 
   if (fensterSlider && fensterWert) {
-    fensterWert.textContent = fensterSlider.value;
 
-    fensterSlider.addEventListener("input", () => {
-      fensterWert.textContent = fensterSlider.value;
+    const updateFenster = () => {
+      const raw = Number(fensterSlider.value);     // 1 … 50 (technisch)
+      const age = 51 - raw;                        // logisch umgedreht
+      fensterWert.textContent = age;
       updateSummary();
-    });
+    };
+
+    fensterSlider.addEventListener("input", updateFenster);
+    updateFenster(); // Initialwert
   }
 
-  // Sliders: Raumtemperatur
+  // Slider: Raumtemperatur
   const tempSlider = document.getElementById("raumtemp");
   const tempWert   = document.getElementById("tempWert");
   const tempText   = document.getElementById("tempText");
@@ -920,43 +919,16 @@ document.addEventListener("DOMContentLoaded", () => {
       else label = "sehr warm";
 
       if (tempText) tempText.textContent = label;
-
       updateSummary();
     };
 
     tempSlider.addEventListener("input", updateTempText);
-    updateTempText(); // Initialwert setzen
+    updateTempText(); // Initialwert
   }
 
+  // Erste Summary
+  updateSummary();
 });
-
-// Sliders: Raumtemperatur
-const tempSlider = document.getElementById("raumtemp");
-const tempWert   = document.getElementById("tempWert");
-const tempText   = document.getElementById("tempText");
-
-if (tempSlider && tempWert) {
-  const updateTempText = () => {
-    const v = Number(tempSlider.value);
-    tempWert.textContent = v;
-
-    // einfache verbale Skala
-    let label = "angenehm";
-    if (v <= 18) label = "kühl";
-    else if (v <= 20) label = "eher kühl";
-    else if (v <= 22) label = "angenehm";
-    else if (v <= 24) label = "warm";
-    else label = "sehr warm";
-
-    if (tempText) tempText.textContent = label;
-
-    updateSummary();
-  };
-
-  tempSlider.addEventListener("input", updateTempText);
-  updateTempText(); // Initialwert setzen
-}
-
 
 /* =====================================================
    STEP BUTTON: WEITER
@@ -964,18 +936,16 @@ if (tempSlider && tempWert) {
 function weiter() {
   const data = collectData();
 
-  fetch("php/save_user_data.php", {   // ← WICHTIG: dieser Pfad
+  fetch("php/save_user_data.php", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ eingaben: data })
   })
   .then(res => res.json())
   .then(res => {
     console.log("Server response:", res);
 
-    const box = document.getElementById("auswertungBox");
+    const box  = document.getElementById("auswertungBox");
     const text = document.getElementById("auswertungText");
 
     if (box && text && res.results && res.results.raw) {
@@ -990,8 +960,10 @@ function weiter() {
   });
 }
 
-
 </script>
+
+
+
 
 <!--
 =====================================================
