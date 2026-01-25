@@ -28,14 +28,29 @@
 }
 
 /* =====================================================
+   TYPOGRAFIE
+===================================================== */
+
+html {
+  font-size: 18px; /* Basis für rem-Werte */
+}
+h1, h2, h3 {
+  font-family: "Fira Sans", Arial, sans-serif;
+  font-weight: 500;
+  color: var(--textgrau);
+}
+
+.note {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* =====================================================
    BASIS-EINSTELLUNGEN
 ===================================================== */
 * {
   box-sizing: border-box; /* saubere Breitenberechnung */
-}
-
-html {
-  font-size: 20px; /* Basis für rem-Werte */
 }
 
 body {
@@ -56,20 +71,7 @@ body {
   background-color: #5c88a1; /* baukult Hintergrund */
 }
 
-/* =====================================================
-   TYPOGRAFIE
-===================================================== */
-h1, h2, h3 {
-  font-family: "Fira Sans", Arial, sans-serif;
-  font-weight: 500;
-  color: var(--textgrau);
-}
 
-.note {
-  font-size: 1rem;
-  color: #666;
-  line-height: 1.5;
-}
 
 /* =====================================================
    APP-RAHMEN
@@ -218,16 +220,55 @@ button:hover {
 /* =====================================================
    SLIDER (Fensteralter, Raumtemperatur)
 ===================================================== */
+
+.slider-wrapper {
+  width: 300px;
+}
+
+.labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.labels .left {
+  text-align: left;
+}
+
+.labels .right {
+  text-align: right;
+}
+
+/* Grundstil für alle Range-Slider */
 input[type="range"] {
+  -webkit-appearance: none;
   width: 100%;
   height: 20px;
-  appearance: none;
   border-radius: 10px;
+  background: linear-gradient(to right,
+    #e53935 0%,
+    #e53935 33%,
+    #fbc02d 33%,
+    #fbc02d 66%,
+    #4caf50 66%,
+    #4caf50 100%
+  );
+  outline: none;
+}
+
+/* Slider-Knopf – WebKit */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #333;
+  border-radius: 50%;
+  border: none;
   cursor: pointer;
 }
 
-/* Slider-Knopf */
-input[type="range"]::-webkit-slider-thumb,
+/* Slider-Knopf – Firefox */
 input[type="range"]::-moz-range-thumb {
   width: 24px;
   height: 24px;
@@ -237,22 +278,35 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
-/* Fensteralter: alt links, neu rechts */
-#fensterAlter {
-  direction: rtl;
+/* Skala unter dem Slider */
+.scale {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 14px;
+}
+
+/* Wrapper für Dachausrichtung: Süd – Switch – Ost/West */
+.main-wrapper {
+  display: flex;
+  align-items: center;        /* vertikal sauber auf einer Linie */
+  justify-content: center;  /* horizontal zentriert */
+  gap: 12px;                /* Abstand zwischen Text und Switch */
 }
 
 /* =====================================================
    SWITCH (Dachausrichtung Süd / Ost-West)
 ===================================================== */
+
 .switch {
   position: relative;
   display: inline-block;
   width: 60px;
   height: 34px;
-
-  /* begrenzt den Klickbereich */
   z-index: 1;
+
+  /* sorgt dafür, dass er sauber auf der Textlinie sitzt */
+  vertical-align: middle;
 }
 
 .switch input {
@@ -265,34 +319,33 @@ input[type="range"]::-moz-range-thumb {
 .slider {
   position: absolute;
   inset: 0;
-
   background-color: #7090a7;
   border-radius: 15px;
   transition: .3s;
-
-  /* GANZ WICHTIG:
-     darf KEINE Klicks abfangen */
   pointer-events: none;
 }
 
-/* beweglicher Punkt */
+/* beweglicher Punkt – exakt geometrisch zentriert */
 .slider:before {
   content: "";
   position: absolute;
-
   width: 26px;
   height: 26px;
+
   left: 4px;
-  bottom: 4px;
+  top: 50%;
+  transform: translateY(-50%);
 
   background-color: white;
   border-radius: 50%;
   transition: .3s;
 }
 
+/* Position bei "checked" – nur horizontal verschoben */
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translate(26px, -50%);
 }
+
 
 /* =====================================================
    ZUSAMMENFASSUNG
@@ -424,6 +477,7 @@ input:checked + .slider:before {
       <h3>Die Bebauung des Grundstücks</h3>
       <p class="note"><i>"Entscheidend für Wärmeverluste und Größe der Fassaden."</i></p>
 
+
 <!-- BEBAUUNG -->
 <!-- ******** -->
 <!-- Art der Bebauung des Grundstücks -->
@@ -457,6 +511,7 @@ input:checked + .slider:before {
 
 </div>
 
+<div style="height:18px;"></div>
 
 <!-- ZUSTAND DES HAUSES -->
 <!-- ****************** -->
@@ -466,6 +521,8 @@ input:checked + .slider:before {
       <label><input type="radio" name="haus_zustand" value="zufrieden"> zufriedenstellend</label><br>
       <label><input type="radio" name="haus_zustand" value="sehr gut"> ausgezeichnet, gepflegt</label><br>
 
+<div style="height:18px;"></div>
+
 <!-- ART DER FENSTER -->
 <!-- *************** -->
       <h3>Art der Fenster:</h3>
@@ -474,29 +531,45 @@ input:checked + .slider:before {
       <label><input type="radio" name="fenster_art" value="2-fach"> 2-fach</label><br>
       <label><input type="radio" name="fenster_art" value="3-fach"> 3-fach</label><br>
 
+
 <!-- ALTER DER FENSTER -->
 <!-- ***************** -->
+
 <!--
-  P2 / Future Note:
-  Der Farbverlauf des Sliders ist hier bewusst INLINE gesetzt.
-  Grund:
-  – Der Verlauf bildet eine inhaltliche Bewertung ab (grün = gut, gelb = mittel, rot = schlecht).
-  – In P1 war eine schnelle, visuell verständliche Lösung wichtiger als Wiederverwendbarkeit.
-
-  In P2 sollte der Gradient:
-  – in CSS ausgelagert werden (z. B. über Klassen oder CSS-Variablen)
-  – optional dynamisch an den Slider-Wert angepasst werden (JS),
-    damit Farbe und Bewertung immer konsistent bleiben.
-
-  Wichtig:
-  Der Slider ist logisch „alt → neu“ gedacht (rechts = neu),
-  deshalb ist die Richtung bewusst `to left` gesetzt.
+Wichtig:
+Der Slider ist logisch „alt → neu“ gedacht (rechts = neu),
+deshalb ist die Richtung bewusst `to left` gesetzt.
 -->
-      <h3 style="margin-top: 20px;">Alter der Fenster: <span id="fensterWert">25</span> Jahre</h3>
-      <input type="range" id="fensterAlter" min="1" max="50" value="25" style="background:linear-gradient(to left,#4caf50 1%,#4caf50 30%,#fbc02d 30%,#fbc02d 60%,#e53935 60%,#e53935 100%)">
-      <div class="slider-label"><span>sehr alt</span><span>neuwertig</span></div>
-    </div>
-  </div>
+
+<h3 style="margin-top: 20px;">
+  Alter der Fenster: <span id="fensterWert">25</span> Jahre
+</h3>
+
+<input
+  type="range"
+  id="fensterAlter"
+  min="1"
+  max="50"
+  value="25"
+  style="width:100%; height:20px; border-radius:10px;
+         background: linear-gradient(to left,
+           #4caf50 0%,
+           #4caf50 33%,
+           #fbc02d 33%,
+           #fbc02d 66%,
+           #e53935 66%,
+           #e53935 100%);
+         -webkit-appearance: none; outline:none;"
+>
+
+<div class="slider-label" style="display:flex; justify-content:space-between; margin-top:6px; font-size:14px;">
+  <span>sehr alt</span>
+  <span>neuwertig</span>
+</div>
+
+</div>  <!-- ENDE accordion-content Thermische Sanierung -->
+</div>  <!-- ENDE box Thermische Sanierung -->
+
 
 
 <!-- ********************** -->
@@ -520,12 +593,31 @@ input:checked + .slider:before {
     <h3 style="margin-top: 20px;">Wohnkomfort</h3>
     <p class="note"><i>"Das subjektive Wärme- oder Kälteempfinden entscheidet über die Behaglichkeit."</i></p>
 
-    <h3>Raumklima: <span id="tempWert">21</span> °C</h3>
-    <input type="range" id="raumtemp" min="17" max="25" value="21" style="background:linear-gradient(to right,#b3e5fc 0%,#e57373 100%)">
-    <div class="scale"><span>17°</span><span>19°</span><span>21°</span><span>23°</span><span>25°</span></div>
-    <div class="rating">Empfinden: <span id="tempText">angenehm</span></div>
+<h3>Raumklima: <span id="tempWert">21</span> °C</h3>
+
+<div class="slider-wrapper">
+  <input
+    type="range"
+    id="raumtemp"
+    min="17"
+    max="25"
+    value="21"
+    style="background:linear-gradient(to right,#b3e5fc 0%,#e57373 100%)"
+  >
+
+  <div class="scale">
+    <span>17°</span>
+    <span>19°</span>
+    <span>21°</span>
+    <span>23°</span>
+    <span>25°</span>
   </div>
 </div>
+
+<div class="rating">Empfinden: <span id="tempText">angenehm</span></div>
+
+    </div>          
+ </div>           
 
 <!-- ******************* -->
 <!-- PHOTOVOLTAIC ANLAGE -->
@@ -561,18 +653,23 @@ input:checked + .slider:before {
 
 <!-- DACHAUSRICHTUNG -->
 <!-- *************** -->
-    <h3 style="margin-top: 20px;">Dachausrichtung:</h3>
-    <input type="hidden" id="pv_ausrichtung" value="Süd">
-    <div class="main-wrapper">
-      <span id="label-sued" class="label label-left is-active">Süd</span>
-      <label class="switch">
-        <input type="checkbox" id="dachAusrichtung">
-        <span class="slider"></span>
-      </label>
-      <span id="label-ow" class="label label-right">Ost/West</span>
-    </div>  
-  </div> 
-</div> 
+<h3 style="margin-top: 20px;">Dachausrichtung:</h3>
+
+<input type="hidden" id="pv_ausrichtung" value="Süd">
+
+<div class="main-wrapper">
+  <span id="label-sued" class="label label-left is-active">Süd</span>
+
+  <label class="switch">
+    <input type="checkbox" id="dachAusrichtung">
+    <span class="slider"></span>
+  </label>
+
+  <span id="label-ow" class="label label-right">Ost/West</span>
+</div>
+
+</div>  <!-- ENDE .accordion-content Photovoltaik -->
+</div>  <!-- ENDE .box Photovoltaik -->
 
 <!-- ZIELE DER SANIERUNG -->
 <!-- ******************** -->
@@ -612,15 +709,14 @@ input:checked + .slider:before {
 
 <!-- ENDE BODY -->
 
-
 <script>
+
 /* =====================================================
    ACCORDION FUNCTION
-   steuert Öffnen/Schließen der Akkordeon-Bereiche
 ===================================================== */
 function toggleAccordion(header) {
-  var content = header.nextElementSibling;
-  var arrow = header.querySelector("span:last-child");
+  const content = header.nextElementSibling;
+  const arrow = header.querySelector("span:last-child");
   if (!content) return;
 
   content.classList.toggle("open");
@@ -632,330 +728,145 @@ function toggleAccordion(header) {
 /* =====================================================
    HELPER FUNCTIONS
 ===================================================== */
-
-/* GET STRING */
-function getString(id) {
-  var el = document.getElementById(id);
-  if (!el) return null;
-  return el.value !== "" ? el.value : null;
-}
-
-/* GET NUMBER */
-function getNumber(id) {
-  var el = document.getElementById(id);
-  if (!el) return null;
-  if (el.value === "") return null;
-  var n = Number(el.value);
-  return Number.isFinite(n) ? n : null;
-}
-
-/* GET RADIO */
-function getRadio(name) {
-  var checked = document.querySelector('input[name="' + name + '"]:checked');
-  return checked ? checked.value : null;
-}
+const getString = id => document.getElementById(id)?.value || null;
+const getNumber = id => {
+  const val = document.getElementById(id)?.value;
+  const n = Number(val);
+  return val === "" || !Number.isFinite(n) ? null : n;
+};
+const getRadio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || null;
 
 /* =====================================================
    COLLECT DATA
-   (IDs must match HTML exactly)
 ===================================================== */
-function collectData() {
+const collectData = () => {
+  const heating = [];
+  ["fernwaerme","gas","dezGas","elektrisch"].forEach(id=>{
+    if(document.getElementById(id)?.checked){
+      heating.push(id==="fernwaerme"?"Fernwärme":id==="gas"?"Gas / Öl zentral":id==="dezGas"?"Gasthermen dezentral":"Elektrisch");
+    }
+  });
 
-  /* heating systems */
-  var heating = [];
-  if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
-  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
-  if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
-  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
+  const goals = [];
+  ["kosten_senken","komfort","gaslos","klima"].forEach(id=>{
+    if(document.getElementById(id)?.checked){
+      goals.push(id==="kosten_senken"?"Kosten senken":id==="komfort"?"Komfort steigern":id==="gaslos"?"Raus aus Gas und Öl":"Klimaschutz");
+    }
+  });
 
-  /* renovation goals */
-  var goals = [];
-  if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
-  if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
-  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
-  if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
-
-  /* roles */
-  var roles = [];
-  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
-  if (document.getElementById("weg")?.checked) roles.push("WEG");
-  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
-  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
-  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
+  const roles = [];
+  ["eigentuemer","weg","mieter","hausverwaltung","energieberater"].forEach(id=>{
+    if(document.getElementById(id)?.checked){
+      roles.push(id==="eigentuemer"?"Eigentümer:in":id==="weg"?"WEG":id==="mieter"?"Mieter:in":id==="hausverwaltung"?"Hausverwaltung":"Energieberater:in");
+    }
+  });
 
   return {
     building_phase: getString("bauphase"),
     building_type: getString("building_type"),
-    roles: roles,
-    living_area_m2: getNumber("area_m2"),            // Wohnfläche
-floors_total: getNumber("floor_count"),          // Geschosse
-windows_per_floor: getNumber("windows_per_floor"), // Fenster/Geschoss
-postal_code: getNumber("postal_code"),           // PLZ
+    roles,
+    living_area_m2: getNumber("area_m2"),
+    floors_total: getNumber("floor_count"),
+    windows_per_floor: getNumber("windows_per_floor"),
+    postal_code: getNumber("postal_code"),
     building_condition: getRadio("haus_zustand"),
     window_type: getRadio("fenster_art"),
     window_age_years: getNumber("fensterAlter"),
-    heating: heating,
+    heating,
     indoor_temp_c: getNumber("raumtemp"),
     roof_type: getString("dachform"),
     roof_orientation: getString("pv_ausrichtung"),
-    goals: goals
+    goals
   };
-}
+};
 
 /* =====================================================
-   SUMMARY UPDATE
+   SUMMARY
 ===================================================== */
-
-function updateSummary() {
-  var d = collectData();
-  var box = document.getElementById("summaryText");
-  if (!box) return;
-
-  // Anfangszustand
-  if (
-    !d.building_phase &&
-    d.living_area_m2 === null &&
-    d.floors_total === null
-  ) {
-    box.innerHTML = "Noch keine Eingaben.";
-    return;
+const displayVal = (val, unit="") => val!=null&&val!==""?val+unit:"–";
+const updateSummary = () => {
+  const d = collectData();
+  const box = document.getElementById("summaryText");
+  if(!box) return;
+  if(!d.building_phase && d.living_area_m2==null && d.floors_total==null){
+    box.innerHTML="Noch keine Eingaben."; return;
   }
-
-  // Zusammenfassung anzeigen
-  box.innerHTML =
-    "<ul>" +
-    "<li>Bauphase: " + (d.building_phase ?? "–") + "</li>" +
-    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
-    "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
-    "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
-    "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
-    "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
-    "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
-    "<li>Fenster: " + (d.window_type ?? "–") +
-      (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
-    "</li>" +
-    "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
-    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
-    "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
-    "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
-    "</ul>";
-}
-
-/* =====================================================
-   SLIDER EVENTS
-===================================================== */
-var fensterAlter = document.getElementById("fensterAlter");
-if (fensterAlter) {
-  fensterAlter.addEventListener("input", function () {
-    var out = document.getElementById("fensterWert");
-    if (out) out.textContent = this.value;
-    updateSummary();
-  });
-}
-
-var raumtemp = document.getElementById("raumtemp");
-if (raumtemp) {
-  raumtemp.addEventListener("input", function () {
-    var out = document.getElementById("tempWert");
-    if (out) out.textContent = this.value;
-    var txt = "angenehm";
-    if (this.value < 20) txt = "eher kühl";
-    if (this.value > 22) txt = "eher warm";
-    var t = document.getElementById("tempText");
-    if (t) t.textContent = txt;
-    updateSummary();
-  });
-}
+  const heatingList = d.heating.length?d.heating.join(", "):"keine Angabe";
+  const goalsList = d.goals.length?d.goals.join(", "):"keine Angabe";
+  box.innerHTML=`
+    <ul>
+      <li>Bauphase: ${d.building_phase ?? "–"}</li>
+      <li>Wohnfläche: ${displayVal(d.living_area_m2," m²")}</li>
+      <li>Geschosse: ${displayVal(d.floors_total)}</li>
+      <li>Fenster/Geschoss: ${displayVal(d.windows_per_floor)}</li>
+      <li>Postleitzahl: ${displayVal(d.postal_code)}</li>
+      <li>Bebauung: ${d.building_type ?? "–"}</li>
+      <li>Zustand: ${d.building_condition ?? "–"}</li>
+      <li>Fenster: ${d.window_type ?? "–"}${d.window_age_years!=null?` (${d.window_age_years} Jahre)`:""}</li>
+      <li>Heizung: ${heatingList}</li>
+      <li>Raumklima: ${displayVal(d.indoor_temp_c," °C")}</li>
+      <li>Dach: ${d.roof_type ?? "–"} / ${d.roof_orientation ?? "–"}</li>
+      <li>Ziele: ${goalsList}</li>
+    </ul>
+  `;
+};
 
 /* =====================================================
    GRID BUTTONS
 ===================================================== */
-function setupGridButtons(buttonClass, hiddenInputId) {
-  var buttons = document.querySelectorAll("." + buttonClass);
-  var hiddenInput = document.getElementById(hiddenInputId);
-  if (!hiddenInput) return;
-
-  buttons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      buttons.forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-      hiddenInput.value = btn.dataset.value || "";
-      updateSummary();
-    });
-  });
-}
-
-setupGridButtons("bauphase-btn", "bauphase");
-setupGridButtons("building-btn", "building_type");
-setupGridButtons("dachform-btn", "dachform");
-
-/* =====================================================
-   ROOF ORIENTATION SWITCH
-===================================================== */
-var dachSwitch = document.getElementById("dachAusrichtung");
-var pvInput = document.getElementById("pv_ausrichtung");
-var labelSued = document.getElementById("label-sued");
-var labelOW = document.getElementById("label-ow");
-
-if (dachSwitch && pvInput) {
-  function updateRoofOrientation() {
-    if (dachSwitch.checked) {
-      pvInput.value = "Ost/West";
-      labelOW?.classList.add("is-active");
-      labelSued?.classList.remove("is-active");
-    } else {
-      pvInput.value = "Süd";
-      labelSued?.classList.add("is-active");
-      labelOW?.classList.remove("is-active");
-    }
+const setupGridButtons=(buttonClass,hiddenId)=>{
+  const buttons=document.querySelectorAll(`.${buttonClass}`);
+  const hidden=document.getElementById(hiddenId);
+  if(!hidden) return;
+  buttons.forEach(btn=>btn.addEventListener("click",()=>{
+    buttons.forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    hidden.value=btn.dataset.value||"";
     updateSummary();
-  }
-  dachSwitch.addEventListener("change", updateRoofOrientation);
-  updateRoofOrientation();
-}
-
-
-/* =====================================================
-   EXPORT & NAVIGATION – SERVER FIRST
-   - sammelt Eingaben
-   - schickt sie an PHP
-   - speichert NUR die Server-Antwort
-   - leitet erst danach zu result.html weiter
-===================================================== */
-
-window.weiter = function () {
-
-  const data = collectData();
-
-  // 🔥 Alte Daten bereinigen
-  localStorage.removeItem("sanapp_data");
-  localStorage.removeItem("sanapp_result");
-
-  // 🔒 Definiertes Payload-Format
-  const payload = {
-    eingaben: {
-      bauphase: data.building_phase ?? null,
-      wohnflaeche_m2: data.living_area_m2 ?? null,
-      anzahl_geschosse: data.floors_total ?? null,
-      fenster_pro_geschoss: data.windows_per_floor ?? null,
-      postleitzahl: data.postal_code ?? null,
-      bebauung: data.building_type ?? null,
-      zustand: data.building_condition ?? null,
-      fenster_typ: data.window_type ?? null,
-      fensteralter_jahre: data.window_age_years ?? null,
-      heizung: Array.isArray(data.heating) ? data.heating : [],
-      raumklima_celsius: data.indoor_temp_c ?? null,
-      dachform: data.roof_type ?? null,
-      dachausrichtung: data.roof_orientation ?? null,
-      ziele: Array.isArray(data.goals) ? data.goals : []
-    }
-  };
-
-  // 🧠 Optional: Eingaben weiter lokal speichern (Debug / Fallback)
-  localStorage.setItem("sanapp_data", JSON.stringify(payload));
-
-  // 🛰 Server aufrufen
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(r => r.json())
-  .then(res => {
-
-    // 🔍 Server-Antwort prüfen
-    if (!res || res.status !== "php_ok") {
-      alert("Server-Fehler: PHP hat nicht korrekt geantwortet.");
-      console.log("SERVER RESPONSE:", res);
-      return;
-    }
-
-    // 🟢 Server-Ergebnis als neue Wahrheit speichern
-    localStorage.setItem("sanapp_result", JSON.stringify(res));
-
-    // 👉 Erst jetzt zur Ergebnis-Seite
-    window.location.href = "result.html";
-
-  })
-  .catch(err => {
-    console.log("PHP FETCH ERROR:", err);
-    alert("Server nicht erreichbar.");
-  });
+  }));
 };
 
-
-
-
 /* =====================================================
-   RESULT + LOADER – JSON-SICHER (FINAL)
+   INIT AFTER DOM
 ===================================================== */
+document.addEventListener("DOMContentLoaded",()=>{
+  updateSummary();
 
-document.addEventListener("DOMContentLoaded", function () {
+  // Sliders
+  ["fensterAlter","raumtemp"].forEach(id=>{
+    document.getElementById(id)?.addEventListener("input",()=>updateSummary());
+  });
 
-  const RESULT_KEY = "gzh_result_text";
+  // Checkboxes & radios
+  document.querySelectorAll("input").forEach(el=>{
+    el.addEventListener("change",updateSummary);
+  });
 
-  const loader    = document.getElementById("loader");
-  const resultBox = document.getElementById("resultText");
+  // Grid buttons
+  setupGridButtons("bauphase-btn","bauphase");
+  setupGridButtons("building-btn","building_type");
+  setupGridButtons("dachform-btn","dachform");
 
-  if (!loader || !resultBox) return;
-
-  loader.style.display = "block";
-  resultBox.style.display = "none";
-
-  // WICHTIG: absoluter Pfad laut realer URL
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      input: {}
-    })
-  })
-  .then(r => r.text())   // zuerst TEXT, robust
-  .then(txt => {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-
-    // Rohantwort anzeigen
-    resultBox.innerText = txt || "LEERE ANTWORT VON PHP";
-
-    // optional: JSON auswerten
-    try {
-      const res = JSON.parse(txt);
-      if (res && res.screen_text) {
-        localStorage.setItem(RESULT_KEY, res.screen_text);
-        resultBox.innerText = res.screen_text;
+  // Roof switch
+  const dachSwitch=document.getElementById("dachAusrichtung");
+  const pvInput=document.getElementById("pv_ausrichtung");
+  const labelSued=document.getElementById("label-sued");
+  const labelOW=document.getElementById("label-ow");
+  if(dachSwitch&&pvInput){
+    const updateRoofOrientation=()=>{
+      if(dachSwitch.checked){
+        pvInput.value="Ost/West"; labelOW.classList.add("is-active"); labelSued.classList.remove("is-active");
+      }else{
+        pvInput.value="Süd"; labelSued.classList.add("is-active"); labelOW.classList.remove("is-active");
       }
-    } catch (e) {
-      // absichtlich leer
-    }
-  })
-  .catch(() => {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "FETCH FEHLER (NETZ / PFAD)";
-  });
-
+      updateSummary();
+    };
+    dachSwitch.addEventListener("change",updateRoofOrientation);
+    updateRoofOrientation();
+  }
 });
-
-
-
-
-
-/* =====================================================
-   INITIALIZE
-===================================================== */
-updateSummary();
-
-document
-  .querySelectorAll('input')
-  .forEach(el => {
-    el.addEventListener("change", updateSummary);
-    el.addEventListener("input", updateSummary);
-  });
 </script>
+
 
 <!--
 =====================================================
@@ -997,9 +908,6 @@ P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
 Änderungen in P2 dürfen keine bestehenden Interaktionen verschlechtern.
 =====================================================
 -->
-
-
-
 
 </body>
 </html>
