@@ -406,6 +406,7 @@ input:checked + .slider:before {
 
 <!-- HEADER IMAGE -->
 <div class="app-container">
+<form id="mainForm" onsubmit="return false;">
   <div class="header-image">
     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
   </div>
@@ -746,7 +747,7 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   <div id="auswertungText" class="note"></div>
   <a id="downloadLink" style="display:none;" download>Download user_data</a>
 </div>
-
+</form>
 <p class="disclaimer">
   * Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen.
 </p>
@@ -914,15 +915,32 @@ document.addEventListener("DOMContentLoaded",()=>{
    STEP BUTTON: WEITER
 ===================================================== */
 function weiter() {
-  // Hier definierst du, was "Weiter" tun soll.
-  // Minimal: Formular absenden oder nächsten Schritt anzeigen.
+  const data = collectData();
 
-  const form = document.getElementById("mainForm");
-  if (form) {
-    form.requestSubmit();   // modernes, sauberes Submit
-  } else {
-    console.warn("Formular mainForm nicht gefunden.");
-  }
+  fetch("save_user_data.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ eingaben: data })
+  })
+  .then(res => res.json())
+  .then(res => {
+    console.log("Server response:", res);
+
+    const box = document.getElementById("auswertungBox");
+    const text = document.getElementById("auswertungText");
+
+    if (box && text && res.results && res.results.raw) {
+      box.style.display = "block";
+      text.textContent = res.results.raw;
+    } else {
+      console.warn("Unerwartete Antwortstruktur:", res);
+    }
+  })
+  .catch(err => {
+    console.error("Fehler beim Senden:", err);
+  });
 }
 </script>
 
