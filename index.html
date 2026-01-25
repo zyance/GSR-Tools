@@ -938,10 +938,21 @@ function weiter() {
 
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify({ eingaben: data })
   })
-  .then(res => res.json())
+  .then(res => {
+    // Sicherheitsnetz: prüfen, ob wirklich JSON kommt
+    const contentType = res.headers.get("content-type") || "";
+    if (!contentType.includes("application/json")) {
+      return res.text().then(txt => {
+        throw new Error("Kein JSON vom Server:\n" + txt);
+      });
+    }
+    return res.json();
+  })
   .then(res => {
     console.log("Server response:", res);
 
@@ -956,7 +967,7 @@ function weiter() {
     }
   })
   .catch(err => {
-    console.error("Fehler beim Senden:", err);
+    console.error("Fehler beim Senden oder Parsen:", err);
   });
 }
 
