@@ -873,16 +873,49 @@ const setupGridButtons=(buttonClass,hiddenId)=>{
    INIT AFTER DOM
 ===================================================== */
 
-// Sliders: Fensteralter
-const fensterSlider = document.getElementById("fensterAlter");
-const fensterWert  = document.getElementById("fensterWert");
+document.addEventListener("DOMContentLoaded", () => {
 
-if (fensterSlider && fensterWert) {
-  fensterSlider.addEventListener("input", () => {
+  // Sliders: Fensteralter
+  const fensterSlider = document.getElementById("fensterAlter");
+  const fensterWert  = document.getElementById("fensterWert");
+
+  if (fensterSlider && fensterWert) {
     fensterWert.textContent = fensterSlider.value;
-    updateSummary();
-  });
-}
+
+    fensterSlider.addEventListener("input", () => {
+      fensterWert.textContent = fensterSlider.value;
+      updateSummary();
+    });
+  }
+
+  // Sliders: Raumtemperatur
+  const tempSlider = document.getElementById("raumtemp");
+  const tempWert   = document.getElementById("tempWert");
+  const tempText   = document.getElementById("tempText");
+
+  if (tempSlider && tempWert) {
+
+    const updateTempText = () => {
+      const v = Number(tempSlider.value);
+      tempWert.textContent = v;
+
+      let label = "angenehm";
+      if (v <= 18) label = "kühl";
+      else if (v <= 20) label = "eher kühl";
+      else if (v <= 22) label = "angenehm";
+      else if (v <= 24) label = "warm";
+      else label = "sehr warm";
+
+      if (tempText) tempText.textContent = label;
+
+      updateSummary();
+    };
+
+    tempSlider.addEventListener("input", updateTempText);
+    updateTempText(); // Initialwert setzen
+  }
+
+});
 
 // Sliders: Raumtemperatur
 const tempSlider = document.getElementById("raumtemp");
@@ -988,3 +1021,4 @@ P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
 
 </body>
 </html>
+
