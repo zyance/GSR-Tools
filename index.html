@@ -11,7 +11,7 @@
 
 <!-- App Stylesheet
      enthält Layout, Farben, Komponenten -->
-<link rel="stylesheet" href="assets/css/style.css">
+
 <title>Gründerzeithaus Sanierungs-Berater</title>
 
 <style>
@@ -406,7 +406,6 @@ input:checked + .slider:before {
 
 <!-- HEADER IMAGE -->
 <div class="app-container">
-<form id="mainForm" onsubmit="return false;">
   <div class="header-image">
     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
   </div>
@@ -747,7 +746,6 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   <div id="auswertungText" class="note"></div>
   <a id="downloadLink" style="display:none;" download>Download user_data</a>
 </div>
-</form>
 <p class="disclaimer">
   * Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen.
 </p>
@@ -874,42 +872,45 @@ const setupGridButtons=(buttonClass,hiddenId)=>{
 /* =====================================================
    INIT AFTER DOM
 ===================================================== */
-document.addEventListener("DOMContentLoaded",()=>{
-  updateSummary();
 
-  // Sliders
-  ["fensterAlter","raumtemp"].forEach(id=>{
-    document.getElementById(id)?.addEventListener("input",()=>updateSummary());
+// Sliders: Fensteralter
+const fensterSlider = document.getElementById("fensterAlter");
+const fensterWert  = document.getElementById("fensterWert");
+
+if (fensterSlider && fensterWert) {
+  fensterSlider.addEventListener("input", () => {
+    fensterWert.textContent = fensterSlider.value;
+    updateSummary();
   });
+}
 
-  // Checkboxes & radios
-  document.querySelectorAll("input").forEach(el=>{
-    el.addEventListener("change",updateSummary);
-  });
+// Sliders: Raumtemperatur
+const tempSlider = document.getElementById("raumtemp");
+const tempWert   = document.getElementById("tempWert");
+const tempText   = document.getElementById("tempText");
 
-  // Grid buttons
-  setupGridButtons("bauphase-btn","bauphase");
-  setupGridButtons("building-btn","building_type");
-  setupGridButtons("dachform-btn","dachform");
+if (tempSlider && tempWert) {
+  const updateTempText = () => {
+    const v = Number(tempSlider.value);
+    tempWert.textContent = v;
 
-  // Roof switch
-  const dachSwitch=document.getElementById("dachAusrichtung");
-  const pvInput=document.getElementById("pv_ausrichtung");
-  const labelSued=document.getElementById("label-sued");
-  const labelOW=document.getElementById("label-ow");
-  if(dachSwitch&&pvInput){
-    const updateRoofOrientation=()=>{
-      if(dachSwitch.checked){
-        pvInput.value="Ost/West"; labelOW.classList.add("is-active"); labelSued.classList.remove("is-active");
-      }else{
-        pvInput.value="Süd"; labelSued.classList.add("is-active"); labelOW.classList.remove("is-active");
-      }
-      updateSummary();
-    };
-    dachSwitch.addEventListener("change",updateRoofOrientation);
-    updateRoofOrientation();
-  }
-});
+    // einfache verbale Skala
+    let label = "angenehm";
+    if (v <= 18) label = "kühl";
+    else if (v <= 20) label = "eher kühl";
+    else if (v <= 22) label = "angenehm";
+    else if (v <= 24) label = "warm";
+    else label = "sehr warm";
+
+    if (tempText) tempText.textContent = label;
+
+    updateSummary();
+  };
+
+  tempSlider.addEventListener("input", updateTempText);
+  updateTempText(); // Initialwert setzen
+}
+
 
 /* =====================================================
    STEP BUTTON: WEITER
