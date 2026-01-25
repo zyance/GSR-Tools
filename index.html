@@ -221,10 +221,13 @@ button:hover {
    SLIDER (Fensteralter, Raumtemperatur)
 ===================================================== */
 
+/* Wrapper: nicht mehr fix 300px, sondern volle Breite */
 .slider-wrapper {
-  width: 300px;
+  width: 100%;
+  max-width: 100%;
 }
 
+/* Label-Zeile über dem Slider */
 .labels {
   display: flex;
   justify-content: space-between;
@@ -243,7 +246,7 @@ button:hover {
 /* Grundstil für alle Range-Slider */
 input[type="range"] {
   -webkit-appearance: none;
-  width: 100%;
+  width: 100%;              /* WICHTIG: immer volle Breite */
   height: 20px;
   border-radius: 10px;
   background: linear-gradient(to right,
@@ -257,7 +260,7 @@ input[type="range"] {
   outline: none;
 }
 
-/* Slider-Knopf – WebKit */
+/* Slider-Knopf – WebKit (Chrome, Safari) */
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 24px;
@@ -293,6 +296,7 @@ input[type="range"]::-moz-range-thumb {
   justify-content: center;  /* horizontal zentriert */
   gap: 12px;                /* Abstand zwischen Text und Switch */
 }
+
 
 /* =====================================================
    SWITCH (Dachausrichtung Süd / Ost-West)
@@ -375,6 +379,25 @@ input:checked + .slider:before {
   font-size: 1rem;
 }
 
+/* =====================================================
+   ROWS
+===================================================== */
+
+.row-2 {
+  display: flex;
+  gap: 20px;
+}
+
+.row-2 .col {
+  flex: 1;
+}
+
+.disclaimer {
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
+}
+
 </style>
 </head>
 
@@ -391,7 +414,7 @@ input:checked + .slider:before {
   <div class="content">
     <h2>„Willkommen beim<br/>Gründerzeithaus-Helfer!"</h2>
     <span class="note">
-      <i>"Wenn Sie für Ihr Gründerzeithaus in Wien ein <b>Bauwerksbuch</b> benötigen oder das Haus <b>umfassend sanieren</b> wollen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben – was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten. Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen."</i>
+      <i>"Wenn Sie für Ihr Gründerzeithaus in Wien <b>umfassend sanieren</b> wollen und/oder ein <b>Bauwerksbuch</b> benötigen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben: Was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten."*</i>
     </span>
   </div> 
 
@@ -448,22 +471,39 @@ input:checked + .slider:before {
   <h3>Angaben zum Gebäude</h3>
   <p class="note"><i>"Die Eigenschaften des Gebäudes sind Grundlage aller Berechnungen."</i></p>
 
-  <label>Wohnfläche (m²)</label><br>
-  <!-- Gesamtfläche des Gebäudes in Quadratmetern -->
-  <input type="number" id="area_m2"><br><br>
+  <!-- Erste Zeile: PLZ + Wohnfläche -->
+  <div class="row-2">
+    <div class="col">
+      <label>Postleitzahl</label><br>
+      <!-- Postleitzahl des Gründerzeithauses (Wien: 4-stellig) -->
+      <input type="number" id="postal_code">
+    </div>
 
-  <label>Geschosse (inkl. EG)</label><br>
-  <!-- Anzahl der oberirdischen Geschosse inkl. Erdgeschoss -->
-  <input type="number" id="floor_count"><br><br>
+    <div class="col">
+      <label>Wohnfläche (m²)</label><br>
+      <!-- Gesamtfläche des Gebäudes in Quadratmetern -->
+      <input type="number" id="area_m2">
+    </div>
+  </div>
 
-  <label>Fenster pro Geschoss</label><br>
-  <!-- Durchschnittliche Anzahl der Fenster je Geschoss -->
-  <input type="number" id="windows_per_floor"><br><br>
+  <br>
 
-  <label>Postleitzahl</label><br>
-  <!-- Postleitzahl des Gründerzeithauses (Wien: 4-stellig) -->
-  <input type="number" id="postal_code"><br><br>
+  <!-- Zweite Zeile: Geschosse + Fenster pro Geschoss -->
+  <div class="row-2">
+    <div class="col">
+      <label>Geschosse (inkl. EG)</label><br>
+      <!-- Anzahl der oberirdischen Geschosse inkl. Erdgeschoss -->
+      <input type="number" id="floor_count">
+    </div>
+
+    <div class="col">
+      <label>Fenster pro Geschoss</label><br>
+      <!-- Durchschnittliche Anzahl der Fenster je Geschoss -->
+      <input type="number" id="windows_per_floor">
+    </div>
+  </div>
 </div>
+
 
 <!-- ******************** -->
 <!-- THERMISCHE SANIERUNG -->
@@ -707,6 +747,10 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   <a id="downloadLink" style="display:none;" download>Download user_data</a>
 </div>
 
+<p class="disclaimer">
+  * Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen.
+</p>
+
 <!-- ENDE BODY -->
 
 <script>
@@ -865,8 +909,22 @@ document.addEventListener("DOMContentLoaded",()=>{
     updateRoofOrientation();
   }
 });
-</script>
 
+/* =====================================================
+   STEP BUTTON: WEITER
+===================================================== */
+function weiter() {
+  // Hier definierst du, was "Weiter" tun soll.
+  // Minimal: Formular absenden oder nächsten Schritt anzeigen.
+
+  const form = document.getElementById("mainForm");
+  if (form) {
+    form.requestSubmit();   // modernes, sauberes Submit
+  } else {
+    console.warn("Formular mainForm nicht gefunden.");
+  }
+}
+</script>
 
 <!--
 =====================================================
