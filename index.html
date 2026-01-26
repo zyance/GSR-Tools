@@ -941,7 +941,7 @@ function weiter() {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ eingaben: data })
+    body: JSON.stringify(data)
   })
   .then(res => {
     // Sicherheitsnetz: prüfen, ob wirklich JSON kommt
