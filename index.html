@@ -953,28 +953,52 @@ function weiter() {
     }
     return res.json();
   })
-  .then(res => {
-    console.log("Server response:", res);
+  
+.then(res => {
+  console.log("Server response:", res);
 
-    const box  = document.getElementById("auswertungBox");
-    const text = document.getElementById("auswertungText");
+  const box  = document.getElementById("auswertungBox");
+  const text = document.getElementById("auswertungText");
 
-    if (box && text && res.results && res.results.raw) {
-      box.style.display = "block";
-      text.textContent = res.results.raw;
-    } else {
-      console.warn("Unerwartete Antwortstruktur:", res);
-    }
-  })
+  if (!box || !text) return;
+
+  let output = null;
+
+  // Erwarteter Hauptfall
+  if (res && res.results && typeof res.results.raw === "string") {
+    output = res.results.raw;
+  }
+  // Fallbacks für abweichende PHP-Antworten
+  else if (res && typeof res.raw === "string") {
+    output = res.raw;
+  }
+  else if (res && typeof res.text === "string") {
+    output = res.text;
+  }
+  else if (res && typeof res.message === "string") {
+    output = res.message;
+  }
+  else if (typeof res === "string") {
+    output = res;
+  }
+
+  if (output !== null) {
+    box.style.display = "block";
+    text.textContent = output;
+  } else {
+    console.warn("Unerwartete Antwortstruktur:", res);
+    box.style.display = "block";
+    text.textContent = "Fehler: Server hat kein auswertbares Ergebnis geliefert.";
+  }
+})
+
+
   .catch(err => {
     console.error("Fehler beim Senden oder Parsen:", err);
   });
 }
 
 </script>
-
-
-
 
 <!--
 =====================================================
