@@ -873,15 +873,13 @@ const setupGridButtons = (buttonClass, hiddenId) => {
   });
 };
 
-/* =====================================================
-   INIT AFTER DOM
-===================================================== */
 document.addEventListener("DOMContentLoaded", () => {
 
   // Grid-Buttons initialisieren
   setupGridButtons("bauphase-btn", "bauphase");
   setupGridButtons("building-btn", "building_type");
   setupGridButtons("dachform-btn", "dachform");
+  setupGridButtons("pv-btn", "pv_ausrichtung");   // <<< FEHLTE – DAS WAR DER BUG
 
   // Slider: Fensteralter (links = 50 alt, rechts = 1 neu)
   const fensterSlider = document.getElementById("fensterAlter");
@@ -929,6 +927,8 @@ document.addEventListener("DOMContentLoaded", () => {
   // Erste Summary
   updateSummary();
 });
+
+
 
 /* =====================================================
    STEP BUTTON: WEITER
