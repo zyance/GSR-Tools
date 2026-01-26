@@ -928,68 +928,27 @@ document.addEventListener("DOMContentLoaded", () => {
   updateSummary();
 });
 
-
-
 /* =====================================================
-   STEP BUTTON: WEITER
+   STEP BUTTON: WEITER – KLASSISCHER SUBMIT
 ===================================================== */
 function weiter() {
-  const data = collectData();
 
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(data)
-  })
-  .then(res => {
-    // Sicherheitsnetz: prüfen, ob wirklich JSON kommt
-    const contentType = res.headers.get("content-type") || "";
-    if (!contentType.includes("application/json")) {
-      return res.text().then(txt => {
-        throw new Error("Kein JSON vom Server:\n" + txt);
-      });
-    }
-    return res.json();
-  })
-  
-.then(res => {
-  console.log("Server response:", res);
+  const form = document.getElementById("mainForm");
 
-  const box  = document.getElementById("auswertungBox");
-  const text = document.getElementById("auswertungText");
-
-  if (!box || !text) return;
-
-  let output = null;
-
-  // Produktiver Pfad (Phase 2+)
-  if (res && res.results && typeof res.results.raw === "string") {
-    output = res.results.raw;
+  if (!form) {
+    console.error("Formular #mainForm nicht gefunden");
+    return;
   }
 
-  // Debug-Pfad (Phase 1)
-  else if (res && res.debug_rag_length) {
-    output =
-      "Phase 1 – Debugmodus\n\n" +
-      "RAG-Länge: " + res.debug_rag_length + " Zeichen\n" +
-      "Geladene Dateien:\n- " + res.files.join("\n- ");
-  }
+  // WICHTIG: die alte onsubmit-Sperre aufheben
+  form.onsubmit = null;
 
-  if (output !== null) {
-    box.style.display = "block";
-    text.textContent = output;
-  } else {
-    console.warn("Unerwartete Antwortstruktur:", res);
-    box.style.display = "block";
-    text.textContent = "Fehler: Server hat kein auswertbares Ergebnis geliefert.";
-  }
-})
+  // Klassischer POST auf PHP
+  form.method = "post";
+  form.action = "https://app.sunsunsun.at/wien/gzh/php/save_user_data.php";
 
-  .catch(err => {
-    console.error("Fehler beim Senden oder Parsen:", err);
-  });
+  // Seitenwechsel auslösen
+  form.submit();
 }
 
 </script>
