@@ -111,8 +111,9 @@ body {
    FORMULARFELDER
 ===================================================== */
 input[type="number"],
-input[type="text"] {
-  width: 33%;
+input[type="text"],
+select {
+  width: 42%;
   padding: 8px;
   font-size: 1rem;
 
@@ -451,9 +452,7 @@ input:checked + .slider:before {
     <label><input type="checkbox" id="energieberater"> Energieberater:in</label><br>
   </div> 
 
-<!-- ******************* -->
 <!-- ANGABEN ZUM GEBÄUDE -->
-<!-- ******************* -->
 <div class="box">
   <h3>Angaben zum Gebäude</h3>
   <p class="note"><i>"Die Eigenschaften des Gebäudes sind Grundlage aller Berechnungen."</i></p>
@@ -462,35 +461,54 @@ input:checked + .slider:before {
   <div class="row-2">
     <div class="col">
       <label>Postleitzahl</label><br>
-      <!-- Postleitzahl des Gründerzeithauses (Wien: 4-stellig) -->
-      <input type="number" id="postal_code">
+      <select id="postal_code">
+        <option value="1010">1010</option>
+        <option value="1020">1020</option>
+        <option value="1030">1030</option>
+        <option value="1040">1040</option>
+        <option value="1050">1050</option>
+        <option value="1060">1060</option>
+        <option value="1070">1070</option>
+        <option value="1080">1080</option>
+        <option value="1090">1090</option>
+        <option value="1100">1100</option>
+        <option value="1110">1110</option>
+        <option value="1120">1120</option>
+        <option value="1130">1130</option>
+        <option value="1140">1140</option>
+        <option value="1150">1150</option>
+        <option value="1160">1160</option>
+        <option value="1170">1170</option>
+        <option value="1180">1180</option>
+        <option value="1190">1190</option>
+        <option value="1200">1200</option>
+        <option value="1210">1210</option>
+        <option value="1220">1220</option>
+        <option value="1230">1230</option>
+      </select>
     </div>
 
     <div class="col">
       <label>Wohnfläche (m²)</label><br>
-      <!-- Gesamtfläche des Gebäudes in Quadratmetern -->
       <input type="number" id="area_m2">
     </div>
   </div>
 
   <br>
 
-  <!-- Zweite Zeile: Geschosse + Fenster pro Geschoss -->
+  <!-- Zweite Zeile: Geschosse + Fenster -->
   <div class="row-2">
     <div class="col">
       <label>Geschosse (inkl. EG)</label><br>
-      <!-- Anzahl der oberirdischen Geschosse inkl. Erdgeschoss -->
       <input type="number" id="floor_count">
     </div>
 
     <div class="col">
       <label>Fenster pro Geschoss</label><br>
-      <!-- Durchschnittliche Anzahl der Fenster je Geschoss -->
       <input type="number" id="windows_per_floor">
     </div>
   </div>
 </div>
-
 
 <!-- ******************** -->
 <!-- THERMISCHE SANIERUNG -->
@@ -578,8 +596,27 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   min="1"
   max="50"
   value="25"
+  oninput="updateFensterAlter(this.value)"
 >
+<span id="fensterAlterAnzeige"></span>
 
+<script>
+  function updateFensterAlter(rawValue) {
+    // Slider läuft 1 (neu) → 50 (alt)
+    // Bedeutung soll sein: links alt (50), rechts neu (1)
+    const ageYears = 51 - Number(rawValue);
+
+    // Anzeige neben dem Slider
+    document.getElementById("fensterAlterAnzeige").textContent =
+      `Alter der Fenster: ${ageYears} Jahre`;
+
+    // zentral speichern (für Summary / collectData)
+    window.currentWindowAgeYears = ageYears;
+  }
+
+  // Initial setzen
+  updateFensterAlter(document.getElementById("fensterAlter").value);
+</script>
 
 <div class="slider-label" style="display:flex; justify-content:space-between; margin-top:6px; font-size:14px;">
   <span>sehr alt</span>
@@ -733,13 +770,12 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 <!-- ENDE BODY -->
 
 <script>
-
 /* =====================================================
    ACCORDION FUNCTION
 ===================================================== */
 function toggleAccordion(header) {
-  const content = header.nextElementSibling;
-  const arrow = header.querySelector("span:last-child");
+  var content = header.nextElementSibling;
+  var arrow = header.querySelector("span:last-child");
   if (!content) return;
 
   content.classList.toggle("open");
@@ -751,206 +787,167 @@ function toggleAccordion(header) {
 /* =====================================================
    HELPER FUNCTIONS
 ===================================================== */
-const getString = id => document.getElementById(id)?.value || null;
-const getNumber = id => {
-  const val = document.getElementById(id)?.value;
-  const n = Number(val);
-  return val === "" || !Number.isFinite(n) ? null : n;
-};
-const getRadio = name => document.querySelector(`input[name="${name}"]:checked`)?.value || null;
+function getString(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  return el.value !== "" ? el.value : null;
+}
+
+function getNumber(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  if (el.value === "") return null;
+  var n = Number(el.value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function getRadio(name) {
+  var checked = document.querySelector('input[name="' + name + '"]:checked');
+  return checked ? checked.value : null;
+}
 
 /* =====================================================
    COLLECT DATA
 ===================================================== */
-const collectData = () => {
-  const heating = [];
-  ["fernwaerme","gas","dezGas","elektrisch"].forEach(id=>{
-    if(document.getElementById(id)?.checked){
-      heating.push(
-        id==="fernwaerme" ? "Fernwärme" :
-        id==="gas"        ? "Gas / Öl zentral" :
-        id==="dezGas"    ? "Gasthermen dezentral" :
-                           "Elektrisch"
-      );
-    }
-  });
+function collectData() {
 
-  const goals = [];
-  ["kosten_senken","komfort","gaslos","klima"].forEach(id=>{
-    if(document.getElementById(id)?.checked){
-      goals.push(
-        id==="kosten_senken" ? "Kosten senken" :
-        id==="komfort"      ? "Komfort steigern" :
-        id==="gaslos"       ? "Raus aus Gas und Öl" :
-                               "Klimaschutz"
-      );
-    }
-  });
+  var heating = [];
+  if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
+  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
+  if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
+  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
 
-  const roles = [];
-  ["eigentuemer","weg","mieter","hausverwaltung","energieberater"].forEach(id=>{
-    if(document.getElementById(id)?.checked){
-      roles.push(
-        id==="eigentuemer"    ? "Eigentümer:in" :
-        id==="weg"           ? "WEG" :
-        id==="mieter"        ? "Mieter:in" :
-        id==="hausverwaltung"? "Hausverwaltung" :
-                                "Energieberater:in"
-      );
-    }
-  });
+  var goals = [];
+  if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
+  if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
+  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
+  if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
+
+  var roles = [];
+  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
+  if (document.getElementById("weg")?.checked) roles.push("WEG");
+  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
+  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
+  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
+
+  /* 🔧 EINZIGE ÄNDERUNG: Fensteralter korrekt invertieren */
+  var rawFensterAlter = getNumber("fensterAlter");
+  var fensterAlterJahre =
+    rawFensterAlter !== null ? (51 - rawFensterAlter) : null;
 
   return {
     building_phase: getString("bauphase"),
     building_type: getString("building_type"),
-    roles,
+    roles: roles,
     living_area_m2: getNumber("area_m2"),
     floors_total: getNumber("floor_count"),
     windows_per_floor: getNumber("windows_per_floor"),
     postal_code: getNumber("postal_code"),
     building_condition: getRadio("haus_zustand"),
     window_type: getRadio("fenster_art"),
-    window_age_years: getNumber("fensterAlter"),
-    heating,
+    window_age_years: fensterAlterJahre,   // ✅ korrekt
+    heating: heating,
     indoor_temp_c: getNumber("raumtemp"),
     roof_type: getString("dachform"),
     roof_orientation: getString("pv_ausrichtung"),
-    goals
+    goals: goals
   };
-};
+}
 
 /* =====================================================
-   SUMMARY
+   SUMMARY UPDATE
 ===================================================== */
-const displayVal = (val, unit="") => val!=null && val!=="" ? val+unit : "–";
+function updateSummary() {
+  var d = collectData();
+  var box = document.getElementById("summaryText");
+  if (!box) return;
 
-const updateSummary = () => {
-  const d = collectData();
-  const box = document.getElementById("summaryText");
-  if(!box) return;
+if (
+  !d.building_phase &&
+  d.living_area_m2 === null &&
+  d.floors_total === null &&
+  d.windows_per_floor === null &&
+  d.postal_code === null &&
+  d.window_type === null &&
+  d.window_age_years === null &&
+  d.heating.length === 0 &&
+  d.goals.length === 0
+) {
 
-  if(!d.building_phase && d.living_area_m2==null && d.floors_total==null){
     box.innerHTML = "Noch keine Eingaben.";
     return;
   }
 
-  const heatingList = d.heating.length ? d.heating.join(", ") : "keine Angabe";
-  const goalsList   = d.goals.length   ? d.goals.join(", ")   : "keine Angabe";
+  box.innerHTML =
+    "<ul>" +
+    "<li>Bauphase: " + (d.building_phase ?? "–") + "</li>" +
+    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
+    "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
+    "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
+    "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
+    "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
+    "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
+    "<li>Fenster: " + (d.window_type ?? "–") +
+      (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
+    "</li>" +
+    "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
+    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
+    "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
+    "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
+    "</ul>";
+}
 
-  box.innerHTML = `
-    <ul>
-      <li>Bauphase: ${d.building_phase ?? "–"}</li>
-      <li>Wohnfläche: ${displayVal(d.living_area_m2," m²")}</li>
-      <li>Geschosse: ${displayVal(d.floors_total)}</li>
-      <li>Fenster/Geschoss: ${displayVal(d.windows_per_floor)}</li>
-      <li>Postleitzahl: ${displayVal(d.postal_code)}</li>
-      <li>Bebauung: ${d.building_type ?? "–"}</li>
-      <li>Zustand: ${d.building_condition ?? "–"}</li>
-      <li>Fenster: ${d.window_type ?? "–"}${d.window_age_years!=null ? ` (${d.window_age_years} Jahre)` : ""}</li>
-      <li>Heizung: ${heatingList}</li>
-      <li>Raumklima: ${displayVal(d.indoor_temp_c," °C")}</li>
-      <li>Dach: ${d.roof_type ?? "–"} / ${d.roof_orientation ?? "–"}</li>
-      <li>Ziele: ${goalsList}</li>
-    </ul>
-  `;
-};
+/* =====================================================
+   SLIDER EVENTS
+===================================================== */
+var fensterAlter = document.getElementById("fensterAlter");
+if (fensterAlter) {
+  fensterAlter.addEventListener("input", function () {
+    var out = document.getElementById("fensterWert");
+
+    // Slider-Wert ist technisch (1–50), Bedeutung ist invertiert
+    var years = 51 - Number(this.value);
+
+    if (out) out.textContent = years;
+    updateSummary();
+  });
+}
+
+var raumtemp = document.getElementById("raumtemp");
+if (raumtemp) {
+  raumtemp.addEventListener("input", function () {
+    var out = document.getElementById("tempWert");
+    if (out) out.textContent = this.value;
+    updateSummary();
+  });
+}
 
 /* =====================================================
    GRID BUTTONS
 ===================================================== */
-const setupGridButtons = (buttonClass, hiddenId) => {
-  const buttons = document.querySelectorAll(`.${buttonClass}`);
-  const hidden  = document.getElementById(hiddenId);
-  if(!hidden) return;
+function setupGridButtons(buttonClass, hiddenInputId) {
+  var buttons = document.querySelectorAll("." + buttonClass);
+  var hiddenInput = document.getElementById(hiddenInputId);
+  if (!hiddenInput) return;
 
-  buttons.forEach(btn=>{
-    btn.addEventListener("click",()=>{
-      buttons.forEach(b=>b.classList.remove("active"));
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      buttons.forEach(function (b) { b.classList.remove("active"); });
       btn.classList.add("active");
-      hidden.value = btn.dataset.value || "";
+      hiddenInput.value = btn.dataset.value || "";
       updateSummary();
     });
   });
-};
-
-document.addEventListener("DOMContentLoaded", () => {
-
-  // Grid-Buttons initialisieren
-  setupGridButtons("bauphase-btn", "bauphase");
-  setupGridButtons("building-btn", "building_type");
-  setupGridButtons("dachform-btn", "dachform");
-  setupGridButtons("pv-btn", "pv_ausrichtung");   // <<< FEHLTE – DAS WAR DER BUG
-
-  // Slider: Fensteralter (links = 50 alt, rechts = 1 neu)
-  const fensterSlider = document.getElementById("fensterAlter");
-  const fensterWert   = document.getElementById("fensterWert");
-
-  if (fensterSlider && fensterWert) {
-
-    const updateFenster = () => {
-      const raw = Number(fensterSlider.value);     // 1 … 50 (technisch)
-      const age = 51 - raw;                        // logisch umgedreht
-      fensterWert.textContent = age;
-      updateSummary();
-    };
-
-    fensterSlider.addEventListener("input", updateFenster);
-    updateFenster(); // Initialwert
-  }
-
-  // Slider: Raumtemperatur
-  const tempSlider = document.getElementById("raumtemp");
-  const tempWert   = document.getElementById("tempWert");
-  const tempText   = document.getElementById("tempText");
-
-  if (tempSlider && tempWert) {
-
-    const updateTempText = () => {
-      const v = Number(tempSlider.value);
-      tempWert.textContent = v;
-
-      let label = "angenehm";
-      if (v <= 18) label = "kühl";
-      else if (v <= 20) label = "eher kühl";
-      else if (v <= 22) label = "angenehm";
-      else if (v <= 24) label = "warm";
-      else label = "sehr warm";
-
-      if (tempText) tempText.textContent = label;
-      updateSummary();
-    };
-
-    tempSlider.addEventListener("input", updateTempText);
-    updateTempText(); // Initialwert
-  }
-
-  // Erste Summary
-  updateSummary();
-});
-
-/* =====================================================
-   STEP BUTTON: WEITER – KLASSISCHER SUBMIT
-===================================================== */
-function weiter() {
-
-  const form = document.getElementById("mainForm");
-
-  if (!form) {
-    console.error("Formular #mainForm nicht gefunden");
-    return;
-  }
-
-  // WICHTIG: die alte onsubmit-Sperre aufheben
-  form.onsubmit = null;
-
-  // Klassischer POST auf PHP
-  form.method = "post";
-  form.action = "https://app.sunsunsun.at/wien/gzh/php/save_user_data.php";
-
-  // Seitenwechsel auslösen
-  form.submit();
 }
 
+setupGridButtons("bauphase-btn", "bauphase");
+setupGridButtons("building-btn", "building_type");
+setupGridButtons("dachform-btn", "dachform");
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+updateSummary();
 </script>
 
 <!--
