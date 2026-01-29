@@ -945,6 +945,16 @@ setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
 
 /* =====================================================
+   GOALS CHECKBOX EVENTS
+===================================================== */
+["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("change", updateSummary);
+  }
+});
+
+/* =====================================================
    INITIALIZE
 ===================================================== */
 updateSummary();
