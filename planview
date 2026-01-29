@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>san.app – Prototyp</title>
+
+  <!-- Google Maps laden (klassische, stabile Variante) -->
+  <!-- WICHTIG: API-Key später über Referrer einschränken -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDvgVofPZUbywEiHJzhXNujYTc0yQRJKeE"
+    defer>
+  </script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      height: 100vh;
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* LINKE SPALTE */
+    .sidebar {
+      width: 320px;
+      padding: 16px;
+      box-sizing: border-box;
+      border-right: 1px solid #ccc;
+      background: #f9f9f9;
+      overflow-y: auto;
+    }
+
+    /* RECHTE HAUPTFLÄCHE */
+    .main {
+      flex: 1;
+      padding: 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    h3 {
+      margin: 18px 0 6px 0;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: #555;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      margin-bottom: 8px;
+      padding: 6px;
+      box-sizing: border-box;
+      font-size: 14px;
+    }
+
+    textarea {
+      min-height: 160px;
+      resize: vertical;
+    }
+
+    /* VIEW-FELD – fix 1600 × 1200 */
+    .view-container {
+      width: 1600px;
+      height: 1200px;
+      border: 1px solid #999;
+      background: #eaeaea;
+    }
+
+    /* STEUERLEISTE */
+    .view-controls {
+      width: 1600px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .left-controls,
+    .right-controls {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LINKE SPALTE -->
+  <div class="sidebar">
+
+    <h3>Adresse</h3>
+    <input type="text" placeholder="PLZ">
+    <input type="text" placeholder="Straße">
+    <input type="text" placeholder="Hausnummer">
+
+    <!-- GPS nur Anzeige -->
+    <input type="text" placeholder="GPS Breite (lat)" readonly>
+    <input type="text" placeholder="GPS Länge (lng)" readonly>
+
+    <h3>Gebäude</h3>
+    <input type="number" placeholder="Geschosse">
+
+    <select>
+      <option>Fenster</option>
+      <option>überwiegend original</option>
+      <option>teilweise erneuert</option>
+      <option>überwiegend erneuert</option>
+    </select>
+
+    <select>
+      <option>Zustand</option>
+      <option>sehr gut</option>
+      <option>gut</option>
+      <option>sanierungsbedürftig</option>
+    </select>
+
+    <h3>Erster Eindruck</h3>
+    <textarea placeholder="Was fällt auf?"></textarea>
+
+  </div>
+
+  <!-- RECHTE SEITE -->
+  <div class="main">
+
+    <!-- VIEW / MAP -->
+    <div class="view-container" id="map"></div>
+
+    <!-- STEUERLEISTE -->
+    <div class="view-controls">
+
+      <!-- LINKS -->
+      <div class="left-controls">
+        <button>Luftbild</button>
+        <button>Solarkataster</button>
+      </div>
+
+      <!-- RECHTS -->
+      <div class="right-controls">
+        <button onclick="showPlan()">Plan</button>
+        <button onclick="showSatellite()">Satellit</button>
+        <button>Messen</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- MAP LOGIK -->
+  <script>
+    /* Globale Map-Referenz */
+    let map;
+
+    /* Initialisierung nach Seiten-Ladevorgang */
+    window.addEventListener("load", function () {
+
+      // Startposition Wien (Platzhalter)
+      const startPosition = {
+        lat: 48.2082,
+        lng: 16.3738
+      };
+
+      // Google Map erzeugen
+      map = new google.maps.Map(document.getElementById("map"), {
+        center: startPosition,
+        zoom: 19,
+        mapTypeId: "roadmap",     // Planansicht
+        disableDefaultUI: true    // ruhig, ohne Google-UI
+      });
+
+    });
+
+    /* Planansicht */
+    function showPlan() {
+      if (map) {
+        map.setMapTypeId("roadmap");
+      }
+    }
+
+    /* Satellitenansicht */
+    function showSatellite() {
+      if (map) {
+        map.setMapTypeId("satellite");
+      }
+    }
+  </script>
+
+</body>
+</html>
