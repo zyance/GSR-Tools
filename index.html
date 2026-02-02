@@ -1,62 +1,256 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>404 – Seite nicht gefunden</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background-color: #f5f5f5;
-      color: #333;
-    }
-    .container {
-      max-width: 720px;
-      margin: 15vh auto;
-      padding: 24px;
-      background: #ffffff;
-      border-radius: 4px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    }
-    h1 {
-      font-size: 28px;
-      margin-bottom: 16px;
-    }
-    p {
-      font-size: 16px;
-      line-height: 1.5;
-      margin-bottom: 12px;
-    }
-    .hint {
-      font-size: 14px;
-      color: #666;
-    }
-    a {
-      color: #000;
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;500&display=swap" rel="stylesheet">
+
+<title>Gründerzeithaus – Bauphase</title>
+
+<style>
+:root{
+  --hellgrau:#f2f2f2;
+  --textgrau:#333333;
+  --baukult:#7090a7;
+}
+
+html { font-size: 20px; }
+
+body{
+  background-color:#5c88a1;
+  margin:0;
+  font-family:"Fira Sans", Arial, sans-serif;
+  font-weight:300;
+  display:flex;
+  justify-content:center;
+  padding:20px 0;
+}
+
+.app-container{
+  width:100%;
+  max-width:600px;
+  background:#fff;
+  box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+.header-image img{
+  width:100%;
+  display:block;
+}
+
+.box{
+  width:92%;
+  margin:3% auto;
+  padding:3%;
+  border:1px solid var(--hellgrau);
+  border-radius:6px;
+  background:#fff;
+  text-align:center;
+}
+
+h2,h3{
+  font-weight:500;
+  color:var(--textgrau);
+}
+
+.note{
+  color:#666;
+  font-size:1rem;
+}
+
+.grid-container{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.grid-btn{
+  background:#cbddec;
+  border:1px solid var(--textgrau);
+  border-radius:6px;
+  padding:6px;
+  cursor:pointer;
+}
+
+.grid-btn.active{
+  background:#fff;
+  border:2px solid #000;
+}
+
+.grid-btn img{
+  width:100%;
+  display:block;
+}
+
+button{
+  background:var(--baukult);
+  color:#fff;
+  border:none;
+  padding:12px 24px;
+  border-radius:6px;
+  cursor:pointer;
+  font-size:1rem;
+  font-weight:500;
+  margin-top:16px;
+}
+</style>
 </head>
+
 <body>
 
-  <div class="container">
-    <h1>404 – Seite nicht gefunden</h1>
+<div class="app-container">
 
-    <p>
-      Die aufgerufene Seite existiert nicht oder wurde verschoben.
-    </p>
-
-    <p>
-      Möglicherweise ist der Link veraltet oder die Adresse wurde falsch eingegeben.
-    </p>
-
-    <p class="hint">
-      Sie können zur <a href="index.html">Startseite</a> zurückkehren
-      oder den Vorgang erneut starten.
-    </p>
+  <div class="header-image">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="">
   </div>
+
+  <div class="box">
+    <h2>Gründerzeithaus – Bauphase</h2>
+    <p class="note"><i>Bitte wählen Sie die Bauphase Ihres Hauses.</i></p>
+
+    <input type="hidden" id="bauphase">
+
+    <div class="grid-container">
+      <button type="button" class="grid-btn bauphase-btn" data-value="Vorgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhUJQbWEiAwi2YpJ0I3i34aj5FQRKXj-Aa2JN9VoI_pO8u_TW1RVqZ2y1fFtM_Xz1UiMBQLNKCak_SengSak4sxTXVAXIbavA8h2sM8Fd7GxiBzO4RbFHXGmqHaF5wyhk9vNsGV2hTHufyue2m2s7xKFW260864UI2ZSJB8g7yoL3Fi4wuBEZQnCTTqxSvi/s1600/GZH%201.png" alt="">
+      </button>
+
+      <button type="button" class="grid-btn bauphase-btn" data-value="Frühgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU-lTfM-GbSoXqmU-u24LAXatmvm7-I-yCleGa-c1vtgMJVmQc9uB6iTx60a6S5kXBdnctf2_TbHWvRKJcGEr9Zvs1Iiu5RhwMNCu_sYdhlR70TqqO7G_duPLcDrmuk5SkYj_srz2vZ2Ih0-BOf_u4kX1315-lnmup1kkpeUQApK6puZRhoHn-YIdqwISB/s1600/GZH%202.png" alt="">
+      </button>
+
+      <button type="button" class="grid-btn bauphase-btn" data-value="Hochgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc4dtrSvVD31xXKk3Rug97KO_eeTFzLT2MRphI_mJ8QKYQE-_VlaMmNsYDArBi8aVJQxUh6PuV3euSQ0KLbgMNvsIMHQvjVfITQD8WteeVmFKvKfwtI4FzKPCF-iHnDbT9RKPA9a9qc2jzQw3YY85GHJ8D9K1HQmomgk-osU1bqyg8BWp-4nDpRyjveNwH/s1600/GZH%203.png" alt="">
+      </button>
+
+      <button type="button" class="grid-btn bauphase-btn" data-value="Spätgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjrSkEcslltNNOj2-kxBQ5P4ARPIh_oHy4-HD7XSZjnw7QhMwWWSjqzfv61ukdjRsOV49sePy6IKA5oGm-VDfVdnv7hul-UUpG1EyrrLnu1ag9wetSR0ELGFn_wsMlvp00zMUkI5KEXpVq2evm2TwxewWe5xZFpjLPcZ0MfKkxvp9urwRDt5OsU_emqDwY7/s320/GZH%204.png" alt="">
+      </button>
+    </div>
+
+<div class="box">
+  <h3>Art der Fenster</h3>
+  <p class="note">
+    <i>„Der Wärmeverlust über alte, undichte Fenster kann erheblich sein.“</i>
+  </p>
+
+  <label>
+    <input type="radio" name="fenster_art" value="Wiener Kastenfenster">
+    Wiener Kastenfenster
+  </label><br>
+
+  <label>
+    <input type="radio" name="fenster_art" value="2-fach">
+    2-fach
+  </label><br>
+
+  <label>
+    <input type="radio" name="fenster_art" value="3-fach">
+    3-fach
+  </label>
+</div>
+
+
+
+    <button type="button" onclick="weiter()">Ergebnis anzeigen</button>
+  </div>
+
+</div>
+
+<script>
+/* ===============================
+   BAUPHASEN BUTTONS
+=============================== */
+function setupBauphasen() {
+  const buttons = document.querySelectorAll(".bauphase-btn");
+  const input = document.getElementById("bauphase");
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      input.value = btn.dataset.value || "";
+    });
+  });
+}
+
+function getRadioValue(name) {
+  const el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : null;
+}
+
+function senden() {
+
+  const bauphase = document.getElementById("bauphase").value;
+  const fensterart = getRadioValue("fenster_art");
+
+  if (!bauphase) return;
+
+  const payload = {
+    projekt: "san.app",
+    phase: "P1",
+    zeitstempel: new Date().toISOString(),
+    eingaben: {
+      bauphase: bauphase,
+      fensterart: fensterart
+    }
+  };
+
+  fetch("./save_user_data.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    cache: "no-store"
+  })
+  .then(() => {
+    window.location.href = "/result.html";
+  })
+  .catch(() => {
+    window.location.href = "/result.html";
+  });
+}
+
+/* ===============================
+   SENDEN AN PHP
+=============================== */
+function senden() {
+
+  const bauphase = document.getElementById("bauphase").value;
+  if (!bauphase) return;
+
+  const payload = {
+    projekt: "san.app",
+    phase: "P1",
+    zeitstempel: new Date().toISOString(),
+    eingaben: {
+      bauphase: bauphase
+    }
+  };
+
+  fetch("./save_user_data.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    cache: "no-store"
+  })
+  .then(r => r.text())
+  .then(txt => {
+    // optional: PHP kann hier JSON oder leer antworten
+    window.location.href = "/result.html";
+  })
+  .catch(() => {
+    window.location.href = "/result.html";
+  });
+}
+
+/* ===============================
+   INIT
+=============================== */
+setupBauphasen();
+</script>
 
 </body>
 </html>
