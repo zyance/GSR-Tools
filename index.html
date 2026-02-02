@@ -216,11 +216,13 @@ fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     if (res.pdf_url) {
       localStorage.setItem("san_app_pdf_url", res.pdf_url);
     }
-    window.location.href = "/result.html";
+    window.location.href =
+  "https://zyance.github.io/GSR-Tools/result.html";
   })
   .catch(err => {
     console.error(err);
-    window.location.href = "/result.html";
+    window.location.href =
+  "https://zyance.github.io/GSR-Tools/result.html";
   });
 }
 
