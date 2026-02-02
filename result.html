@@ -5,17 +5,31 @@
     <title>Ergebnis</title>
 </head>
 <body>
-<br><br><br><br><br><br>
-    <p style="text-align: center;">
-        Wir haben für Sie auch eine längere Fassung als PDF für Sie erstellt.<br>
-        Speichern Sie diese in Ihrem Download-Ordner ab.
-    </p>
 
-    <p style="text-align: center;">
-        <a href="GSR_Einschaetzung.pdf" download>
-            GSR_Einschätzung.pdf
-        </a>
-    </p>
+<br><br><br><br><br><br>
+
+<p style="text-align: center;">
+    Wir haben für Sie auch eine längere Fassung als PDF für Sie erstellt.<br>
+    Speichern Sie diese in Ihrem Download-Ordner ab.
+</p>
+
+<p style="text-align: center;">
+    <a id="pdfLink" download>
+        GSR_Einschätzung.pdf
+    </a>
+</p>
+
+<script>
+(function () {
+    var url = localStorage.getItem("san_app_pdf_url");
+
+    if (url) {
+        document.getElementById("pdfLink").href = url;
+    } else {
+        document.getElementById("pdfLink").style.display = "none";
+    }
+})();
+</script>
 
 </body>
 </html>
