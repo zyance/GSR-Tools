@@ -755,7 +755,7 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 <div class="box">
   <button
     type="button"
-    onclick="window.location.href='result.html'">
+    <button type="button" onclick="weiter()">Zur Auswertung</button>
     Zur Auswertung
   </button>
 </div>
@@ -951,6 +951,60 @@ setupGridButtons("dachform-btn", "dachform");
     el.addEventListener("change", updateSummary);
   }
 });
+
+window.weiter = function () {
+
+  // optionales UI-Feedback (kannst du weglassen)
+  try {
+    var btn = document.querySelector('button[onclick="weiter()"]');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Auswertung läuft …";
+    }
+  } catch (e) {}
+
+  // Payload: nutzt deine bestehende collectData()-Logik
+  var payload = {
+    projekt: "san.app",
+    phase: "P1",
+    zeitstempel: new Date().toISOString(),
+    eingaben: collectData()
+  };
+
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+    cache: "no-store"
+  })
+  .then(function (r) {
+    return r.text(); // bewusst text, damit wir Fehler sehen
+  })
+  .then(function (txt) {
+
+    var res;
+    try {
+      res = JSON.parse(txt);
+    } catch (e) {
+      console.error("PHP-Antwort ist kein JSON:", txt);
+      window.location.href = "result.html";
+      return;
+    }
+
+    // 🔑 DAS ist der entscheidende Schritt
+    if (res.pdf_url) {
+      localStorage.setItem("san_app_pdf_url", res.pdf_url);
+    } else {
+      console.warn("Keine pdf_url in PHP-Antwort:", res);
+    }
+
+    window.location.href = "result.html";
+  })
+  .catch(function (err) {
+    console.error("Fetch-Fehler:", err);
+    window.location.href = "result.html";
+  });
+};
 
 /* =====================================================
    INITIALIZE
