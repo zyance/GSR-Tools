@@ -205,7 +205,7 @@ function senden() {
     }
   };
 
-  fetch("./save_user_data.php", {
+fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
