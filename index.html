@@ -3,10 +3,22 @@
 <head> 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+<!-- Google Fonts: Fira Sans
+     wird vom Browser früh geladen, wichtig für sauberes Rendering -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+<!-- App Stylesheet
+     enthält Layout, Farben, Komponenten -->
+
 <title>Gründerzeithaus Sanierungs-Berater</title>
 
 <style>
+
+/* =====================================================
+   GRUNDVARIABLEN
+===================================================== */
 :root{
   --hellgrau:#f2f2f2;
   --mittelgrau:#b5b5b5;
@@ -14,76 +26,58 @@
   --baukult:#7090a7;
 }
 
+/* =====================================================
+   TYPOGRAFIE
+===================================================== */
 html {
-  font-size: 20px; /* Basisgröße */
-}
-
-body {
-      background-color: #5c88a1; /* baukult */
-  margin: 0;
-  font-family: "Fira Sans", Arial, system-ui, sans-serif;
-  font-weight: 300;        /* ← Light */
-  line-height: 1.5;
-  font-size: 1rem;         /* = 18px */
-  display: flex;
-  border-radius: 8px;
-  justify-content: center;
-  align-items: flex-start;
-  min-height: 100vh;
-  color: var(--textgrau);
-  padding: 20px 0;
+  font-size: 18px;
 }
 
 h1, h2, h3 {
   font-family: "Fira Sans", Arial, sans-serif;
-  font-weight: 500;   /* ← Medium */
+  font-weight: 500;
   color: var(--textgrau);
 }
 
-.header h1 { font-size: 1.4rem; text-align: center; }
-.header h2 { font-size: 1.3rem; }
-.header h3 { font-size: 1.1rem; }
-
-.note { 
+.note {
   font-size: 1rem;
   color: #666;
   line-height: 1.5;
 }
 
-.content {
-  padding: 5%;
-  text-align: center;
-}
-
-.content p {
-  color: #666666;
-  font-size: 1rem;
-  line-height: 1.5;
-}
-
-input[type="number"], input[type="text"] {
-  font-size: 1rem;
-  padding: 8px;
-  width: 33%;
-  border: 1px solid var(--mittelgrau);
-  border-radius: 4px;
-}
-
+/* =====================================================
+   BASIS
+===================================================== */
 * {
   box-sizing: border-box;
 }
 
-.box {
-  width: 92%;
-  margin: 3% auto;
-  padding: 3%;
-  border: 1px solid var(--hellgrau);
-  border-radius: 6px;
-  background: #fff;
+body {
+  margin: 0;
+  padding: 20px 0;
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  font-family: "Fira Sans", Arial, system-ui, sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  line-height: 1.5;
+
+  color: var(--textgrau);
+  background-color: #5c88a1;
 }
 
-.summary-box {
-  background: var(--hellgrau) !important;
+/* =====================================================
+   APP-RAHMEN
+===================================================== */
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  background: #ffffff;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
 }
 
 .header-image img {
@@ -92,11 +86,78 @@ input[type="number"], input[type="text"] {
   display: block;
 }
 
-.app-container {
-  width: 100%;
-  max-width: 600px;
-  background-color: #ffffff;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+.content {
+  padding: 5%;
+  text-align: center;
+}
+
+/* =====================================================
+   BOXEN
+===================================================== */
+.box {
+  width: 92%;
+  margin: 3% auto;
+  padding: 3%;
+  background: #fff;
+  border: 1px solid var(--hellgrau);
+  border-radius: 6px;
+}
+
+.summary-box {
+  background: var(--hellgrau);
+}
+
+/* =====================================================
+   FORMULARFELDER
+===================================================== */
+input[type="number"],
+input[type="text"],
+select {
+  width: 42%;
+  padding: 8px;
+  font-size: 1rem;
+
+  border: 1px solid var(--mittelgrau);
+  border-radius: 4px;
+
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+button {
+  background: var(--baukult);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-family: "Fira Sans", Arial, sans-serif;
+  font-weight: 500;
+
+  cursor: pointer;
+}
+
+button:hover {
+  background: #5a7a91;
+}
+
+.box button {
+  display: block;
+  margin: 0 auto;
+}
+
+/* =====================================================
+   GRID-BUTTONS
+===================================================== */
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
 .grid-btn {
@@ -105,7 +166,6 @@ input[type="number"], input[type="text"] {
   border-radius: 6px;
   padding: 6px;
   cursor: pointer;
-  transition: background 0.2s, border-color 0.2s;
 }
 
 .grid-btn:hover {
@@ -121,23 +181,22 @@ input[type="number"], input[type="text"] {
 .grid-btn img {
   width: 100%;
   display: block;
+  pointer-events: none;
 }
 
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
+/* =====================================================
+   ACCORDION
+===================================================== */
 .accordion-header {
   background: var(--hellgrau);
   padding: 12px;
-  cursor: pointer;
-  font-family: "Fira Sans", Arial, sans-serif;
-  font-weight: 500;   /* ← Medium */
+  border-radius: 6px;
+
   display: flex;
   justify-content: space-between;
-  border-radius: 6px;
+
+  font-weight: 500;
+  cursor: pointer;
   user-select: none;
 }
 
@@ -154,87 +213,88 @@ input[type="number"], input[type="text"] {
   display: block;
 }
 
+/* =====================================================
+   SLIDER – ALLGEMEIN
+===================================================== */
+.slider-wrapper {
+  width: 100%;
+  max-width: 100%;
+}
+
 input[type="range"] {
+  -webkit-appearance: none;
   width: 100%;
   height: 20px;
   border-radius: 10px;
-  appearance: none;
-  cursor: pointer;
+  outline: none;
+  background: #ddd;
 }
 
+/* Thumb WebKit */
 input[type="range"]::-webkit-slider-thumb {
-  appearance: none;
+  -webkit-appearance: none;
   width: 24px;
   height: 24px;
   background: #333;
   border-radius: 50%;
+  border: none;
   cursor: pointer;
 }
-/* Fensteralter-Slider: alt links, neu rechts */
-#fensterAlter {
-  direction: rtl;
-}
 
+/* Thumb Firefox */
 input[type="range"]::-moz-range-thumb {
   width: 24px;
   height: 24px;
   background: #333;
   border-radius: 50%;
-  cursor: pointer;
   border: none;
+  cursor: pointer;
+}
+
+/* =====================================================
+   SLIDER SPEZIAL: FENSTERALTER
+   Links = 50 Jahre (alt, rot)
+   Rechts = 1 Jahr (neu, grün)
+===================================================== */
+#fensterAlter {
+  background: linear-gradient(to right,
+    #e53935 0%,    /* sehr alt */
+    #e53935 33%,
+    #fbc02d 33%,  /* mittel */
+    #fbc02d 66%,
+    #4caf50 66%,  /* neu */
+    #4caf50 100%
+  );
+}
+
+/* =====================================================
+   SLIDER SPEZIAL: RAUMTEMPERATUR
+===================================================== */
+#raumtemp {
+  background: linear-gradient(to right,
+    #b3e5fc 0%,   /* kalt */
+    #81d4fa 33%,
+    #ffe082 50%, /* angenehm */
+    #ffb74d 75%,
+    #e57373 100% /* warm */
+  );
 }
 
 .scale {
   display: flex;
   justify-content: space-between;
+  width: 100%;
   font-size: 14px;
-  margin-top: 6px;
 }
 
-.scale span::before {
-  content: "|";
-  display: block;
-  font-size: 10px;
-}
-
-.slider-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-  color: var(--textgrau);
-  margin-top: 4px;
-}
-
-.rating {
-  font-size: 1.1em;
-  margin-top: 6px;
-}
-
+/* =====================================================
+   SWITCH DACH
+===================================================== */
 .main-wrapper {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.label {
-  font-size: 16px;
-  color: #333;
-  user-select: none;
-  font-weight: normal;
-  transition: font-weight 0.2s;
-  min-width: 80px;
-}
-
-.label-left { text-align: right; }
-.label-right { text-align: left; }
-
-.is-active {
-  font-family: "Fira Sans", Arial, sans-serif;
-  font-weight: 500;   /* ← Medium */
-
-  color: #000;
+  gap: 12px;
 }
 
 .switch {
@@ -242,6 +302,7 @@ input[type="range"]::-moz-range-thumb {
   display: inline-block;
   width: 60px;
   height: 34px;
+  vertical-align: middle;
 }
 
 .switch input {
@@ -252,50 +313,35 @@ input[type="range"]::-moz-range-thumb {
 
 .slider {
   position: absolute;
-  cursor: pointer;
   inset: 0;
   background-color: #7090a7;
+  border-radius: 15px;
   transition: .3s;
-  border-radius: 50%;
+  pointer-events: none;
 }
 
 .slider:before {
-  position: absolute;
   content: "";
-  height: 26px;
+  position: absolute;
   width: 26px;
+  height: 26px;
+
   left: 4px;
-  bottom: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+
   background-color: white;
-  transition: .3s;
   border-radius: 50%;
+  transition: .3s;
 }
 
 input:checked + .slider:before {
-  transform: translateX(26px);
+  transform: translate(26px, -50%);
 }
 
-button {
-  background: var(--baukult);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  font-family: "Fira Sans", Arial, sans-serif;
-  font-weight: 500;   /* ← Medium */
-  margin-top: 12px;
-}
-
-button:hover {
-  background: #5a7a91;
-}
-    .box button {
-  display: block;
-  margin: 0 auto;
-}
-
+/* =====================================================
+   SUMMARY
+===================================================== */
 #summaryText ul {
   list-style: none;
   padding: 0;
@@ -312,10 +358,31 @@ button:hover {
   border-bottom: none;
 }
 
+/* =====================================================
+   AUSWERTUNG
+===================================================== */
 #auswertungText {
-  white-space: pre-wrap;   /* Zeilenumbrüche bleiben */
+  white-space: pre-wrap;
   line-height: 1.6;
   font-size: 1rem;
+}
+
+/* =====================================================
+   ROWS
+===================================================== */
+.row-2 {
+  display: flex;
+  gap: 20px;
+}
+
+.row-2 .col {
+  flex: 1;
+}
+
+.disclaimer {
+  text-align: center;
+  font-style: italic;
+  font-size: 14px;
 }
 
 </style>
@@ -323,9 +390,10 @@ button:hover {
 
 <body>
 <!-- ANFANG BODY -->
+<div class="app-container">
+<form id="mainForm" onsubmit="return false;">
 
 <!-- HEADER IMAGE -->
-<div class="app-container">
   <div class="header-image">
     <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
   </div>
@@ -334,7 +402,7 @@ button:hover {
   <div class="content">
     <h2>„Willkommen beim<br/>Gründerzeithaus-Helfer!"</h2>
     <span class="note">
-      <i>"Wenn Sie für Ihr Gründerzeithaus in Wien ein <b>Bauwerksbuch</b> benötigen oder das Haus <b>umfassend sanieren</b> wollen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben – was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten. Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen."</i>
+      <i>"Wenn Sie für Ihr Gründerzeithaus in Wien <b>umfassend sanieren</b> wollen und/oder ein <b>Bauwerksbuch</b> benötigen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben: Was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten."*</i>
     </span>
   </div> 
 
@@ -384,21 +452,63 @@ button:hover {
     <label><input type="checkbox" id="energieberater"> Energieberater:in</label><br>
   </div> 
 
-<!-- ******************* -->
 <!-- ANGABEN ZUM GEBÄUDE -->
-<!-- ******************* -->
-  <div class="box">
-    <h3>Angaben zum Gebäude</h3>
-    <p class="note"><i>"Die Eigenschaften des Gebäudes sind Grundlage aller Berechnungen."</i></p>
-    <label>Wohnfläche (m²)</label><br>
-    <input type="number" id="wohnflaeche"><br><br>
-    <label>Geschosse (inkl. EG)</label><br>
-    <input type="number" id="geschosse"><br><br>
-    <label>Fenster pro Geschoss</label><br>
-    <input type="number" id="fensterAnzahl"><br><br>
-    <label>Postleitzahl</label><br>
-    <input type="number" id="postleitzahl"><br><br>
+<div class="box">
+  <h3>Angaben zum Gebäude</h3>
+  <p class="note"><i>"Die Eigenschaften des Gebäudes sind Grundlage aller Berechnungen."</i></p>
+
+  <!-- Erste Zeile: PLZ + Wohnfläche -->
+  <div class="row-2">
+    <div class="col">
+      <label>Postleitzahl</label><br>
+      <select id="postal_code">
+        <option value="1010">1010</option>
+        <option value="1020">1020</option>
+        <option value="1030">1030</option>
+        <option value="1040">1040</option>
+        <option value="1050">1050</option>
+        <option value="1060">1060</option>
+        <option value="1070">1070</option>
+        <option value="1080">1080</option>
+        <option value="1090">1090</option>
+        <option value="1100">1100</option>
+        <option value="1110">1110</option>
+        <option value="1120">1120</option>
+        <option value="1130">1130</option>
+        <option value="1140">1140</option>
+        <option value="1150">1150</option>
+        <option value="1160">1160</option>
+        <option value="1170">1170</option>
+        <option value="1180">1180</option>
+        <option value="1190">1190</option>
+        <option value="1200">1200</option>
+        <option value="1210">1210</option>
+        <option value="1220">1220</option>
+        <option value="1230">1230</option>
+      </select>
+    </div>
+
+    <div class="col">
+      <label>Wohnfläche (m²)</label><br>
+      <input type="number" id="area_m2">
+    </div>
   </div>
+
+  <br>
+
+  <!-- Zweite Zeile: Geschosse + Fenster -->
+  <div class="row-2">
+    <div class="col">
+      <label>Geschosse (inkl. EG)</label><br>
+      <input type="number" id="floor_count">
+    </div>
+
+    <div class="col">
+      <label>Fenster pro Geschoss</label><br>
+      <input type="number" id="windows_per_floor">
+    </div>
+  </div>
+</div>
 
 <!-- ******************** -->
 <!-- THERMISCHE SANIERUNG -->
@@ -412,31 +522,41 @@ button:hover {
       <h3>Die Bebauung des Grundstücks</h3>
       <p class="note"><i>"Entscheidend für Wärmeverluste und Größe der Fassaden."</i></p>
 
+
 <!-- BEBAUUNG -->
 <!-- ******** -->
-      <input type="hidden" id="bebauung">
-      <div class="grid-container">
+<!-- Art der Bebauung des Grundstücks -->
+<input type="hidden" id="building_type">
+
+<div class="grid-container">
 
 <!-- FREISTEHEND -->
-        <button type="button" class="grid-btn bebauung-btn" data-value="Freistehend">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhf9_tkMIji4Fw90CxZdIypq36VnUt_BvdS5TdyJnGWTsgTkyCQOnR7WVPxJPwXy4reqiq6zo7jxzBOCaqr53-Ryof2li9ilAtvTyPMF2JFm5hXBG1xRyCr1A5iHSbwh803EEwkURODNPvPHIPjeKUU2ze2IzKy50r5j758gwTjVlQfHkKAgmFyzbSJFRQA/s320/BAU_1.png" alt="Freistehend">
-        </button>
+  <button type="button" class="grid-btn building-btn" data-value="Freistehend">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhf9_tkMIji4Fw90CxZdIypq36VnUt_BvdS5TdyJnGWTsgTkyCQOnR7WVPxJPwXy4reqiq6zo7jxzBOCaqr53-Ryof2li9ilAtvTyPMF2JFm5hXBG1xRyCr1A5iHSbwh803EEwkURODNPvPHIPjeKUU2ze2IzKy50r5j758gwTjVlQfHkKAgmFyzbSJFRQA/s320/BAU_1.png"
+         alt="Freistehend">
+  </button>
 
 <!-- ECKHAUS -->
-        <button type="button" class="grid-btn bebauung-btn" data-value="Eckhaus">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQT8QYouomyMbKyoJg0OkZyWSqPqAsnJkVluCABhFkXnruSOMsP99pJMxivSk4HI6JxVyQbcyOBF7S-CHYKeByfoy8tzGCCR8P_yLNYzsz6X_yVMhyphenhyphen7qlZVvC3P2BXtlne33ncJ9gwm7pQhRLYS6urrHGdNAknGUO-FQOSz8h56Vm5iIcLhHVZcUIn33d5/s320/BAU_2.png" alt="Eckhaus">
-        </button>
+  <button type="button" class="grid-btn building-btn" data-value="Eckhaus">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQT8QYouomyMbKyoJg0OkZyWSqPqAsnJkVluCABhFkXnruSOMsP99pJMxivSk4HI6JxVyQbcyOBF7S-CHYKeByfoy8tzGCCR8P_yLNYzsz6X_yVMhyphenhyphen7qlZVvC3P2BXtlne33ncJ9gwm7pQhRLYS6urrHGdNAknGUO-FQOSz8h56Vm5iIcLhHVZcUIn33d5/s320/BAU_2.png"
+         alt="Eckhaus">
+  </button>
 
 <!-- GESCHLOSSENE BAUWEISE -->
-        <button type="button" class="grid-btn bebauung-btn" data-value="Geschlossene Bauweise">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhtR4trn47VMw7LTCzHycsfRxTPdkjJ1iLC5tehQqLzyW4NmKnea8E3KVOgpf_jhwvIQMsCsNsCcBYcXDsBSdqBKhnNKHD6pxKPx6Fce93nDthHdMPhYLYoJAC6RYO1JrwTE1mQ0-HfZW_-BBCMRc31DAf6_Qpy8rTUubtp9Ftb1IA1R4F_-cKmaapp7O_r/s320/BAU_3.png" alt="Geschlossene Bauweise">
-        </button>
+  <button type="button" class="grid-btn building-btn" data-value="Geschlossene Bauweise">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhtR4trn47VMw7LTCzHycsfRxTPdkjJ1iLC5tehQqLzyW4NmKnea8E3KVOgpf_jhwvIQMsCsNsCcBYcXDsBSdqBKhnNKHD6pxKPx6Fce93nDthHdMPhYLYoJAC6RYO1JrwTE1mQ0-HfZW_-BBCMRc31DAf6_Qpy8rTUubtp9Ftb1IA1R4F_-cKmaapp7O_r/s320/BAU_3.png"
+         alt="Geschlossene Bauweise">
+  </button>
 
 <!-- MIT HINTERHAUS -->
-        <button type="button" class="grid-btn bebauung-btn" data-value="Mit Hinterhaus">
-          <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjA8-IH0KQi74v_fHFrc6mw2mdQtF9VbfyBhlfUHstxVyDBnMR54PFe4qPQ8MR0Ou1nfl8W9lxRmTTMoKYuJNBgnHzsnViDZFeUDK9pBS0B3rYa2ieeTATUvVEt43ii_1YB1Cp9ENxR9e3xQHZtUMgi3vJ8uIxRZGlbkqIiTkqS8xqT_8CThQoMsozyXEyE/s320/BAU_4.png" alt="Mit Hinterhaus">
-        </button>
-      </div>
+  <button type="button" class="grid-btn building-btn" data-value="Mit Hinterhaus">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjA8-IH0KQi74v_fHFrc6mw2mdQtF9VbfyBhlfUHstxVyDBnMR54PFe4qPQ8MR0Ou1nfl8W9lxRmTTMoKYuJNBgnHzsnViDZFeUDK9pBS0B3rYa2ieeTATUvVEt43ii_1YB1Cp9ENxR9e3xQHZtUMgi3vJ8uIxRZGlbkqIiTkqS8xqT_8CThQoMsozyXEyE/s320/BAU_4.png"
+         alt="Mit Hinterhaus">
+  </button>
+
+</div>
+
+<div style="height:18px;"></div>
 
 <!-- ZUSTAND DES HAUSES -->
 <!-- ****************** -->
@@ -446,6 +566,8 @@ button:hover {
       <label><input type="radio" name="haus_zustand" value="zufrieden"> zufriedenstellend</label><br>
       <label><input type="radio" name="haus_zustand" value="sehr gut"> ausgezeichnet, gepflegt</label><br>
 
+<div style="height:18px;"></div>
+
 <!-- ART DER FENSTER -->
 <!-- *************** -->
       <h3>Art der Fenster:</h3>
@@ -454,13 +576,56 @@ button:hover {
       <label><input type="radio" name="fenster_art" value="2-fach"> 2-fach</label><br>
       <label><input type="radio" name="fenster_art" value="3-fach"> 3-fach</label><br>
 
+
 <!-- ALTER DER FENSTER -->
 <!-- ***************** -->
-      <h3 style="margin-top: 20px;">Alter der Fenster: <span id="fensterWert">25</span> Jahre</h3>
-      <input type="range" id="fensterAlter" min="1" max="50" value="25" style="background:linear-gradient(to left,#4caf50 1%,#4caf50 30%,#fbc02d 30%,#fbc02d 60%,#e53935 60%,#e53935 100%)">
-      <div class="slider-label"><span>sehr alt</span><span>neuwertig</span></div>
-    </div>
-  </div>
+
+<!--
+Wichtig:
+Der Slider ist logisch „alt → neu“ gedacht (rechts = neu),
+deshalb ist die Richtung bewusst `to left` gesetzt.
+-->
+
+<h3 style="margin-top: 20px;">
+  Alter der Fenster: <span id="fensterWert">25</span> Jahre
+</h3>
+
+<input
+  type="range"
+  id="fensterAlter"
+  min="1"
+  max="50"
+  value="25"
+  oninput="updateFensterAlter(this.value)"
+>
+<span id="fensterAlterAnzeige"></span>
+
+<script>
+  function updateFensterAlter(rawValue) {
+    // Slider läuft 1 (neu) → 50 (alt)
+    // Bedeutung soll sein: links alt (50), rechts neu (1)
+    const ageYears = 51 - Number(rawValue);
+
+    // Anzeige neben dem Slider
+    document.getElementById("fensterAlterAnzeige").textContent =
+      `Alter der Fenster: ${ageYears} Jahre`;
+
+    // zentral speichern (für Summary / collectData)
+    window.currentWindowAgeYears = ageYears;
+  }
+
+  // Initial setzen
+  updateFensterAlter(document.getElementById("fensterAlter").value);
+</script>
+
+<div class="slider-label" style="display:flex; justify-content:space-between; margin-top:6px; font-size:14px;">
+  <span>sehr alt</span>
+  <span>neuwertig</span>
+</div>
+
+</div>  <!-- ENDE accordion-content Thermische Sanierung -->
+</div>  <!-- ENDE box Thermische Sanierung -->
+
 
 
 <!-- ********************** -->
@@ -484,12 +649,30 @@ button:hover {
     <h3 style="margin-top: 20px;">Wohnkomfort</h3>
     <p class="note"><i>"Das subjektive Wärme- oder Kälteempfinden entscheidet über die Behaglichkeit."</i></p>
 
-    <h3>Raumklima: <span id="tempWert">21</span> °C</h3>
-    <input type="range" id="raumtemp" min="17" max="25" value="21" style="background:linear-gradient(to right,#b3e5fc 0%,#e57373 100%)">
-    <div class="scale"><span>17°</span><span>19°</span><span>21°</span><span>23°</span><span>25°</span></div>
-    <div class="rating">Empfinden: <span id="tempText">angenehm</span></div>
+<h3>Raumklima: <span id="tempWert">21</span> °C</h3>
+
+<div class="slider-wrapper">
+<input
+  type="range"
+  id="raumtemp"
+  min="17"
+  max="25"
+  value="21"
+>
+
+  <div class="scale">
+    <span>17°</span>
+    <span>19°</span>
+    <span>21°</span>
+    <span>23°</span>
+    <span>25°</span>
   </div>
 </div>
+
+<div class="rating">Empfinden: <span id="tempText">angenehm</span></div>
+
+    </div>          
+ </div>           
 
 <!-- ******************* -->
 <!-- PHOTOVOLTAIC ANLAGE -->
@@ -525,18 +708,23 @@ button:hover {
 
 <!-- DACHAUSRICHTUNG -->
 <!-- *************** -->
-    <h3 style="margin-top: 20px;">Dachausrichtung:</h3>
-    <input type="hidden" id="pv_ausrichtung" value="Süd">
-    <div class="main-wrapper">
-      <span id="label-sued" class="label label-left is-active">Süd</span>
-      <label class="switch">
-        <input type="checkbox" id="dachAusrichtung">
-        <span class="slider"></span>
-      </label>
-      <span id="label-ow" class="label label-right">Ost/West</span>
-    </div>  
-  </div> 
-</div> 
+<h3 style="margin-top: 20px;">Dachausrichtung:</h3>
+
+<input type="hidden" id="pv_ausrichtung" value="Süd">
+
+<div class="main-wrapper">
+  <span id="label-sued" class="label label-left is-active">Süd</span>
+
+  <label class="switch">
+    <input type="checkbox" id="dachAusrichtung">
+    <span class="slider"></span>
+  </label>
+
+  <span id="label-ow" class="label label-right">Ost/West</span>
+</div>
+
+</div>  <!-- ENDE .accordion-content Photovoltaik -->
+</div>  <!-- ENDE .box Photovoltaik -->
 
 <!-- ZIELE DER SANIERUNG -->
 <!-- ******************** -->
@@ -564,73 +752,252 @@ button:hover {
 
 <!-- ZUR AUSWERTUNG -->
 <!-- **************** -->
-<button type="button" onclick="return senden(event);">
-  Zur Auswertung
-</button>
-
-<div class="box summary-box" id="auswertungBox" style="display:none;">
-  <h3>Erste Einschätzung – Phase 1</h3>
-  <div id="auswertungText" class="note"></div>
-  <a id="downloadLink" style="display:none;" download>Download user_data</a>
+<div class="box">
+  <button
+    type="button"
+    onclick="window.location.href='result.html'">
+    Zur Auswertung
+  </button>
+</div>
+<p class="disclaimer">
+  * Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen.
+</p>
+</form>
 </div>
 
 <!-- ENDE BODY -->
 
 <script>
 /* =====================================================
-   EXPORT & WEITER BUTTON  (FIXED)
-   - sammelt User-Daten
-   - POST an Hoststar-PHP
-   - speichert PDF-URL
-   - Redirect zu GitHub result.html
+   ACCORDION FUNCTION
 ===================================================== */
+function toggleAccordion(header) {
+  var content = header.nextElementSibling;
+  var arrow = header.querySelector("span:last-child");
+  if (!content) return;
 
-window.weiter = function () {
+  content.classList.toggle("open");
+  if (arrow) {
+    arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
+  }
+}
 
-  // UI-Feedback
-  var btn = document.querySelector('button[onclick="weiter()"]');
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = "Auswertung läuft …";
+/* =====================================================
+   HELPER FUNCTIONS
+===================================================== */
+function getString(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  return el.value !== "" ? el.value : null;
+}
+
+function getNumber(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  if (el.value === "") return null;
+  var n = Number(el.value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function getRadio(name) {
+  var checked = document.querySelector('input[name="' + name + '"]:checked');
+  return checked ? checked.value : null;
+}
+
+/* =====================================================
+   COLLECT DATA
+===================================================== */
+function collectData() {
+
+  var heating = [];
+  if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
+  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
+  if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
+  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
+
+  var goals = [];
+  if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
+  if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
+  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
+  if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
+
+  var roles = [];
+  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
+  if (document.getElementById("weg")?.checked) roles.push("WEG");
+  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
+  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
+  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
+
+  /* 🔧 EINZIGE ÄNDERUNG: Fensteralter korrekt invertieren */
+  var rawFensterAlter = getNumber("fensterAlter");
+  var fensterAlterJahre =
+    rawFensterAlter !== null ? (51 - rawFensterAlter) : null;
+
+  return {
+    building_phase: getString("bauphase"),
+    building_type: getString("building_type"),
+    roles: roles,
+    living_area_m2: getNumber("area_m2"),
+    floors_total: getNumber("floor_count"),
+    windows_per_floor: getNumber("windows_per_floor"),
+    postal_code: getNumber("postal_code"),
+    building_condition: getRadio("haus_zustand"),
+    window_type: getRadio("fenster_art"),
+    window_age_years: fensterAlterJahre,   // ✅ korrekt
+    heating: heating,
+    indoor_temp_c: getNumber("raumtemp"),
+    roof_type: getString("dachform"),
+    roof_orientation: getString("pv_ausrichtung"),
+    goals: goals
+  };
+}
+
+/* =====================================================
+   SUMMARY UPDATE
+===================================================== */
+function updateSummary() {
+  var d = collectData();
+  var box = document.getElementById("summaryText");
+  if (!box) return;
+
+if (
+  !d.building_phase &&
+  d.living_area_m2 === null &&
+  d.floors_total === null &&
+  d.windows_per_floor === null &&
+  d.postal_code === null &&
+  d.window_type === null &&
+  d.window_age_years === null &&
+  d.heating.length === 0 &&
+  d.goals.length === 0
+) {
+
+    box.innerHTML = "Noch keine Eingaben.";
+    return;
   }
 
-  var payload = {
-    projekt: "san.app",
-    phase: "P1",
-    zeitstempel: new Date().toISOString(),
-    eingaben: collectData()
-  };
+  box.innerHTML =
+    "<ul>" +
+    "<li>Bauphase: " + (d.building_phase ?? "–") + "</li>" +
+    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
+    "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
+    "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
+    "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
+    "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
+    "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
+    "<li>Fenster: " + (d.window_type ?? "–") +
+      (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
+    "</li>" +
+    "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
+    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
+    "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
+    "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
+    "</ul>";
+}
 
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    cache: "no-store"
-  })
-  .then(r => r.json())
-  .then(res => {
+/* =====================================================
+   SLIDER EVENTS
+===================================================== */
+var fensterAlter = document.getElementById("fensterAlter");
+if (fensterAlter) {
+  fensterAlter.addEventListener("input", function () {
+    var out = document.getElementById("fensterWert");
 
-    if (res.pdf_url) {
-      localStorage.setItem("san_app_pdf_url", res.pdf_url);
-    } else {
-      localStorage.removeItem("san_app_pdf_url");
-    }
+    // Slider-Wert ist technisch (1–50), Bedeutung ist invertiert
+    var years = 51 - Number(this.value);
 
-    window.location.href =
-      "https://zyance.github.io/GSR-Tools/result.html";
-  })
-  .catch(err => {
-
-    localStorage.removeItem("san_app_pdf_url");
-
-    window.location.href =
-      "https://zyance.github.io/GSR-Tools/result.html";
+    if (out) out.textContent = years;
+    updateSummary();
   });
-};
+}
+
+var raumtemp = document.getElementById("raumtemp");
+if (raumtemp) {
+  raumtemp.addEventListener("input", function () {
+    var out = document.getElementById("tempWert");
+    if (out) out.textContent = this.value;
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   GRID BUTTONS
+===================================================== */
+function setupGridButtons(buttonClass, hiddenInputId) {
+  var buttons = document.querySelectorAll("." + buttonClass);
+  var hiddenInput = document.getElementById(hiddenInputId);
+  if (!hiddenInput) return;
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      buttons.forEach(function (b) { b.classList.remove("active"); });
+      btn.classList.add("active");
+      hiddenInput.value = btn.dataset.value || "";
+      updateSummary();
+    });
+  });
+}
+
+setupGridButtons("bauphase-btn", "bauphase");
+setupGridButtons("building-btn", "building_type");
+setupGridButtons("dachform-btn", "dachform");
+
+/* =====================================================
+   GOALS CHECKBOX EVENTS
+===================================================== */
+["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("change", updateSummary);
+  }
+});
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+updateSummary();
 </script>
 
+<!--
+=====================================================
+P2 / FUTURE DEVELOPMENT NOTES – SAN.APP P1
+=====================================================
 
+Diese Datei bildet den stabilen Stand von Phase P1 ab.
+Fokus von P1 war:
+– Verständlichkeit für Nicht-Techniker
+– visuelle Plausibilität
+– robuste, einfache Logik
+– keine Optimierung auf Wiederverwendbarkeit
 
+Bewusste P1-Entscheidungen:
+– Inline-Styles bei Slidern (z. B. Farbverläufe) zur schnellen visuellen Bewertung
+– Inline-onclick bei Accordion-Headern für maximale Transparenz
+– Keine dynamischen Farb-/Skalenberechnungen
+– Klare, explizite IDs statt abstrakter Datenmodelle
+
+P2 – mögliche, aber NICHT verpflichtende Schritte:
+1) Slider-Styles (z. B. Fensteralter, Raumtemperatur)
+   – Farbverläufe in CSS auslagern
+   – optional dynamisch per JS an Slider-Wert koppeln
+
+2) Accordion-Logik
+   – optional Event-Listener statt Inline-onclick
+   – nur wenn zusätzliche Logik (Tracking, Analytics) nötig wird
+
+3) Summary-Rendering
+   – aktuell bewusst simpel (innerHTML)
+   – erst in P2/P3 auf Templates oder Komponenten umstellen
+
+4) Struktur
+   – Trennung in CSS / JS-Dateien nur dann,
+     wenn mehrere Pages dieselbe Logik teilen
+
+WICHTIG:
+P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
+Änderungen in P2 dürfen keine bestehenden Interaktionen verschlechtern.
+=====================================================
+-->
 
 </body>
-</html
+</html>
