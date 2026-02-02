@@ -177,11 +177,17 @@ function setupBauphasen() {
   });
 }
 
+/* ===============================
+   RADIO HELPER
+=============================== */
 function getRadioValue(name) {
   const el = document.querySelector('input[name="' + name + '"]:checked');
   return el ? el.value : null;
 }
 
+/* ===============================
+   SENDEN AN PHP (FINAL)
+=============================== */
 function senden() {
 
   const bauphase = document.getElementById("bauphase").value;
@@ -205,43 +211,15 @@ function senden() {
     body: JSON.stringify(payload),
     cache: "no-store"
   })
-  .then(() => {
-    window.location.href = "/result.html";
-  })
-  .catch(() => {
-    window.location.href = "/result.html";
-  });
-}
-
-/* ===============================
-   SENDEN AN PHP
-=============================== */
-function senden() {
-
-  const bauphase = document.getElementById("bauphase").value;
-  if (!bauphase) return;
-
-  const payload = {
-    projekt: "san.app",
-    phase: "P1",
-    zeitstempel: new Date().toISOString(),
-    eingaben: {
-      bauphase: bauphase
+  .then(r => r.json())
+  .then(res => {
+    if (res.pdf_url) {
+      localStorage.setItem("san_app_pdf_url", res.pdf_url);
     }
-  };
-
-  fetch("./save_user_data.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-    cache: "no-store"
-  })
-  .then(r => r.text())
-  .then(txt => {
-    // optional: PHP kann hier JSON oder leer antworten
     window.location.href = "/result.html";
   })
-  .catch(() => {
+  .catch(err => {
+    console.error(err);
     window.location.href = "/result.html";
   });
 }
