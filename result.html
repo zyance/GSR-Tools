@@ -105,47 +105,41 @@ h2{ text-align:center; font-weight:500; }
 <script>
 console.log("RESULT SCRIPT START");
 
-/* =====================================================
-   RESULT – SERVER TEXT (GET, 405-SAFE)
-===================================================== */
 window.addEventListener("load", function () {
   const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultText");
 
+  // Loader initial sichtbar → jetzt aus
   if (loader) loader.style.display = "none";
 
-  // Bauphase + Fensterart aus localStorage ziehen
+  // Daten aus localStorage
   const raw = localStorage.getItem("gzh_raw_data");
   const d = raw ? JSON.parse(raw) : {};
 
-  const params = new URLSearchParams();
-  if (d.building_phase) params.append("building_phase", d.building_phase);
-  if (d.window_type)    params.append("window_type", d.window_type);
+  console.log("FETCH START", d);
 
- console.log("FETCH START");
-
- fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    building_phase: data.building_phase,
-    window_type: data.window_type
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      building_phase: d.building_phase || null,
+      window_type: d.window_type || null
+    })
   })
-})
-.then(r => r.text())
-.then(txt => {
-  resultBox.style.display = "block";
-  resultBox.innerText = txt || "Kein Text vom Server.";
-})
-.catch(() => {
-  resultBox.style.display = "block";
-  resultBox.innerText = "Server nicht erreichbar.";
+  .then(r => r.text())
+  .then(txt => {
+    console.log("FETCH RESPONSE OK");
+    resultBox.style.display = "block";
+    resultBox.innerText = txt || "Kein Text vom Server.";
+  })
+  .catch(err => {
+    console.error("FETCH ERROR", err);
+    resultBox.style.display = "block";
+    resultBox.innerText = "Server nicht erreichbar.";
+  });
 });
-
-
-
 </script>
 
 
