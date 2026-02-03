@@ -826,10 +826,8 @@ function collectData() {
   if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
   if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
 
-  /* 🔧 EINZIGE ÄNDERUNG: Fensteralter korrekt invertieren */
-  var rawFensterAlter = getNumber("fensterAlter");
-  var fensterAlterJahre =
-    rawFensterAlter !== null ? (51 - rawFensterAlter) : null;
+ // Fensteralter kommt zentral vom Slider (global gesetzt)
+var fensterAlterJahre = window.currentWindowAgeYears ?? null;
 
   return {
     building_phase: getString("bauphase"),
