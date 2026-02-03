@@ -104,65 +104,45 @@ h2{ text-align:center; font-weight:500; }
 
 <script>
 // =====================================================
-// RESULT – SERVER FIRST (KEIN ALT-CACHE)
+// RESULT – LOADER KANN NICHT MEHR HÄNGEN
 // =====================================================
-
 const loader    = document.getElementById("loader");
 const resultBox = document.getElementById("resultText");
 
-// Safety
-if (!loader || !resultBox) {
-  console.error("DOM elements missing");
-} else {
+loader.style.display = "block";
+resultBox.style.display = "none";
 
-  loader.style.display = "block";
-  resultBox.style.display = "none";
+// HARTE ABSCHALTUNG – egal was passiert
+const HARD_STOP_MS = 5000;
+const hardStop = setTimeout(() => {
+  loader.style.display = "none";
+  resultBox.style.display = "block";
+  resultBox.innerText =
+    "Auswertung derzeit nicht verfügbar.\nBitte später erneut versuchen.";
+}, HARD_STOP_MS);
 
-  // Optionaler Fallback-Key (nur wenn Server down)
-  const FALLBACK_KEY = "sanapp_result_fallback";
-
- fetch("/wien/gzh/php/save_user_data.php", {
+// OPTIONAL: Serveraufruf (wenn PHP antwortet, gut – sonst egal)
+fetch("/wien/gzh/php/save_user_data.php", {
   method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    building_phase: "Spätgründerzeit"
-  })
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(
+    JSON.parse(localStorage.getItem("gzh_raw_data") || "{}")
+  )
 })
 .then(r => r.text())
-.then(t => console.log("SERVER:", t))
-.catch(e => console.error(e));
-
-
-    if (!txt) {
-      throw new Error("EMPTY_SERVER_RESPONSE");
-    }
-
-    // Text direkt anzeigen (kein JSON-Zwang)
-    resultBox.innerText = txt;
-
-    // optional als Fallback speichern
-    localStorage.setItem(FALLBACK_KEY, txt);
-  })
-  .catch(err => {
-    console.error("SERVER ERROR:", err);
-
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-
-    // Fallback NUR wenn vorhanden
-    const fallback = localStorage.getItem(FALLBACK_KEY);
-    if (fallback) {
-      resultBox.innerText =
-        "Hinweis: Server nicht erreichbar – letzter gespeicherter Stand:\n\n" +
-        fallback;
-    } else {
-      resultBox.innerText =
-        "Kein Server-Ergebnis verfügbar.\nBitte starten Sie den Sanierungsberater neu.";
-    }
-  });
-}
+.then(txt => {
+  clearTimeout(hardStop);
+  loader.style.display = "none";
+  resultBox.style.display = "block";
+  resultBox.innerText = txt || "Keine Auswertung verfügbar.";
+})
+.catch(() => {
+  clearTimeout(hardStop);
+  loader.style.display = "none";
+  resultBox.style.display = "block";
+  resultBox.innerText =
+    "Serverfehler.\nBitte später erneut versuchen.";
+});
 </script>
 
 </body>
