@@ -104,7 +104,7 @@ h2{ text-align:center; font-weight:500; }
 
 <script>
 /* =====================================================
-   RESULT – SERVER TEXT (TXT-RAGs via save_user_data.php)
+   RESULT – SERVER TEXT (GET, 405-SAFE)
 ===================================================== */
 window.addEventListener("load", function () {
   const loader    = document.getElementById("loader");
@@ -112,24 +112,27 @@ window.addEventListener("load", function () {
 
   if (loader) loader.style.display = "none";
 
-  const payload = localStorage.getItem("gzh_raw_data") || "{}";
+  // Bauphase + Fensterart aus localStorage ziehen
+  const raw = localStorage.getItem("gzh_raw_data");
+  const d = raw ? JSON.parse(raw) : {};
 
-  fetch("save_user_data.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: payload
-  })
-  .then(r => r.text())
-  .then(txt => {
-    resultBox.style.display = "block";
-    resultBox.innerText = txt || "Kein Text vom Server.";
-  })
-  .catch(() => {
-    resultBox.style.display = "block";
-    resultBox.innerText = "Server nicht erreichbar.";
-  });
+  const params = new URLSearchParams();
+  if (d.building_phase) params.append("building_phase", d.building_phase);
+  if (d.window_type)    params.append("window_type", d.window_type);
+
+  fetch("save_user_data.php?" + params.toString())
+    .then(r => r.text())
+    .then(txt => {
+      resultBox.style.display = "block";
+      resultBox.innerText = txt || "Kein Text vom Server.";
+    })
+    .catch(() => {
+      resultBox.style.display = "block";
+      resultBox.innerText = "Server nicht erreichbar.";
+    });
 });
 </script>
+
 
 </body>
 </html>
