@@ -19,9 +19,7 @@
   --text-main:#333;
   --text-note:#555;
 }
-
 html{ font-size:20px; }
-
 body{
   margin:0;
   font-family:"Fira Sans", Arial, sans-serif;
@@ -31,7 +29,6 @@ body{
   justify-content:center;
   padding:20px 0;
 }
-
 .app-container{
   width:100%;
   max-width:600px;
@@ -39,18 +36,14 @@ body{
   border-radius:8px;
   box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
-
 .content{ padding:24px; }
-
 h2{ text-align:center; font-weight:500; }
-
 .note{
   font-style:italic;
   color:var(--text-note);
   text-align:center;
   margin:18px 0;
 }
-
 .result-box{
   background:var(--bg-box);
   padding:20px;
@@ -59,12 +52,10 @@ h2{ text-align:center; font-weight:500; }
   white-space:pre-wrap;
   line-height:1.6;
 }
-
 #loader{
   text-align:center;
   padding:20px;
 }
-
 .spinner{
   width:40px;
   height:40px;
@@ -74,7 +65,6 @@ h2{ text-align:center; font-weight:500; }
   margin:0 auto 12px;
   animation:spin 1s linear infinite;
 }
-
 @keyframes spin{
   from{ transform:rotate(0deg); }
   to{ transform:rotate(360deg); }
@@ -83,12 +73,10 @@ h2{ text-align:center; font-weight:500; }
 </head>
 
 <body>
-
 <div class="app-container">
   <div class="content">
 
-
-<h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
+    <h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
 
     <div class="note">
       Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
@@ -114,74 +102,24 @@ h2{ text-align:center; font-weight:500; }
   </div>
 </div>
 
-
 <script>
-
-/* =====================================================
-   RESULT + LOADER – CLIENT FIRST (SERVER READY LATER)
-   - liest Userdaten aus localStorage
-   - zeigt sie im Ergebnisfeld an
-   - Server-Fetch ist nur auskommentiert (für später)
-===================================================== */
-
-// gleicher Key wie in index.html
-const DATA_KEY = "gzh_raw_data";
+// =====================================================
+// RESULT – SERVER FIRST (KEIN ALT-CACHE)
+// =====================================================
 
 const loader    = document.getElementById("loader");
 const resultBox = document.getElementById("resultText");
 
-// Sicherheitscheck
+// Safety
 if (!loader || !resultBox) {
   console.error("DOM elements missing");
 } else {
 
-  // Initial: Loader sichtbar, Box versteckt
   loader.style.display = "block";
   resultBox.style.display = "none";
 
-
-/* =====================================================
-   RESULT LOAD – SERVER FIRST
-   Single Source of Truth: sanapp_result
-   Quelle: PHP save_user_data.php
-===================================================== */
-
-const RESULT_KEY = "sanapp_result";
-
-const raw = localStorage.getItem(RESULT_KEY);
-
-if (!raw) {
-  loader.style.display = "none";
-  resultBox.style.display = "block";
-  resultBox.innerText =
-    "Kein Server-Ergebnis gefunden.\nBitte starten Sie den Sanierungsberater neu.";
-} else {
-  try {
-    const res = JSON.parse(raw);
-
-    // Loader aus, Ergebnis ein
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-
-    // 🟢 HIER kommt echtes Server-Ergebnis
-    resultBox.innerText =
-      res.screen_text || "Kein Ergebnistext vom Server.";
-
-  } catch (e) {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "Fehler beim Lesen des Server-Ergebnisses.";
-    console.log("RAW SERVER RESULT:", raw);
-    console.log("PARSE ERROR:", e);
-  }
-}
-
-
-  /* =====================================================
-     SERVER-FIRST LOGIK – FÜR SPÄTER WIEDER AKTIVIERBAR
-     =====================================================
-
-  const RESULT_KEY = "gzh_result_text";
+  // Optionaler Fallback-Key (nur wenn Server down)
+  const FALLBACK_KEY = "sanapp_result_fallback";
 
   fetch("/wien/gzh/user_data/save_user_data.php", {
     method: "POST",
@@ -189,40 +127,43 @@ if (!raw) {
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({
-      input: {}   // hier später echte Daten einsetzen
-    })
+    // Server holt sich die echten Daten selbst
+    body: JSON.stringify({})
   })
   .then(r => r.text())
   .then(txt => {
     loader.style.display = "none";
     resultBox.style.display = "block";
 
-    resultBox.innerText = txt || "LEERE SERVERANTWORT";
-
-    try {
-      const res = JSON.parse(txt);
-      if (res && res.screen_text) {
-        localStorage.setItem(RESULT_KEY, res.screen_text);
-        resultBox.innerText = res.screen_text;
-      }
-    } catch (e) {
-      // absichtlich nichts – Text bleibt sichtbar
+    if (!txt) {
+      throw new Error("EMPTY_SERVER_RESPONSE");
     }
+
+    // Text direkt anzeigen (kein JSON-Zwang)
+    resultBox.innerText = txt;
+
+    // optional als Fallback speichern
+    localStorage.setItem(FALLBACK_KEY, txt);
   })
-  .catch(() => {
+  .catch(err => {
+    console.error("SERVER ERROR:", err);
+
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = "KEINE SERVERANTWORT";
+
+    // Fallback NUR wenn vorhanden
+    const fallback = localStorage.getItem(FALLBACK_KEY);
+    if (fallback) {
+      resultBox.innerText =
+        "Hinweis: Server nicht erreichbar – letzter gespeicherter Stand:\n\n" +
+        fallback;
+    } else {
+      resultBox.innerText =
+        "Kein Server-Ergebnis verfügbar.\nBitte starten Sie den Sanierungsberater neu.";
+    }
   });
-
-  ===================================================== */
-
 }
-
 </script>
-
-
 
 </body>
 </html>
