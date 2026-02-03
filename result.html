@@ -120,7 +120,9 @@ window.addEventListener("load", function () {
   if (d.building_phase) params.append("building_phase", d.building_phase);
   if (d.window_type)    params.append("window_type", d.window_type);
 
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+ console.log("FETCH START");
+
+ fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
   method: "POST",
   headers: {
     "Content-Type": "application/json"
