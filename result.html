@@ -103,23 +103,25 @@ h2{ text-align:center; font-weight:500; }
 </div>
 <script>
 /* =====================================================
-   RESULT – MINIMAL & SYNTAX-SAFE
+   RESULT – HARD DOM SAFE
 ===================================================== */
+window.addEventListener("load", function () {
+  const loader = document.getElementById("loader");
+  const resultBox = document.getElementById("resultText");
 
-const loader = document.getElementById("loader");
-const resultBox = document.getElementById("resultText");
+  if (loader) {
+    loader.style.display = "none";
+    loader.innerHTML = ""; // absolut tot
+  }
 
-// Loader aus
-if (loader) loader.style.display = "none";
+  if (resultBox) {
+    resultBox.style.display = "block";
+    resultBox.innerText =
+      "RESULT SCRIPT OK\nLoader endgültig beendet.";
+  }
 
-// Ergebnis anzeigen
-if (resultBox) {
-  resultBox.style.display = "block";
-  resultBox.innerText = "RESULT SCRIPT OK\nLoader beendet.";
-}
-
-// Debug
-console.log("RESULT SCRIPT OK");
+  console.log("RESULT SCRIPT OK – LOAD EVENT");
+});
 </script>
 
 
