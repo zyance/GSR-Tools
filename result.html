@@ -101,28 +101,62 @@ h2{ text-align:center; font-weight:500; }
 
   </div>
 </div>
+
 <script>
 /* =====================================================
-   RESULT – HARD DOM SAFE
+   RESULT – OPTION A
+   Sofort-Ergebnis aus lokalen Inputs (stabil)
 ===================================================== */
+
 window.addEventListener("load", function () {
-  const loader = document.getElementById("loader");
+  const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultText");
 
-  if (loader) {
-    loader.style.display = "none";
-    loader.innerHTML = ""; // absolut tot
-  }
+  // Loader AUS
+  if (loader) loader.style.display = "none";
 
+  // Daten holen (Single Source of Truth aus Index)
+  const raw = localStorage.getItem("gzh_raw_data");
+  const d = raw ? JSON.parse(raw) : {};
+
+  // Fallbacks sauber
+  const t = (v, f="–") => (v !== null && v !== undefined && v !== "" ? v : f);
+  const list = (arr, f="keine Angabe") => (Array.isArray(arr) && arr.length ? arr.join(", ") : f);
+
+  // Ergebnistext bauen
+  const text =
+`Erste Einschätzung – Überblick
+
+Bauphase: ${t(d.building_phase)}
+Bebauung: ${t(d.building_type)}
+Zustand: ${t(d.building_condition)}
+
+Fenster: ${t(d.window_type)}${d.window_age_years != null ? " (" + d.window_age_years + " Jahre)" : ""}
+
+Wohnfläche: ${d.living_area_m2 != null ? d.living_area_m2 + " m²" : "–"}
+Geschosse: ${t(d.floors_total)}
+Fenster/Geschoss: ${t(d.windows_per_floor)}
+Postleitzahl: ${t(d.postal_code)}
+
+Heizung: ${list(d.heating)}
+Raumklima: ${d.indoor_temp_c != null ? d.indoor_temp_c + " °C" : "–"}
+
+Dach: ${t(d.roof_type)} / ${t(d.roof_orientation)}
+Ziele: ${list(d.goals)}
+`;
+
+  // Anzeigen
   if (resultBox) {
     resultBox.style.display = "block";
-    resultBox.innerText =
-      "RESULT SCRIPT OK\nLoader endgültig beendet.";
+    resultBox.innerText = text;
   }
 
-  console.log("RESULT SCRIPT OK – LOAD EVENT");
+  console.log("RESULT OPTION A – OK");
 });
 </script>
+
+
+
 
 
 
