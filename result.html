@@ -104,45 +104,23 @@ h2{ text-align:center; font-weight:500; }
 
 <script>
 // =====================================================
-// RESULT – LOADER KANN NICHT MEHR HÄNGEN
+// HARD STOP – KEIN LOADER DARF ÜBERLEBEN
 // =====================================================
 const loader    = document.getElementById("loader");
 const resultBox = document.getElementById("resultText");
 
-loader.style.display = "block";
-resultBox.style.display = "none";
-
-// HARTE ABSCHALTUNG – egal was passiert
-const HARD_STOP_MS = 5000;
-const hardStop = setTimeout(() => {
-  loader.style.display = "none";
+// SOFORT: Loader AUS
+if (loader) loader.style.display = "none";
+if (resultBox) {
   resultBox.style.display = "block";
   resultBox.innerText =
-    "Auswertung derzeit nicht verfügbar.\nBitte später erneut versuchen.";
-}, HARD_STOP_MS);
+    "DEBUG RESULT\n\n" +
+    "Wenn du das siehst, läuft dieser JS-Code.\n" +
+    "Der Loader ist tot.";
+}
 
-// OPTIONAL: Serveraufruf (wenn PHP antwortet, gut – sonst egal)
-fetch("/wien/gzh/php/save_user_data.php", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(
-    JSON.parse(localStorage.getItem("gzh_raw_data") || "{}")
-  )
-})
-.then(r => r.text())
-.then(txt => {
-  clearTimeout(hardStop);
-  loader.style.display = "none";
-  resultBox.style.display = "block";
-  resultBox.innerText = txt || "Keine Auswertung verfügbar.";
-})
-.catch(() => {
-  clearTimeout(hardStop);
-  loader.style.display = "none";
-  resultBox.style.display = "block";
-  resultBox.innerText =
-    "Serverfehler.\nBitte später erneut versuchen.";
-});
+// ABSOLUTER BEWEIS IN DER CONSOLE
+console.log("RESULT.JS LOADED – LOADER KILLED");
 </script>
 
 </body>
