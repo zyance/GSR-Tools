@@ -753,7 +753,10 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 <div class="box">
   <button
     type="button"
-    onclick="window.location.href='result.html'">
+    onclick="
+      localStorage.setItem('gzh_raw_data', JSON.stringify(collectData()));
+      window.location.href='result.html';
+    ">
     Zur Auswertung
   </button>
 </div>
