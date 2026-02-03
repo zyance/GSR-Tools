@@ -121,7 +121,7 @@ if (!loader || !resultBox) {
   // Optionaler Fallback-Key (nur wenn Server down)
   const FALLBACK_KEY = "sanapp_result_fallback";
 
-  fetch("/wien/gzh/user_data/save_user_data.php", {
+  fetch("/wien/gzh/php/save_user_data.php", {
     method: "POST",
     cache: "no-store",
     headers: {
