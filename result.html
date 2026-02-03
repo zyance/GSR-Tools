@@ -104,26 +104,21 @@ h2{ text-align:center; font-weight:500; }
 
 <script>
 /* =====================================================
-   RESULT – OPTION A
-   Sofort-Ergebnis aus lokalen Inputs (stabil)
+   RESULT – OPTION A (STABIL, OHNE SERVER)
 ===================================================== */
-
 window.addEventListener("load", function () {
   const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultText");
 
-  // Loader AUS
   if (loader) loader.style.display = "none";
 
-  // Daten holen (Single Source of Truth aus Index)
   const raw = localStorage.getItem("gzh_raw_data");
   const d = raw ? JSON.parse(raw) : {};
 
-  // Fallbacks sauber
   const t = (v, f="–") => (v !== null && v !== undefined && v !== "" ? v : f);
-  const list = (arr, f="keine Angabe") => (Array.isArray(arr) && arr.length ? arr.join(", ") : f);
+  const list = (arr, f="keine Angabe") =>
+    (Array.isArray(arr) && arr.length ? arr.join(", ") : f);
 
-  // Ergebnistext bauen
   const text =
 `Erste Einschätzung – Überblick
 
@@ -145,7 +140,6 @@ Dach: ${t(d.roof_type)} / ${t(d.roof_orientation)}
 Ziele: ${list(d.goals)}
 `;
 
-  // Anzeigen
   if (resultBox) {
     resultBox.style.display = "block";
     resultBox.innerText = text;
@@ -154,12 +148,6 @@ Ziele: ${list(d.goals)}
   console.log("RESULT OPTION A – OK");
 });
 </script>
-
-
-
-
-
-
 
 </body>
 </html>
