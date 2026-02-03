@@ -121,19 +121,19 @@ if (!loader || !resultBox) {
   // Optionaler Fallback-Key (nur wenn Server down)
   const FALLBACK_KEY = "sanapp_result_fallback";
 
-  fetch("/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    cache: "no-store",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    // Server holt sich die echten Daten selbst
-    body: JSON.stringify({})
+ fetch("/wien/gzh/php/save_user_data.php", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    building_phase: "Spätgründerzeit"
   })
-  .then(r => r.text())
-  .then(txt => {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
+})
+.then(r => r.text())
+.then(t => console.log("SERVER:", t))
+.catch(e => console.error(e));
+
 
     if (!txt) {
       throw new Error("EMPTY_SERVER_RESPONSE");
