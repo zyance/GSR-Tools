@@ -940,6 +940,7 @@ setupGridButtons("bauphase-btn", "bauphase");
 setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
 
+
 /* =====================================================
    GOALS CHECKBOX EVENTS
 ===================================================== */
@@ -951,13 +952,14 @@ setupGridButtons("dachform-btn", "dachform");
 });
 
 /* =====================================================
-   GOALS CHECKBOX EVENTS
+   RADIO EVENTS (Fensterart, Zustand)
 ===================================================== */
-["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
-  var el = document.getElementById(id);
-  if (el) {
-    el.addEventListener("change", updateSummary);
-  }
+["fenster_art","haus_zustand"].forEach(function(name){
+  document
+    .querySelectorAll('input[name="' + name + '"]')
+    .forEach(function(el){
+      el.addEventListener("change", updateSummary);
+    });
 });
 
 /* =====================================================
