@@ -448,8 +448,6 @@ input:checked + .slider:before {
     <label><input type="checkbox" id="eigentuemer"> Allein- oder Mehrheitseigentümer:in</label><br>
     <label><input type="checkbox" id="weg"> Eigentümergemeinschaft (WEG)</label><br>
     <label><input type="checkbox" id="mieter"> Mieter:in</label><br> 
-    <label><input type="checkbox" id="hausverwaltung"> Hausverwaltung</label><br>
-    <label><input type="checkbox" id="energieberater"> Energieberater:in</label><br>
   </div> 
 
 <!-- ANGABEN ZUM GEBÄUDE -->
@@ -941,6 +939,16 @@ function setupGridButtons(buttonClass, hiddenInputId) {
 setupGridButtons("bauphase-btn", "bauphase");
 setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
+
+/* =====================================================
+   GOALS CHECKBOX EVENTS
+===================================================== */
+["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("change", updateSummary);
+  }
+});
 
 /* =====================================================
    GOALS CHECKBOX EVENTS
