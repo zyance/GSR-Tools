@@ -101,27 +101,29 @@ h2{ text-align:center; font-weight:500; }
 
   </div>
 </div>
-
 <script>
-// =====================================================
-// HARD STOP – KEIN LOADER DARF ÜBERLEBEN
-// =====================================================
-const loader    = document.getElementById("loader");
+/* =====================================================
+   RESULT – MINIMAL & SYNTAX-SAFE
+===================================================== */
+
+const loader = document.getElementById("loader");
 const resultBox = document.getElementById("resultText");
 
-// SOFORT: Loader AUS
+// Loader aus
 if (loader) loader.style.display = "none";
+
+// Ergebnis anzeigen
 if (resultBox) {
   resultBox.style.display = "block";
-  resultBox.innerText =
-    "DEBUG RESULT\n\n" +
-    "Wenn du das siehst, läuft dieser JS-Code.\n" +
-    "Der Loader ist tot.";
+  resultBox.innerText = "RESULT SCRIPT OK\nLoader beendet.";
 }
 
-// ABSOLUTER BEWEIS IN DER CONSOLE
-console.log("RESULT.JS LOADED – LOADER KILLED");
+// Debug
+console.log("RESULT SCRIPT OK");
 </script>
+
+
+
 
 </body>
 </html>
