@@ -120,17 +120,28 @@ window.addEventListener("load", function () {
   if (d.building_phase) params.append("building_phase", d.building_phase);
   if (d.window_type)    params.append("window_type", d.window_type);
 
-  fetch("save_user_data.php?" + params.toString())
-    .then(r => r.text())
-    .then(txt => {
-      resultBox.style.display = "block";
-      resultBox.innerText = txt || "Kein Text vom Server.";
-    })
-    .catch(() => {
-      resultBox.style.display = "block";
-      resultBox.innerText = "Server nicht erreichbar.";
-    });
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    building_phase: data.building_phase,
+    window_type: data.window_type
+  })
+})
+.then(r => r.text())
+.then(txt => {
+  resultBox.style.display = "block";
+  resultBox.innerText = txt || "Kein Text vom Server.";
+})
+.catch(() => {
+  resultBox.style.display = "block";
+  resultBox.innerText = "Server nicht erreichbar.";
 });
+
+
+
 </script>
 
 
