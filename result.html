@@ -4,13 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Erste Einschätzung – Gründerzeithaus</title>
+<title>Ergebnis – Gründerzeithaus</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-
-<link rel="stylesheet" href="assets/css/style.css">
 
 <style>
 :root{
@@ -49,9 +47,20 @@ h2{ text-align:center; font-weight:500; }
   padding:20px;
   border-radius:6px;
   margin:24px 0;
-  white-space:pre-wrap;
-  line-height:1.6;
+  text-align:center;
 }
+a.download{
+  display:inline-block;
+  margin-top:12px;
+  padding:12px 18px;
+  background:#5c88a1;
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:500;
+}
+a.download:hover{ background:#4a748b; }
+
 #loader{
   text-align:center;
   padding:20px;
@@ -76,72 +85,65 @@ h2{ text-align:center; font-weight:500; }
 <div class="app-container">
   <div class="content">
 
-    <h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
+    <h2>Ihr Ergebnis ist bereit</h2>
 
     <div class="note">
-      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
-      grundsätzliche Möglichkeiten und bekannte Einschränkungen.
-      Sie ersetzt keine Planung und keine Kostenschätzung.
+      Auf Basis Ihrer Angaben wurde ein individuelles PDF erstellt.
     </div>
 
     <!-- LOADER -->
     <div id="loader">
       <div class="spinner"></div>
-      <div class="note">Auswertung läuft …</div>
+      <div class="note">PDF wird erzeugt …</div>
     </div>
 
-    <!-- ERGEBNIS -->
-    <div id="resultText" class="result-box" style="display:none;"></div>
-
-    <div class="note">
-      Die Aussagen sind bewusst vorsichtig formuliert.
-      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
-      muss immer am konkreten Gebäude geprüft werden.
-    </div>
+    <!-- RESULT -->
+    <div id="resultBox" class="result-box" style="display:none;"></div>
 
   </div>
 </div>
 
 <script>
-console.log("RESULT SCRIPT START");
-
-window.addEventListener("load", function () {
+window.addEventListener("load", () => {
   const loader    = document.getElementById("loader");
-  const resultBox = document.getElementById("resultText");
+  const resultBox = document.getElementById("resultBox");
 
-  // Loader initial sichtbar → jetzt aus
-  if (loader) loader.style.display = "none";
-
-  // Daten aus localStorage
   const raw = localStorage.getItem("gzh_raw_data");
   const d = raw ? JSON.parse(raw) : {};
 
-  console.log("FETCH START", d);
-
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       building_phase: d.building_phase || null,
+      project_id: d.project_id || null,
       window_type: d.window_type || null
     })
   })
-  .then(r => r.text())
-  .then(txt => {
-    console.log("FETCH RESPONSE OK");
+  .then(r => r.json())
+  .then(res => {
+    loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = txt || "Kein Text vom Server.";
+
+    if (res.status !== "ok") {
+      resultBox.innerText = "Fehler bei der PDF-Erstellung.";
+      return;
+    }
+
+    resultBox.innerHTML = `
+      <strong>PDF erfolgreich erstellt</strong><br>
+      <a class="download" href="${res.url}" target="_blank">
+        PDF herunterladen
+      </a>
+    `;
   })
-  .catch(err => {
-    console.error("FETCH ERROR", err);
+  .catch(() => {
+    loader.style.display = "none";
     resultBox.style.display = "block";
     resultBox.innerText = "Server nicht erreichbar.";
   });
 });
 </script>
-
 
 </body>
 </html>
