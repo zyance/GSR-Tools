@@ -120,13 +120,16 @@ window.addEventListener("load", () => {
   const raw = localStorage.getItem("gzh_raw_data");
   const d = raw ? JSON.parse(raw) : {};
 
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+  // HIER: Seiten-Texte müssen schon im localStorage liegen
+  // z.B. d.pages = [ "...", "...", ... 10x ]
+  const pages = d.pages || [];
+
+  fetch("https://app.sunsunsun.at/wien/gzh/php/build_screen_text.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      building_phase: d.building_phase || null,
       project_id: d.project_id || null,
-      window_type: d.window_type || null
+      pages: pages
     })
   })
   .then(r => r.json())
@@ -135,18 +138,31 @@ window.addEventListener("load", () => {
     resultBox.style.display = "block";
 
     if (res.status !== "ok") {
-      resultBox.innerText = "Fehler bei der PDF-Erstellung.";
+      resultBox.innerText = "Fehler bei der Texterstellung.";
       return;
     }
 
-    resultBox.innerHTML = `
-      <strong>PDF erfolgreich erstellt</strong><br>
-      <a class="download" href="${res.url}" target="_blank">
-        PDF herunterladen
-      </a>
-    `;
+    let html = "";
+
+    res.screen_text.forEach((sentence, i) => {
+      const link = res.page_links[i];
+
+      html += `
+        <div style="margin-bottom:18px;">
+          <div style="margin-bottom:6px;">
+            ${sentence}
+          </div>
+          <a href="${link.url}" class="download">
+            ${link.label}
+          </a>
+        </div>
+      `;
+    });
+
+    resultBox.innerHTML = html;
   })
-  .catch(() => {
+  .catch(err => {
+    console.error(err);
     loader.style.display = "none";
     resultBox.style.display = "block";
     resultBox.innerText = "Server nicht erreichbar.";
