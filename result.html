@@ -124,7 +124,7 @@ window.addEventListener("load", () => {
   // z.B. d.pages = [ "...", "...", ... 10x ]
   const pages = d.pages || [];
 
-  fetch("https://app.sunsunsun.at/wien/gzh/php/build_screen_text.php", {
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
