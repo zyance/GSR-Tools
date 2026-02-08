@@ -152,28 +152,37 @@ button:hover {
 }
 
 /* =====================================================
-   GRID BUTTONS SETUP (nur Bauphase)
+   GRID-BUTTONS
 ===================================================== */
-function setupBauphaseButtons() {
-  const buttons = document.querySelectorAll(".bauphase-btn");
-  const hiddenInput = document.getElementById("bauphase");
-  if (!hiddenInput) return;
-
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      // Nur Bauphase als Zahl
-      hiddenInput.value = btn.dataset.num || "1234";
-      window.selectedBauphase = Number(btn.dataset.num) || 1234;
-
-      updateSummary();
-    });
-  });
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
 }
 
-setupBauphaseButtons();
+.grid-btn {
+  background: #cbddec;
+  border: 1px solid var(--textgrau);
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.grid-btn:hover {
+  background: #e0e0e0;
+}
+
+.grid-btn.active {
+  background: #ffffff;
+  border-color: #000;
+  border-width: 2px;
+}
+
+.grid-btn img {
+  width: 100%;
+  display: block;
+  pointer-events: none;
+}
 
 /* =====================================================
    ACCORDION
@@ -766,7 +775,7 @@ function toggleAccordion(header) {
 }
 
 /* =====================================================
-   GRID BUTTONS SETUP (nur Bauphase)
+   GRID BUTTONS SETUP (Bauphase)
 ===================================================== */
 function setupBauphaseButtons() {
   const buttons = document.querySelectorAll(".bauphase-btn");
@@ -778,10 +787,10 @@ function setupBauphaseButtons() {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Nur Zahl speichern
+      // Nur die Zahl wird an den Server geschickt
       const num = Number(btn.dataset.num) || 1234;
-      hiddenInput.value = num;
-      window.selectedBauphase = num;
+      hiddenInput.value = num; // für Server
+      window.selectedBauphase = num; // für Summary
 
       updateSummary();
     });
@@ -791,35 +800,82 @@ function setupBauphaseButtons() {
 setupBauphaseButtons();
 
 /* =====================================================
-   COLLECT DATA (nur Bauphase für PHP)
+   COLLECT DATA (reduziert für Server)
 ===================================================== */
 function collectData() {
-  const bauphaseNum  = window.selectedBauphase?.num || 1234;
-  const bauphaseName = window.selectedBauphase?.name || "Bauphase 1234";
-
   return {
-    building_phase_num: bauphaseNum,      // PHP / Server
-    building_phase_name: bauphaseName     // UI / Summary
+    building_phase_num: window.selectedBauphase || 1234 // nur die Zahl
   };
 }
 
 /* =====================================================
-/* =====================================================
-   SUMMARY UPDATE (nur Zahl)
+   SUMMARY UPDATE (alles bleibt sichtbar)
 ===================================================== */
 function updateSummary() {
   const phase = window.selectedBauphase || 1234;
   const box = document.getElementById("summaryText");
   if (!box) return;
 
-  box.textContent = phase; // jetzt nur Zahl
+  // UI: bleibt wie gehabt, z.B. auch Wohnfläche etc.
+  // hier nur Beispiel: Bauphase als Zahl, der Rest unverändert
+  const area = document.getElementById("area_m2")?.value || "–";
+  const floors = document.getElementById("floor_count")?.value || "–";
+  const windows = document.getElementById("windows_per_floor")?.value || "–";
+
+  box.innerHTML =
+    "<ul>" +
+    `<li>Bauphase: ${phase}</li>` +
+    `<li>Wohnfläche: ${area !== "" ? area + " m²" : "–"}</li>` +
+    `<li>Geschosse: ${floors}</li>` +
+    `<li>Fenster/Geschoss: ${windows}</li>` +
+    "</ul>";
 }
+
+/* =====================================================
+   SLIDER EVENTS
+===================================================== */
+const fensterAlter = document.getElementById("fensterAlter");
+if (fensterAlter) {
+  fensterAlter.addEventListener("input", function () {
+    const out = document.getElementById("fensterWert");
+    const years = 51 - Number(this.value);
+    window.currentWindowAgeYears = years;
+    if (out) out.textContent = years;
+    updateSummary();
+  });
+}
+
+const raumtemp = document.getElementById("raumtemp");
+if (raumtemp) {
+  raumtemp.addEventListener("input", function () {
+    const out = document.getElementById("tempWert");
+    if (out) out.textContent = this.value;
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   CHECKBOX & RADIO EVENTS (UI bleibt)
+===================================================== */
+["kosten_senken","komfort","gaslos","klima"].forEach(id =>
+  document.getElementById(id)?.addEventListener("change", updateSummary)
+);
+
+["fenster_art","haus_zustand"].forEach(name =>
+  document.querySelectorAll(`input[name="${name}"]`).forEach(el =>
+    el.addEventListener("change", updateSummary)
+  )
+);
 
 /* =====================================================
    INIT
 ===================================================== */
 updateSummary();
 </script>
+
+
+
+
 
 <!--
 =====================================================
