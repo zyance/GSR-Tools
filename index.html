@@ -113,9 +113,9 @@ body {
 input[type="number"],
 input[type="text"],
 select {
-  width: 48%;
+  width: 42%;
   padding: 8px;
-  font-size: 0,9rem;
+  font-size: 1rem;
 
   border: 1px solid var(--mittelgrau);
   border-radius: 4px;
@@ -393,6 +393,10 @@ input:checked + .slider:before {
 <div class="app-container">
 <form id="mainForm" onsubmit="return false;">
 
+<!-- HEADER IMAGE -->
+  <div class="header-image">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
+  </div>
 
 <!-- WELCOME txt -->
   <div class="content">
@@ -402,37 +406,40 @@ input:checked + .slider:before {
     </span>
   </div> 
 
-<div class="box">
-  <h3>Die 4 Bauphasen der Gründerzeit</h3>
-  <p class="note"><i>„Gibt einen ersten Überblick über das Alter des Gebäudes.“</i></p>
+<!-- BAUPHASEN GRID -->
+  <div class="box">
+    <h3>Die 4 Bauphasen der Gründerzeit</h3>
+    <p class="note"><i>„Gibt einen ersten Überblick über das Alter des Gebäudes.“</i></p>
 
-  <!-- WICHTIG: Hidden Field für JS + Server -->
-  <input type="hidden" id="bauphase" name="building_phase">
+<!-- Hidden Field für JS -->
+    <input type="hidden" id="bauphase">
 
-<div class="grid-container">
-  <!-- VORGRÜNDERZEIT -->
-  <button type="button" class="grid-btn bauphase-btn" data-name="Vorgründerzeit" data-num="1">
-    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhUJQbWEiAwi2YpJ0I3i34aj5FQRKXj-Aa2JN9VoI_pO8u_TW1RVqZ2y1fFtM_Xz1UiMBQLNKCak_SengSak4sxTXVAXIbavA8h2sM8Fd7GxiBzO4RbFHXGmqHaF5wyhk9vNsGV2hTHufyue2m2s7xKFW260864UI2ZSJB8g7yoL3Fi4wuBEZQnCTTqxSvi/s1600/GZH%201.png" alt="Vorgründerzeit">
-  </button>
+<!-- VORGRÜNDERZEIT -->
+    <div class="grid-container">
+      <button type="button" class="grid-btn bauphase-btn" data-value="Vorgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhUJQbWEiAwi2YpJ0I3i34aj5FQRKXj-Aa2JN9VoI_pO8u_TW1RVqZ2y1fFtM_Xz1UiMBQLNKCak_SengSak4sxTXVAXIbavA8h2sM8Fd7GxiBzO4RbFHXGmqHaF5wyhk9vNsGV2hTHufyue2m2s7xKFW260864UI2ZSJB8g7yoL3Fi4wuBEZQnCTTqxSvi/s1600/GZH%201.png"
+             alt="Vorgründerzeit">
+      </button>
 
 <!-- FRÜHGRÜNDERZEIT -->
-<button type="button" class="grid-btn bauphase-btn" data-name="Frühgründerzeit" data-num="2">
-  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU-lTfM-GbSoXqmU-u24LAXatmvm7-I-yCleGa-c1vtgMJVmQc9uB6iTx60a6S5kXBdnctf2_TbHWvRKJcGEr9Zvs1Iiu5RhwMNCu_sYdhlR70TqqO7G_duPLcDrmuk5SkYj_srz2vZ2Ih0-BOf_u4kX1315-lnmup1kkpeUQApK6puZRhoHn-YIdqwISB/s1600/GZH%202.png"
-       alt="Frühgründerzeit">
-</button>
+      <button type="button" class="grid-btn bauphase-btn" data-value="Frühgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU-lTfM-GbSoXqmU-u24LAXatmvm7-I-yCleGa-c1vtgMJVmQc9uB6iTx60a6S5kXBdnctf2_TbHWvRKJcGEr9Zvs1Iiu5RhwMNCu_sYdhlR70TqqO7G_duPLcDrmuk5SkYj_srz2vZ2Ih0-BOf_u4kX1315-lnmup1kkpeUQApK6puZRhoHn-YIdqwISB/s1600/GZH%202.png"
+             alt="Frühgründerzeit">
+      </button>
 
 <!-- HOCHGRÜNDERZEIT -->
-<button type="button" class="grid-btn bauphase-btn" data-name="Hochgründerzeit" data-num="3">
-  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc4dtrSvVD31xXKk3Rug97KO_eeTFzLT2MRphI_mJ8QKYQE-_VlaMmNsYDArBi8aVJQxUh6PuV3euSQ0KLbgMNvsIMHQvjVfITQD8WteeVmFKvKfwtI4FzKPCF-iHnDbT9RKPA9a9qc2jzQw3YY85GHJ8D9K1HQmomgk-osU1bqyg8BWp-4nDpRyjveNwH/s1600/GZH%203.png"
-       alt="Hochgründerzeit">
-</button>
+      <button type="button" class="grid-btn bauphase-btn" data-value="Hochgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhc4dtrSvVD31xXKk3Rug97KO_eeTFzLT2MRphI_mJ8QKYQE-_VlaMmNsYDArBi8aVJQxUh6PuV3euSQ0KLbgMNvsIMHQvjVfITQD8WteeVmFKvKfwtI4FzKPCF-iHnDbT9RKPA9a9qc2jzQw3YY85GHJ8D9K1HQmomgk-osU1bqyg8BWp-4nDpRyjveNwH/s1600/GZH%203.png"
+             alt="Hochgründerzeit">
+      </button>
 
 <!-- SPÄTGRÜNDERZEIT -->
-<button type="button" class="grid-btn bauphase-btn" data-name="Spätgründerzeit" data-num="4">
-  <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjrSkEcslltNNOj2-kxBQ5P4ARPIh_oHy4-HD7XSZjnw7QhMwWWSjqzfv61ukdjRsOV49sePy6IKA5oGm-VDfVdnv7hul-UUpG1EyrrLnu1ag9wetSR0ELGFn_wsMlvp00zMUkI5KEXpVq2evm2TwxewWe5xZFpjLPcZ0MfKkxvp9urwRDt5OsU_emqDwY7/s320/GZH%204.png"
-       alt="Spätgründerzeit">
-</button>
-</div>
+      <button type="button" class="grid-btn bauphase-btn" data-value="Spätgründerzeit">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjrSkEcslltNNOj2-kxBQ5P4ARPIh_oHy4-HD7XSZjnw7QhMwWWSjqzfv61ukdjRsOV49sePy6IKA5oGm-VDfVdnv7hul-UUpG1EyrrLnu1ag9wetSR0ELGFn_wsMlvp00zMUkI5KEXpVq2evm2TwxewWe5xZFpjLPcZ0MfKkxvp9urwRDt5OsU_emqDwY7/s320/GZH%204.png"
+             alt="Spätgründerzeit">
+      </button>
+    </div>
+  </div>
 
 <!-- EIGENTÜMER UND BEWOHNER -->
 <!-- *********************** -->
@@ -480,7 +487,7 @@ input:checked + .slider:before {
     </div>
 
     <div class="col">
-      <label>Wohnfläche,m²</label><br>
+      <label>Wohnfläche (m²)</label><br>
       <input type="number" id="area_m2">
     </div>
   </div>
@@ -553,7 +560,7 @@ input:checked + .slider:before {
 <!-- ****************** -->
       <h3>Zustand des Hauses:</h3>
       <p class="note" style="margin-top: 20px;"><i>"Der Zustand entscheidet über den Umfang der Sanierungsarbeiten."</i></p>
-      <label><input type="radio" name="haus_zustand" value="schlecht"> sanierungsbedürftig</label><br>
+      <label><input type="radio" name="haus_zustand" value="schlecht"> dringend sanierungsbedürftig</label><br>
       <label><input type="radio" name="haus_zustand" value="zufrieden"> zufriedenstellend</label><br>
       <label><input type="radio" name="haus_zustand" value="sehr gut"> ausgezeichnet, gepflegt</label><br>
 
@@ -762,92 +769,218 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 <!-- ENDE BODY -->
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+/* =====================================================
+   ACCORDION FUNCTION
+===================================================== */
+function toggleAccordion(header) {
+  var content = header.nextElementSibling;
+  var arrow = header.querySelector("span:last-child");
+  if (!content) return;
 
-  // =====================================================
-  // GLOBAL
-  // =====================================================
-  window.selectedBauphase = null;
+  content.classList.toggle("open");
+  if (arrow) {
+    arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
+  }
+}
 
-  // =====================================================
-  // GRID BUTTONS SETUP (Bauphase)
-  // =====================================================
-  const buttons = document.querySelectorAll(".bauphase-btn");
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
+/* =====================================================
+   HELPER FUNCTIONS
+===================================================== */
+function getNumber(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  const val = Number(el.value);
+  return isNaN(val) ? null : val;
+}
+
+function getString(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : null;
+}
+
+function getRadio(name) {
+  const sel = document.querySelector('input[name="' + name + '"]:checked');
+  return sel ? sel.value : null;
+}
+
+/* =====================================================
+   COLLECT DATA
+===================================================== */
+function collectData() {
+  // Bauphase von Buttons (Mapping auf 1–4)
+  const bauphaseMap = {
+    "Vorgründerzeit": 1,
+    "Frühgründerzeit": 2,
+    "Hochgründerzeit": 3,
+    "Spätgründerzeit": 4
+  };
+  const selectedBtn = document.querySelector(".bauphase-btn.active");
+  const bauphaseValue = selectedBtn ? bauphaseMap[selectedBtn.dataset.value] : null;
+
+  // Rollen
+  const roles = [];
+  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
+  if (document.getElementById("weg")?.checked) roles.push("WEG");
+  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
+  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
+  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
+
+  // Heizung
+  const heating = [];
+  if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
+  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
+  if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
+  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
+
+  // Ziele
+  const goals = [];
+  if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
+  if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
+  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
+  if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
+
+  // Fensteralter Slider (global)
+  const fensterAlterJahre = window.currentWindowAgeYears ?? null;
+
+  return {
+    building_phase: bauphaseValue,              // ✅ Zahl 1–4 oder null
+    building_type: getString("building_type"),
+    roles: roles,
+    living_area_m2: getNumber("area_m2"),
+    floors_total: getNumber("floor_count"),
+    windows_per_floor: getNumber("windows_per_floor"),
+    postal_code: getNumber("postal_code"),
+    building_condition: getRadio("haus_zustand"),
+    window_type: getRadio("fenster_art"),
+    window_age_years: fensterAlterJahre,
+    heating: heating,
+    indoor_temp_c: getNumber("raumtemp"),
+    roof_type: getString("dachform"),
+    roof_orientation: getString("pv_ausrichtung"),
+    goals: goals
+  };
+}
+
+/* =====================================================
+   SUMMARY UPDATE
+===================================================== */
+function updateSummary() {
+  var d = collectData();
+  var box = document.getElementById("summaryText");
+  if (!box) return;
+
+  // Keine Eingaben
+  if (
+    d.building_phase === null &&
+    d.living_area_m2 === null &&
+    d.floors_total === null &&
+    d.windows_per_floor === null &&
+    d.postal_code === null &&
+    d.window_type === null &&
+    d.window_age_years === null &&
+    d.heating.length === 0 &&
+    d.goals.length === 0
+  ) {
+    box.innerHTML = "Noch keine Eingaben.";
+    return;
+  }
+
+  box.innerHTML =
+    "<ul>" +
+    "<li>Bauphase: " + (d.building_phase ?? "–") + "</li>" +
+    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
+    "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
+    "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
+    "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
+    "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
+    "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
+    "<li>Fenster: " + (d.window_type ?? "–") +
+      (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
+    "</li>" +
+    "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
+    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
+    "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
+    "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
+    "</ul>";
+}
+
+
+
+
+/* =====================================================
+   SLIDER EVENTS
+===================================================== */
+var fensterAlter = document.getElementById("fensterAlter");
+if (fensterAlter) {
+  fensterAlter.addEventListener("input", function () {
+    var out = document.getElementById("fensterWert");
+
+    // Slider-Wert ist technisch (1–50), Bedeutung ist invertiert
+    var years = 51 - Number(this.value);
+
+    if (out) out.textContent = years;
+    updateSummary();
+  });
+}
+
+var raumtemp = document.getElementById("raumtemp");
+if (raumtemp) {
+  raumtemp.addEventListener("input", function () {
+    var out = document.getElementById("tempWert");
+    if (out) out.textContent = this.value;
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   GRID BUTTONS
+===================================================== */
+function setupGridButtons(buttonClass, hiddenInputId) {
+  var buttons = document.querySelectorAll("." + buttonClass);
+  var hiddenInput = document.getElementById(hiddenInputId);
+  if (!hiddenInput) return;
+
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      buttons.forEach(function (b) { b.classList.remove("active"); });
       btn.classList.add("active");
-
-      // Zahl setzen
-      const num = Number(btn.dataset.num);
-      window.selectedBauphase = num;
-
+      hiddenInput.value = btn.dataset.value || "";
       updateSummary();
     });
   });
+}
 
-  // =====================================================
-  // SUMMARY UPDATE
-  // =====================================================
-  function updateSummary() {
-    const phase = window.selectedBauphase;
-    const box = document.getElementById("summaryText");
-    if (!box) return;
+setupGridButtons("bauphase-btn", "bauphase");
+setupGridButtons("building-btn", "building_type");
+setupGridButtons("dachform-btn", "dachform");
 
-    const area = document.getElementById("area_m2")?.value || "–";
-    const floors = document.getElementById("floor_count")?.value || "–";
-    const windows = document.getElementById("windows_per_floor")?.value || "–";
 
-    box.innerHTML =
-      "<ul>" +
-      `<li>Bauphase: ${phase !== null ? phase : "–"}</li>` +
-      `<li>Wohnfläche: ${area !== "" ? area + " m²" : "–"}</li>` +
-      `<li>Geschosse: ${floors}</li>` +
-      `<li>Fenster/Geschoss: ${windows}</li>` +
-      "</ul>";
+/* =====================================================
+   GOALS CHECKBOX EVENTS
+===================================================== */
+["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("change", updateSummary);
   }
-
-  updateSummary(); // initial
-
-  // =====================================================
-  // AUSWERTUNG BUTTON
-  // =====================================================
-  const btnAuswertung = document.getElementById("auswertungBtn");
-  if (btnAuswertung) {
-    btnAuswertung.addEventListener("click", () => {
-      if (window.selectedBauphase === null) {
-        alert("Bitte zuerst eine Bauphase auswählen!");
-        return;
-      }
-
-      const payload = {
-        building_phase: window.selectedBauphase,
-        project_id: "meinProjekt"
-      };
-
-      fetch("/php-endpoint.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      })
-      .then(res => res.json())
-      .then(data => {
-        console.log("Server Response:", data);
-        if (data.pdf) {
-          alert("PDF bereit: " + data.pdf.url);
-        }
-      })
-      .catch(err => console.error("Fehler beim Senden der Bauphase:", err));
-    });
-  }
-
 });
+
+/* =====================================================
+   RADIO EVENTS (Fensterart, Zustand)
+===================================================== */
+["fenster_art","haus_zustand"].forEach(function(name){
+  document
+    .querySelectorAll('input[name="' + name + '"]')
+    .forEach(function(el){
+      el.addEventListener("change", updateSummary);
+    });
+});
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
+updateSummary();
 </script>
-
-
-
-
-
 
 <!--
 =====================================================
