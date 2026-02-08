@@ -17,6 +17,7 @@
     border: 1px solid #333;
     border-radius: 5px;
     background-color: #eee;
+    transition: background 0.2s;
   }
   .bauphase-btn.active {
     background-color: #4caf50;
@@ -44,40 +45,45 @@
 <button id="goBtn">Go</button>
 
 <script>
-let selectedPhase = null;
-
-// Buttons aktivieren
+// ===============================
+// Buttons auswählen
+// ===============================
 const buttons = document.querySelectorAll(".bauphase-btn");
+let selectedBauphase = null;
+
 buttons.forEach(btn => {
   btn.addEventListener("click", () => {
     buttons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    selectedPhase = btn.dataset.value;
+    selectedBauphase = btn.dataset.value;
+    console.log("Ausgewählte Bauphase:", selectedBauphase);
   });
 });
 
-// Go-Button sendet die Auswahl an den Server
+// ===============================
+// Go Button -> Server
+// ===============================
 document.getElementById("goBtn").addEventListener("click", () => {
-  if (!selectedPhase) {
-    alert("Bitte wähle zuerst eine Bauphase aus!");
+  if (!selectedBauphase) {
+    alert("Bitte zuerst eine Bauphase auswählen!");
     return;
   }
 
-  // POST Request an den Server
-  fetch("/save-phase", {
+  console.log("Sende Bauphase an Server:", selectedBauphase);
+
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ bauphase: selectedPhase })
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ bauphase: selectedBauphase })
   })
   .then(res => res.json())
   .then(data => {
-    alert("Server hat gespeichert: " + JSON.stringify(data));
+    console.log("Serverantwort:", data);
+    alert("Bauphase erfolgreich gesendet!");
   })
   .catch(err => {
-    console.error(err);
-    alert("Fehler beim Senden an den Server!");
+    console.error("Fehler beim Senden:", err);
+    alert("Fehler beim Senden an den Server.");
   });
 });
 </script>
