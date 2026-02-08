@@ -113,9 +113,9 @@ body {
 input[type="number"],
 input[type="text"],
 select {
-  width: 46%;
+  width: 48%;
   padding: 8px;
-  font-size: 1rem;
+  font-size: 0,9rem;
 
   border: 1px solid var(--mittelgrau);
   border-radius: 4px;
@@ -761,14 +761,13 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 
 <!-- ENDE BODY -->
 
-
 <script>
 /* =====================================================
    ACCORDION FUNCTION
 ===================================================== */
 function toggleAccordion(header) {
-  var content = header.nextElementSibling;
-  var arrow = header.querySelector("span:last-child");
+  const content = header.nextElementSibling;
+  const arrow = header.querySelector("span:last-child");
   if (!content) return;
 
   content.classList.toggle("open");
@@ -793,25 +792,52 @@ function getString(id) {
 }
 
 function getRadio(name) {
-  const sel = document.querySelector('input[name="' + name + '"]:checked');
+  const sel = document.querySelector(`input[name="${name}"]:checked`);
   return sel ? sel.value : null;
 }
+
+/* =====================================================
+   GRID BUTTONS SETUP
+   (Bauphase / Building / Dach)
+===================================================== */
+function setupGridButtons(buttonClass, hiddenInputId) {
+  const buttons = document.querySelectorAll("." + buttonClass);
+  const hiddenInput = document.getElementById(hiddenInputId);
+  if (!hiddenInput) return;
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      // alte aktiv entfernen
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Nummer + Name zusammen ins Hidden Field
+      hiddenInput.value = btn.dataset.num ? `${btn.dataset.num}|${btn.dataset.name}` : btn.value || "";
+
+      // Globale Variable für Summary / Server
+      if (buttonClass === "bauphase-btn") {
+        window.selectedBauphase = {
+          num: Number(btn.dataset.num),
+          name: btn.dataset.name
+        };
+      }
+
+      updateSummary();
+    });
+  });
+}
+
+setupGridButtons("bauphase-btn", "bauphase");
+setupGridButtons("building-btn", "building_type");
+setupGridButtons("dachform-btn", "dachform");
 
 /* =====================================================
    COLLECT DATA
 ===================================================== */
 function collectData() {
+  const bauphaseNum  = window.selectedBauphase?.num || null;
+  const bauphaseName = window.selectedBauphase?.name || null;
 
-  /* 🔥 Bauphase: EIN Feld = Wahrheit (NUM|NAME) */
-  const rawBauphase = document.getElementById("bauphase")?.value || "";
-  const bpParts = rawBauphase.split("|");
-
-  const bauphaseNum  = bpParts[0] ? Number(bpParts[0]) : null;
-  const bauphaseName = bpParts[1] || null;
-
-  console.log("Sende an Server:", bauphaseNum, bauphaseName);
-
-  /* Rollen */
   const roles = [];
   if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
   if (document.getElementById("weg")?.checked) roles.push("WEG");
@@ -819,14 +845,12 @@ function collectData() {
   if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
   if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
 
-  /* Heizung */
   const heating = [];
   if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
   if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
   if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
   if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
 
-  /* Ziele */
   const goals = [];
   if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
   if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
@@ -836,8 +860,8 @@ function collectData() {
   const fensterAlterJahre = window.currentWindowAgeYears ?? null;
 
   return {
-    building_phase_name: bauphaseName,   // User / Summary
-    building_phase_num: bauphaseNum,    // Server / PDF
+    building_phase_num: bauphaseNum,      // PDF / Server
+    building_phase_name: bauphaseName,    // UI / Summary
     building_type: getString("building_type"),
     roles: roles,
     living_area_m2: getNumber("area_m2"),
@@ -856,21 +880,6 @@ function collectData() {
 }
 
 /* =====================================================
-   DEFAULT BAUPHASE (PFLICHT)
-===================================================== */
-(function initDefaultBauphase(){
-  const hidden = document.getElementById("bauphase");
-  if (!hidden || hidden.value) return;
-
-  // DEFAULT: Hochgründerzeit
-  hidden.value = "3|Hochgründerzeit";
-
-  const btn = document.querySelector('.bauphase-btn[data-num="3"]');
-  if (btn) btn.classList.add("active");
-})();
-
-
-/* =====================================================
    SUMMARY UPDATE
 ===================================================== */
 function updateSummary() {
@@ -880,93 +889,63 @@ function updateSummary() {
 
   box.innerHTML =
     "<ul>" +
-    "<li>Bauphase: " + (d.building_phase_name ?? "–") + "</li>" +
-    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
-    "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
-    "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
-    "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
-    "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
-    "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
-    "<li>Fenster: " + (d.window_type ?? "–") +
-      (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
-    "</li>" +
-    "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
-    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
-    "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
-    "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
+    `<li>Bauphase: ${d.building_phase_name ?? "–"}</li>` +
+    `<li>Wohnfläche: ${d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–"}</li>` +
+    `<li>Geschosse: ${d.floors_total ?? "–"}</li>` +
+    `<li>Fenster/Geschoss: ${d.windows_per_floor ?? "–"}</li>` +
+    `<li>Postleitzahl: ${d.postal_code ?? "–"}</li>` +
+    `<li>Bebauung: ${d.building_type ?? "–"}</li>` +
+    `<li>Zustand: ${d.building_condition ?? "–"}</li>` +
+    `<li>Fenster: ${d.window_type ?? "–"}${d.window_age_years !== null ? ` (${d.window_age_years} Jahre)` : ""}</li>` +
+    `<li>Heizung: ${d.heating.length ? d.heating.join(", ") : "keine Angabe"}</li>` +
+    `<li>Raumklima: ${d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–"}</li>` +
+    `<li>Dach: ${d.roof_type ?? "–"} / ${d.roof_orientation ?? "–"}</li>` +
+    `<li>Ziele: ${d.goals.length ? d.goals.join(", ") : "keine Angabe"}</li>` +
     "</ul>";
 }
 
 /* =====================================================
    SLIDER EVENTS
 ===================================================== */
-var fensterAlter = document.getElementById("fensterAlter");
+const fensterAlter = document.getElementById("fensterAlter");
 if (fensterAlter) {
   fensterAlter.addEventListener("input", function () {
-    var out = document.getElementById("fensterWert");
-    var years = 51 - Number(this.value);
+    const out = document.getElementById("fensterWert");
+    const years = 51 - Number(this.value);
     window.currentWindowAgeYears = years;
     if (out) out.textContent = years;
     updateSummary();
   });
 }
 
-var raumtemp = document.getElementById("raumtemp");
+const raumtemp = document.getElementById("raumtemp");
 if (raumtemp) {
   raumtemp.addEventListener("input", function () {
-    var out = document.getElementById("tempWert");
+    const out = document.getElementById("tempWert");
     if (out) out.textContent = this.value;
     updateSummary();
   });
 }
 
 /* =====================================================
-   GRID BUTTONS (BAUPHASE / BUILDING / DACH)
-===================================================== */
-function setupGridButtons(buttonClass, hiddenInputId) {
-  const buttons = document.querySelectorAll("." + buttonClass);
-  const hiddenInput = document.getElementById(hiddenInputId);
-  if (!hiddenInput) return;
-
-  buttons.forEach(btn => {
-    btn.addEventListener("click", () => {
-      buttons.forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      /* 🔥 NUM|NAME */
-      if (btn.dataset.num && btn.dataset.name) {
-        hiddenInput.value = btn.dataset.num + "|" + btn.dataset.name;
-      } else {
-        hiddenInput.value = btn.value || "";
-      }
-
-      updateSummary();
-    });
-  });
-}
-
-setupGridButtons("bauphase-btn", "bauphase");
-setupGridButtons("building-btn", "building_type");
-setupGridButtons("dachform-btn", "dachform");
-
-/* =====================================================
    CHECKBOX & RADIO EVENTS
 ===================================================== */
-["kosten_senken","komfort","gaslos","klima"].forEach(id => {
-  document.getElementById(id)?.addEventListener("change", updateSummary);
-});
+["kosten_senken","komfort","gaslos","klima"].forEach(id =>
+  document.getElementById(id)?.addEventListener("change", updateSummary)
+);
 
-["fenster_art","haus_zustand"].forEach(name => {
-  document
-    .querySelectorAll('input[name="' + name + '"]')
-    .forEach(el => el.addEventListener("change", updateSummary));
-});
+["fenster_art","haus_zustand"].forEach(name =>
+  document.querySelectorAll(`input[name="${name}"]`).forEach(el =>
+    el.addEventListener("change", updateSummary)
+  )
+);
 
 /* =====================================================
    INIT
 ===================================================== */
 updateSummary();
 </script>
+
 
 
 
