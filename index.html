@@ -804,11 +804,15 @@ function getRadio(name) {
 }
 
 /* =====================================================
-   COLLECT DATA
+   COLLECT DATA (Buttons statt Input)
 ===================================================== */
 function collectData() {
+  // Bauphase von Buttons
+  const selectedBtn = document.querySelector(".bauphase-btn.active");
+  const bauphaseValue = selectedBtn ? parseInt(selectedBtn.dataset.value, 10) : null;
+
   // Rollen
-  var roles = [];
+  const roles = [];
   if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
   if (document.getElementById("weg")?.checked) roles.push("WEG");
   if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
@@ -816,25 +820,21 @@ function collectData() {
   if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
 
   // Heizung
-  var heating = [];
+  const heating = [];
   if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
   if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
   if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
   if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
 
   // Ziele
-  var goals = [];
+  const goals = [];
   if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
   if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
   if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
   if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
 
-  // Fensteralter Slider (global gesetzt)
-  var fensterAlterJahre = window.currentWindowAgeYears ?? null;
-
-  // ⚡ Wichtig: Bauphase als Zahl, nicht String
-  var bauphaseValue = parseInt(getString("bauphase"), 10);
-  if (![1,2,3,4].includes(bauphaseValue)) bauphaseValue = null;
+  // Fensteralter Slider (global)
+  const fensterAlterJahre = window.currentWindowAgeYears ?? null;
 
   return {
     building_phase: bauphaseValue,              // ✅ Zahl 1–4 oder null
