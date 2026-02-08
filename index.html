@@ -152,37 +152,28 @@ button:hover {
 }
 
 /* =====================================================
-   GRID-BUTTONS
+   GRID BUTTONS SETUP (nur Bauphase)
 ===================================================== */
-.grid-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+function setupBauphaseButtons() {
+  const buttons = document.querySelectorAll(".bauphase-btn");
+  const hiddenInput = document.getElementById("bauphase");
+  if (!hiddenInput) return;
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+
+      // Nur Bauphase als Zahl
+      hiddenInput.value = btn.dataset.num || "1234";
+      window.selectedBauphase = Number(btn.dataset.num) || 1234;
+
+      updateSummary();
+    });
+  });
 }
 
-.grid-btn {
-  background: #cbddec;
-  border: 1px solid var(--textgrau);
-  border-radius: 6px;
-  padding: 6px;
-  cursor: pointer;
-}
-
-.grid-btn:hover {
-  background: #e0e0e0;
-}
-
-.grid-btn.active {
-  background: #ffffff;
-  border-color: #000;
-  border-width: 2px;
-}
-
-.grid-btn img {
-  width: 100%;
-  display: block;
-  pointer-events: none;
-}
+setupBauphaseButtons();
 
 /* =====================================================
    ACCORDION
@@ -815,17 +806,14 @@ function collectData() {
 }
 
 /* =====================================================
-   SUMMARY UPDATE
+   SUMMARY UPDATE (nur Zahl)
 ===================================================== */
 function updateSummary() {
-  const d = collectData();
+  const phase = window.selectedBauphase || 1234;
   const box = document.getElementById("summaryText");
   if (!box) return;
 
-  box.innerHTML =
-    "<ul>" +
-    `<li>Bauphase: ${d.building_phase_name}</li>` +
-    "</ul>";
+  box.textContent = phase; // nur Zahl
 }
 
 /* =====================================================
@@ -833,8 +821,6 @@ function updateSummary() {
 ===================================================== */
 updateSummary();
 </script>
-
-
 
 <!--
 =====================================================
