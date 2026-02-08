@@ -29,6 +29,10 @@
     font-size: 16px;
     cursor: pointer;
   }
+  #status {
+    margin-top: 15px;
+    font-weight: bold;
+  }
 </style>
 </head>
 <body>
@@ -36,18 +40,18 @@
 <h2>Wähle die Bauphase</h2>
 
 <div>
-  <button type="button" class="bauphase-btn" data-value="Vorgründerzeit">Vorgründerzeit</button>
-  <button type="button" class="bauphase-btn" data-value="Frühgründerzeit">Frühgründerzeit</button>
-  <button type="button" class="bauphase-btn" data-value="Hochgründerzeit">Hochgründerzeit</button>
-  <button type="button" class="bauphase-btn" data-value="Spätgründerzeit">Spätgründerzeit</button>
+  <button type="button" class="bauphase-btn" data-value="1">Vorgründerzeit</button>
+  <button type="button" class="bauphase-btn" data-value="2">Frühgründerzeit</button>
+  <button type="button" class="bauphase-btn" data-value="3">Hochgründerzeit</button>
+  <button type="button" class="bauphase-btn" data-value="4">Spätgründerzeit</button>
 </div>
 
 <button id="goBtn">Go</button>
 
+<div id="status"></div>
+
 <script>
-// ===============================
 // Buttons auswählen
-// ===============================
 const buttons = document.querySelectorAll(".bauphase-btn");
 let selectedBauphase = null;
 
@@ -55,35 +59,33 @@ buttons.forEach(btn => {
   btn.addEventListener("click", () => {
     buttons.forEach(b => b.classList.remove("active"));
     btn.classList.add("active");
-    selectedBauphase = btn.dataset.value;
-    console.log("Ausgewählte Bauphase:", selectedBauphase);
+    selectedBauphase = parseInt(btn.dataset.value, 10); // Zahl speichern
+    document.getElementById("status").textContent = "Ausgewählt: " + selectedBauphase;
   });
 });
 
-// ===============================
 // Go Button -> Server
-// ===============================
 document.getElementById("goBtn").addEventListener("click", () => {
   if (!selectedBauphase) {
     alert("Bitte zuerst eine Bauphase auswählen!");
     return;
   }
 
-  console.log("Sende Bauphase an Server:", selectedBauphase);
+  document.getElementById("status").textContent = "Sende Bauphase: " + selectedBauphase;
 
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ bauphase: selectedBauphase })
+    body: JSON.stringify({ building_phase: selectedBauphase, project_id: "project" })
   })
   .then(res => res.json())
   .then(data => {
     console.log("Serverantwort:", data);
-    alert("Bauphase erfolgreich gesendet!");
+    document.getElementById("status").textContent = "Bauphase erfolgreich gesendet: " + selectedBauphase;
   })
   .catch(err => {
     console.error("Fehler beim Senden:", err);
-    alert("Fehler beim Senden an den Server.");
+    document.getElementById("status").textContent = "Fehler beim Senden an den Server!";
   });
 });
 </script>
