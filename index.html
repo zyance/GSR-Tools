@@ -926,7 +926,7 @@ function setupGridButtons(buttonClass, hiddenInputId) {
       // Hidden Input bekommt Zahl (Server)
       hiddenInput.value = btn.dataset.num || "";
 
-      // Globale Variable bekommt Name + Zahl (Summary)
+      // Globale Variable bekommt Name + Zahl (für Summary & Server)
       window.selectedBauphase = {
         name: btn.dataset.name || "",
         num: Number(btn.dataset.num) || null
@@ -937,6 +937,7 @@ function setupGridButtons(buttonClass, hiddenInputId) {
   });
 }
 
+// Aufrufen
 setupGridButtons("bauphase-btn", "bauphase");
 setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
