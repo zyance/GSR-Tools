@@ -856,6 +856,21 @@ function collectData() {
 }
 
 /* =====================================================
+   DEFAULT BAUPHASE (PFLICHT)
+===================================================== */
+(function initDefaultBauphase(){
+  const hidden = document.getElementById("bauphase");
+  if (!hidden || hidden.value) return;
+
+  // DEFAULT: Hochgründerzeit
+  hidden.value = "3|Hochgründerzeit";
+
+  const btn = document.querySelector('.bauphase-btn[data-num="3"]');
+  if (btn) btn.classList.add("active");
+})();
+
+
+/* =====================================================
    SUMMARY UPDATE
 ===================================================== */
 function updateSummary() {
