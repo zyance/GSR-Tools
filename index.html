@@ -766,7 +766,7 @@ function toggleAccordion(header) {
 }
 
 /* =====================================================
-   GRID BUTTONS SETUP (nur Bauphase relevant)
+   GRID BUTTONS SETUP (nur Bauphase)
 ===================================================== */
 function setupBauphaseButtons() {
   const buttons = document.querySelectorAll(".bauphase-btn");
@@ -778,12 +778,10 @@ function setupBauphaseButtons() {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Nur Bauphase senden
-      hiddenInput.value = btn.dataset.num || "1234"; // Default 1234
-      window.selectedBauphase = {
-        num: Number(btn.dataset.num) || 1234,
-        name: btn.dataset.name || "Bauphase 1234"
-      };
+      // Nur Zahl speichern
+      const num = Number(btn.dataset.num) || 1234;
+      hiddenInput.value = num;
+      window.selectedBauphase = num;
 
       updateSummary();
     });
@@ -806,6 +804,7 @@ function collectData() {
 }
 
 /* =====================================================
+/* =====================================================
    SUMMARY UPDATE (nur Zahl)
 ===================================================== */
 function updateSummary() {
@@ -813,7 +812,7 @@ function updateSummary() {
   const box = document.getElementById("summaryText");
   if (!box) return;
 
-  box.textContent = phase; // nur Zahl
+  box.textContent = phase; // jetzt nur Zahl
 }
 
 /* =====================================================
