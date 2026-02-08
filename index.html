@@ -807,6 +807,8 @@ function collectData() {
   const bauphaseName = window.selectedBauphase?.name || null;
   const bauphaseNum  = window.selectedBauphase?.num  || null;
 
+console.log("Sende an Server:", window.selectedBauphase.num);
+
   // Rollen
   const roles = [];
   if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
