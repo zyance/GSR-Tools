@@ -764,36 +764,26 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 
 <script>
 /* =====================================================
-   ACCORDION FUNCTION
+   GLOBAL
 ===================================================== */
-function toggleAccordion(header) {
-  const content = header.nextElementSibling;
-  const arrow = header.querySelector("span:last-child");
-  if (!content) return;
-  content.classList.toggle("open");
-  if (arrow) arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
-}
+window.selectedBauphase = null; // keine Default-Zahl!
 
 /* =====================================================
    GRID BUTTONS SETUP (Bauphase)
 ===================================================== */
 function setupBauphaseButtons() {
   const buttons = document.querySelectorAll(".bauphase-btn");
-  const hiddenInput = document.getElementById("bauphase");
-  if (!hiddenInput) return;
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Bauphase-Zahl
-      const num = Number(btn.dataset.num) || 1234;
-      hiddenInput.value = num; // nur für Form/Server falls nötig
-      window.selectedBauphase = num; // für Summary
+      // Zahl setzen, keine Default-Zahl mehr
+      const num = Number(btn.dataset.num);
+      window.selectedBauphase = num;
 
       updateSummary();
-      sendBauphaseToServer(num); // <-- direkt an PHP schicken
     });
   });
 }
@@ -801,12 +791,38 @@ function setupBauphaseButtons() {
 setupBauphaseButtons();
 
 /* =====================================================
-   SEND TO PHP
+   SUMMARY UPDATE
 ===================================================== */
-function sendBauphaseToServer(phaseNum) {
+function updateSummary() {
+  const phase = window.selectedBauphase;
+  const box = document.getElementById("summaryText");
+  if (!box) return;
+
+  const area = document.getElementById("area_m2")?.value || "–";
+  const floors = document.getElementById("floor_count")?.value || "–";
+  const windows = document.getElementById("windows_per_floor")?.value || "–";
+
+  box.innerHTML =
+    "<ul>" +
+    `<li>Bauphase: ${phase !== undefined ? phase : "–"}</li>` +
+    `<li>Wohnfläche: ${area !== "" ? area + " m²" : "–"}</li>` +
+    `<li>Geschosse: ${floors}</li>` +
+    `<li>Fenster/Geschoss: ${windows}</li>` +
+    "</ul>";
+}
+
+/* =====================================================
+   AUSWERTUNG BUTTON (an PHP senden)
+===================================================== */
+document.getElementById("auswertungBtn")?.addEventListener("click", () => {
+  if (!window.selectedBauphase) {
+    alert("Bitte zuerst eine Bauphase auswählen!");
+    return;
+  }
+
   const payload = {
-    building_phase: phaseNum,   // PHP erwartet genau diesen Key
-    project_id: "meinProjekt"   // optional, je nach PHP
+    building_phase: window.selectedBauphase,
+    project_id: "meinProjekt"
   };
 
   fetch("/php-endpoint.php", {
@@ -817,67 +833,12 @@ function sendBauphaseToServer(phaseNum) {
   .then(res => res.json())
   .then(data => {
     console.log("Server Response:", data);
-    // hier könntest du z.B. Links zum PDF/DOCX anzeigen
+    if (data.pdf) {
+      alert("PDF bereit: " + data.pdf.url);
+    }
   })
   .catch(err => console.error("Fehler beim Senden der Bauphase:", err));
-}
-
-/* =====================================================
-   SUMMARY UPDATE (UI bleibt sichtbar)
-===================================================== */
-function updateSummary() {
-  const phase = window.selectedBauphase || 1234;
-  const box = document.getElementById("summaryText");
-  if (!box) return;
-
-  const area = document.getElementById("area_m2")?.value || "–";
-  const floors = document.getElementById("floor_count")?.value || "–";
-  const windows = document.getElementById("windows_per_floor")?.value || "–";
-
-  box.innerHTML =
-    "<ul>" +
-    `<li>Bauphase: ${phase}</li>` +
-    `<li>Wohnfläche: ${area !== "" ? area + " m²" : "–"}</li>` +
-    `<li>Geschosse: ${floors}</li>` +
-    `<li>Fenster/Geschoss: ${windows}</li>` +
-    "</ul>";
-}
-
-/* =====================================================
-   SLIDER EVENTS
-===================================================== */
-const fensterAlter = document.getElementById("fensterAlter");
-if (fensterAlter) {
-  fensterAlter.addEventListener("input", function () {
-    const out = document.getElementById("fensterWert");
-    const years = 51 - Number(this.value);
-    window.currentWindowAgeYears = years;
-    if (out) out.textContent = years;
-    updateSummary();
-  });
-}
-
-const raumtemp = document.getElementById("raumtemp");
-if (raumtemp) {
-  raumtemp.addEventListener("input", function () {
-    const out = document.getElementById("tempWert");
-    if (out) out.textContent = this.value;
-    updateSummary();
-  });
-}
-
-/* =====================================================
-   CHECKBOX & RADIO EVENTS (UI bleibt)
-===================================================== */
-["kosten_senken","komfort","gaslos","klima"].forEach(id =>
-  document.getElementById(id)?.addEventListener("change", updateSummary)
-);
-
-["fenster_art","haus_zustand"].forEach(name =>
-  document.querySelectorAll(`input[name="${name}"]`).forEach(el =>
-    el.addEventListener("change", updateSummary)
-  )
-);
+});
 
 /* =====================================================
    INIT
