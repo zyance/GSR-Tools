@@ -754,13 +754,7 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
     type="button"
     onclick="
       (function(){
-        // Bauphase Mapping 1–4
-        const bauphaseMap = {
-          'Vorgründerzeit': 1,
-          'Frühgründerzeit': 2,
-          'Hochgründerzeit': 3,
-          'Spätgründerzeit': 4
-        };
+        const bauphaseMap = { 'Vorgründerzeit':1, 'Frühgründerzeit':2, 'Hochgründerzeit':3, 'Spätgründerzeit':4 };
         const selectedBtn = document.querySelector('.bauphase-btn.active');
         const bauphaseValue = selectedBtn ? bauphaseMap[selectedBtn.dataset.value] : null;
 
@@ -769,16 +763,10 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
           return;
         }
 
-        // Sende nur die Bauphase an PHP
-        fetch('/php-endpoint.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ building_phase: bauphaseValue })
-        }).then(res => res.json())
-          .then(data => console.log('Server Response:', data))
-          .catch(err => console.error('Fehler beim Senden der Bauphase:', err));
+        // Speichern für result.html
+        localStorage.setItem('building_phase', bauphaseValue);
 
-        // Weiterleitung wie gehabt
+        // Weiterleitung wie gewohnt
         window.location.href = 'result.html';
       })();
     ">
