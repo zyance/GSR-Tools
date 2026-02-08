@@ -761,6 +761,7 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 
 <!-- ENDE BODY -->
 
+
 <script>
 /* =====================================================
    ACCORDION FUNCTION
@@ -769,113 +770,47 @@ function toggleAccordion(header) {
   const content = header.nextElementSibling;
   const arrow = header.querySelector("span:last-child");
   if (!content) return;
-
   content.classList.toggle("open");
-  if (arrow) {
-    arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
-  }
+  if (arrow) arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
 }
 
 /* =====================================================
-   HELPER FUNCTIONS
+   GRID BUTTONS SETUP (nur Bauphase relevant)
 ===================================================== */
-function getNumber(id) {
-  const el = document.getElementById(id);
-  if (!el) return null;
-  const val = Number(el.value);
-  return isNaN(val) ? null : val;
-}
-
-function getString(id) {
-  const el = document.getElementById(id);
-  return el && el.value !== "" ? el.value : null;
-}
-
-function getRadio(name) {
-  const sel = document.querySelector(`input[name="${name}"]:checked`);
-  return sel ? sel.value : null;
-}
-
-/* =====================================================
-   GRID BUTTONS SETUP
-   (Bauphase / Building / Dach)
-===================================================== */
-function setupGridButtons(buttonClass, hiddenInputId) {
-  const buttons = document.querySelectorAll("." + buttonClass);
-  const hiddenInput = document.getElementById(hiddenInputId);
+function setupBauphaseButtons() {
+  const buttons = document.querySelectorAll(".bauphase-btn");
+  const hiddenInput = document.getElementById("bauphase");
   if (!hiddenInput) return;
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
-      // alte aktiv entfernen
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Nummer + Name zusammen ins Hidden Field
-      hiddenInput.value = btn.dataset.num ? `${btn.dataset.num}|${btn.dataset.name}` : btn.value || "";
-
-      // Globale Variable für Summary / Server
-      if (buttonClass === "bauphase-btn") {
-        window.selectedBauphase = {
-          num: Number(btn.dataset.num),
-          name: btn.dataset.name
-        };
-      }
+      // Nur Bauphase senden
+      hiddenInput.value = btn.dataset.num || "1234"; // Default 1234
+      window.selectedBauphase = {
+        num: Number(btn.dataset.num) || 1234,
+        name: btn.dataset.name || "Bauphase 1234"
+      };
 
       updateSummary();
     });
   });
 }
 
-setupGridButtons("bauphase-btn", "bauphase");
-setupGridButtons("building-btn", "building_type");
-setupGridButtons("dachform-btn", "dachform");
+setupBauphaseButtons();
 
 /* =====================================================
-   COLLECT DATA
+   COLLECT DATA (nur Bauphase für PHP)
 ===================================================== */
 function collectData() {
-  const bauphaseNum  = window.selectedBauphase?.num || null;
-  const bauphaseName = window.selectedBauphase?.name || null;
-
-  const roles = [];
-  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
-  if (document.getElementById("weg")?.checked) roles.push("WEG");
-  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
-  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
-  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
-
-  const heating = [];
-  if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
-  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
-  if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
-  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
-
-  const goals = [];
-  if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
-  if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
-  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
-  if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
-
-  const fensterAlterJahre = window.currentWindowAgeYears ?? null;
+  const bauphaseNum  = window.selectedBauphase?.num || 1234;
+  const bauphaseName = window.selectedBauphase?.name || "Bauphase 1234";
 
   return {
-    building_phase_num: bauphaseNum,      // PDF / Server
-    building_phase_name: bauphaseName,    // UI / Summary
-    building_type: getString("building_type"),
-    roles: roles,
-    living_area_m2: getNumber("area_m2"),
-    floors_total: getNumber("floor_count"),
-    windows_per_floor: getNumber("windows_per_floor"),
-    postal_code: getNumber("postal_code"),
-    building_condition: getRadio("haus_zustand"),
-    window_type: getRadio("fenster_art"),
-    window_age_years: fensterAlterJahre,
-    heating: heating,
-    indoor_temp_c: getNumber("raumtemp"),
-    roof_type: getString("dachform"),
-    roof_orientation: getString("pv_ausrichtung"),
-    goals: goals
+    building_phase_num: bauphaseNum,      // PHP / Server
+    building_phase_name: bauphaseName     // UI / Summary
   };
 }
 
@@ -889,63 +824,15 @@ function updateSummary() {
 
   box.innerHTML =
     "<ul>" +
-    `<li>Bauphase: ${d.building_phase_name ?? "–"}</li>` +
-    `<li>Wohnfläche: ${d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–"}</li>` +
-    `<li>Geschosse: ${d.floors_total ?? "–"}</li>` +
-    `<li>Fenster/Geschoss: ${d.windows_per_floor ?? "–"}</li>` +
-    `<li>Postleitzahl: ${d.postal_code ?? "–"}</li>` +
-    `<li>Bebauung: ${d.building_type ?? "–"}</li>` +
-    `<li>Zustand: ${d.building_condition ?? "–"}</li>` +
-    `<li>Fenster: ${d.window_type ?? "–"}${d.window_age_years !== null ? ` (${d.window_age_years} Jahre)` : ""}</li>` +
-    `<li>Heizung: ${d.heating.length ? d.heating.join(", ") : "keine Angabe"}</li>` +
-    `<li>Raumklima: ${d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–"}</li>` +
-    `<li>Dach: ${d.roof_type ?? "–"} / ${d.roof_orientation ?? "–"}</li>` +
-    `<li>Ziele: ${d.goals.length ? d.goals.join(", ") : "keine Angabe"}</li>` +
+    `<li>Bauphase: ${d.building_phase_name}</li>` +
     "</ul>";
 }
-
-/* =====================================================
-   SLIDER EVENTS
-===================================================== */
-const fensterAlter = document.getElementById("fensterAlter");
-if (fensterAlter) {
-  fensterAlter.addEventListener("input", function () {
-    const out = document.getElementById("fensterWert");
-    const years = 51 - Number(this.value);
-    window.currentWindowAgeYears = years;
-    if (out) out.textContent = years;
-    updateSummary();
-  });
-}
-
-const raumtemp = document.getElementById("raumtemp");
-if (raumtemp) {
-  raumtemp.addEventListener("input", function () {
-    const out = document.getElementById("tempWert");
-    if (out) out.textContent = this.value;
-    updateSummary();
-  });
-}
-
-/* =====================================================
-   CHECKBOX & RADIO EVENTS
-===================================================== */
-["kosten_senken","komfort","gaslos","klima"].forEach(id =>
-  document.getElementById(id)?.addEventListener("change", updateSummary)
-);
-
-["fenster_art","haus_zustand"].forEach(name =>
-  document.querySelectorAll(`input[name="${name}"]`).forEach(el =>
-    el.addEventListener("change", updateSummary)
-  )
-);
 
 /* =====================================================
    INIT
 ===================================================== */
 updateSummary();
 </script>
-
 
 
 
