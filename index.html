@@ -402,13 +402,12 @@ input:checked + .slider:before {
     </span>
   </div> 
 
-<!-- BAUPHASEN GRID -->
-  <div class="box">
-    <h3>Die 4 Bauphasen der Gründerzeit</h3>
-    <p class="note"><i>„Gibt einen ersten Überblick über das Alter des Gebäudes.“</i></p>
+<div class="box">
+  <h3>Die 4 Bauphasen der Gründerzeit</h3>
+  <p class="note"><i>„Gibt einen ersten Überblick über das Alter des Gebäudes.“</i></p>
 
-<!-- Hidden Field für JS -->
-<input type="hidden" id="bauphase">
+  <!-- WICHTIG: Hidden Field für JS + Server -->
+  <input type="hidden" id="bauphase" name="building_phase">
 
 <div class="grid-container">
   <!-- VORGRÜNDERZEIT -->
@@ -481,7 +480,7 @@ input:checked + .slider:before {
     </div>
 
     <div class="col">
-      <label>Wohnfläche (m²)</label><br>
+      <label>Wohnfläche,m²</label><br>
       <input type="number" id="area_m2">
     </div>
   </div>
@@ -554,7 +553,7 @@ input:checked + .slider:before {
 <!-- ****************** -->
       <h3>Zustand des Hauses:</h3>
       <p class="note" style="margin-top: 20px;"><i>"Der Zustand entscheidet über den Umfang der Sanierungsarbeiten."</i></p>
-      <label><input type="radio" name="haus_zustand" value="schlecht"> dringend sanierungsbedürftig</label><br>
+      <label><input type="radio" name="haus_zustand" value="schlecht"> sanierungsbedürftig</label><br>
       <label><input type="radio" name="haus_zustand" value="zufrieden"> zufriedenstellend</label><br>
       <label><input type="radio" name="haus_zustand" value="sehr gut"> ausgezeichnet, gepflegt</label><br>
 
@@ -762,6 +761,7 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 
 <!-- ENDE BODY -->
 
+
 <script>
 /* =====================================================
    ACCORDION FUNCTION
@@ -789,7 +789,7 @@ function getNumber(id) {
 
 function getString(id) {
   const el = document.getElementById(id);
-  return el ? el.value : null;
+  return el && el.value !== "" ? el.value : null;
 }
 
 function getRadio(name) {
@@ -800,16 +800,18 @@ function getRadio(name) {
 /* =====================================================
    COLLECT DATA
 ===================================================== */
-
-
 function collectData() {
-  // Bauphase für Benutzer (Text) und Server (Zahl) aus globaler Variable
-  const bauphaseName = window.selectedBauphase?.name || null;
-  const bauphaseNum  = window.selectedBauphase?.num  || null;
 
-console.log("Sende an Server:", window.selectedBauphase.num);
+  /* 🔥 Bauphase: EIN Feld = Wahrheit (NUM|NAME) */
+  const rawBauphase = document.getElementById("bauphase")?.value || "";
+  const bpParts = rawBauphase.split("|");
 
-  // Rollen
+  const bauphaseNum  = bpParts[0] ? Number(bpParts[0]) : null;
+  const bauphaseName = bpParts[1] || null;
+
+  console.log("Sende an Server:", bauphaseNum, bauphaseName);
+
+  /* Rollen */
   const roles = [];
   if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
   if (document.getElementById("weg")?.checked) roles.push("WEG");
@@ -817,14 +819,14 @@ console.log("Sende an Server:", window.selectedBauphase.num);
   if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
   if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
 
-  // Heizung
+  /* Heizung */
   const heating = [];
   if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
   if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
   if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
   if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
 
-  // Ziele
+  /* Ziele */
   const goals = [];
   if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
   if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
@@ -834,8 +836,8 @@ console.log("Sende an Server:", window.selectedBauphase.num);
   const fensterAlterJahre = window.currentWindowAgeYears ?? null;
 
   return {
-    building_phase_name: bauphaseName, // für User
-    building_phase_num: bauphaseNum,   // für Server / PDF
+    building_phase_name: bauphaseName,   // User / Summary
+    building_phase_num: bauphaseNum,    // Server / PDF
     building_type: getString("building_type"),
     roles: roles,
     living_area_m2: getNumber("area_m2"),
@@ -852,8 +854,6 @@ console.log("Sende an Server:", window.selectedBauphase.num);
     goals: goals
   };
 }
-
-
 
 /* =====================================================
    SUMMARY UPDATE
@@ -882,7 +882,6 @@ function updateSummary() {
     "</ul>";
 }
 
-
 /* =====================================================
    SLIDER EVENTS
 ===================================================== */
@@ -890,10 +889,8 @@ var fensterAlter = document.getElementById("fensterAlter");
 if (fensterAlter) {
   fensterAlter.addEventListener("input", function () {
     var out = document.getElementById("fensterWert");
-
-    // Slider-Wert ist technisch (1–50), Bedeutung ist invertiert
     var years = 51 - Number(this.value);
-
+    window.currentWindowAgeYears = years;
     if (out) out.textContent = years;
     updateSummary();
   });
@@ -909,7 +906,7 @@ if (raumtemp) {
 }
 
 /* =====================================================
-   GRID BUTTONS
+   GRID BUTTONS (BAUPHASE / BUILDING / DACH)
 ===================================================== */
 function setupGridButtons(buttonClass, hiddenInputId) {
   const buttons = document.querySelectorAll("." + buttonClass);
@@ -918,57 +915,45 @@ function setupGridButtons(buttonClass, hiddenInputId) {
 
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
-      // alle Buttons deaktivieren
       buttons.forEach(b => b.classList.remove("active"));
-      // aktuellen aktiv setzen
       btn.classList.add("active");
 
-      // Hidden Input bekommt Zahl (Server)
-      hiddenInput.value = btn.dataset.num || "";
-
-      // Globale Variable bekommt Name + Zahl (für Summary & Server)
-      window.selectedBauphase = {
-        name: btn.dataset.name || "",
-        num: Number(btn.dataset.num) || null
-      };
+      /* 🔥 NUM|NAME */
+      if (btn.dataset.num && btn.dataset.name) {
+        hiddenInput.value = btn.dataset.num + "|" + btn.dataset.name;
+      } else {
+        hiddenInput.value = btn.value || "";
+      }
 
       updateSummary();
     });
   });
 }
 
-// Aufrufen
 setupGridButtons("bauphase-btn", "bauphase");
 setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
 
-
 /* =====================================================
-   GOALS CHECKBOX EVENTS
+   CHECKBOX & RADIO EVENTS
 ===================================================== */
-["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
-  var el = document.getElementById(id);
-  if (el) {
-    el.addEventListener("change", updateSummary);
-  }
+["kosten_senken","komfort","gaslos","klima"].forEach(id => {
+  document.getElementById(id)?.addEventListener("change", updateSummary);
 });
 
-/* =====================================================
-   RADIO EVENTS (Fensterart, Zustand)
-===================================================== */
-["fenster_art","haus_zustand"].forEach(function(name){
+["fenster_art","haus_zustand"].forEach(name => {
   document
     .querySelectorAll('input[name="' + name + '"]')
-    .forEach(function(el){
-      el.addEventListener("change", updateSummary);
-    });
+    .forEach(el => el.addEventListener("change", updateSummary));
 });
 
 /* =====================================================
-   INITIALIZE
+   INIT
 ===================================================== */
 updateSummary();
 </script>
+
+
 
 <!--
 =====================================================
