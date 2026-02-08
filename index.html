@@ -749,21 +749,41 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 </div>
 
 <!-- ZUR AUSWERTUNG -->
-<!-- **************** -->
 <div class="box">
   <button
     type="button"
     onclick="
-      localStorage.setItem('gzh_raw_data', JSON.stringify(collectData()));
-      window.location.href='result.html';
+      (function(){
+        // Bauphase Mapping 1–4
+        const bauphaseMap = {
+          'Vorgründerzeit': 1,
+          'Frühgründerzeit': 2,
+          'Hochgründerzeit': 3,
+          'Spätgründerzeit': 4
+        };
+        const selectedBtn = document.querySelector('.bauphase-btn.active');
+        const bauphaseValue = selectedBtn ? bauphaseMap[selectedBtn.dataset.value] : null;
+
+        if(!bauphaseValue){
+          alert('Bitte zuerst eine Bauphase auswählen!');
+          return;
+        }
+
+        // Sende nur die Bauphase an PHP
+        fetch('/php-endpoint.php', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ building_phase: bauphaseValue })
+        }).then(res => res.json())
+          .then(data => console.log('Server Response:', data))
+          .catch(err => console.error('Fehler beim Senden der Bauphase:', err));
+
+        // Weiterleitung wie gehabt
+        window.location.href = 'result.html';
+      })();
     ">
     Zur Auswertung
   </button>
-</div>
-<p class="disclaimer">
-  * Diese App ersetzt keine professionelle Beratung, gibt Ihnen aber hilfreiche Anregungen.
-</p>
-</form>
 </div>
 
 <!-- ENDE BODY -->
