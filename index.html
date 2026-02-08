@@ -804,12 +804,18 @@ function getRadio(name) {
 }
 
 /* =====================================================
-   COLLECT DATA (Buttons statt Input)
+   COLLECT DATA
 ===================================================== */
 function collectData() {
-  // Bauphase von Buttons
+  // Bauphase von Buttons (Mapping auf 1–4)
+  const bauphaseMap = {
+    "Vorgründerzeit": 1,
+    "Frühgründerzeit": 2,
+    "Hochgründerzeit": 3,
+    "Spätgründerzeit": 4
+  };
   const selectedBtn = document.querySelector(".bauphase-btn.active");
-  const bauphaseValue = selectedBtn ? parseInt(selectedBtn.dataset.value, 10) : null;
+  const bauphaseValue = selectedBtn ? bauphaseMap[selectedBtn.dataset.value] : null;
 
   // Rollen
   const roles = [];
