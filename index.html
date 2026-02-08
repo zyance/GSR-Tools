@@ -389,30 +389,30 @@ input:checked + .slider:before {
 </head>
 
 <body>
+<!-- ANFANG BODY -->
 <div class="app-container">
-  <form id="mainForm" onsubmit="return false;">
+<form id="mainForm" onsubmit="return false;">
 
-    <!-- HEADER IMAGE -->
-    <div class="header-image">
-      <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
-    </div>
+<!-- HEADER IMAGE -->
+  <div class="header-image">
+    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjmDFrR6H0SJzmUI-Xgbh8cxS77152EE03Bg4_NISF-KsvKkc_VYMBeLft6zowFFEGykT2BZiIZF2FTWeOFj2_mbipFBhvPxde2jmFi3MNH2WH7bmB-esFDNXSs81xeW5E10n-1CaK0zFiItf1Oqgece8P7Nd7vzyUxZwsjxBL90cNdXkg9QojJbGw19xTD/s1600/baukult_logo.png" alt="Gründerzeithaus Sanierungs-Berater">
+  </div>
 
-    <!-- WELCOME TEXT -->
-    <div class="content">
-      <h2>„Willkommen beim<br/>Gründerzeithaus-Helfer!"</h2>
-      <span class="note">
-        <i>"Wenn Sie für Ihr Gründerzeithaus in Wien <b>umfassend sanieren</b> wollen und/oder ein <b>Bauwerksbuch</b> benötigen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben: Was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten."*</i>
-      </span>
-    </div> 
+<!-- WELCOME txt -->
+  <div class="content">
+    <h2>„Willkommen beim<br/>Gründerzeithaus-Helfer!"</h2>
+    <span class="note">
+      <i>"Wenn Sie für Ihr Gründerzeithaus in Wien <b>umfassend sanieren</b> wollen und/oder ein <b>Bauwerksbuch</b> benötigen, kann ich Ihnen schon nach Eingabe von wenigen Daten eine fundierten Rat für die nächsten Schritte geben: Was für Ihr Gebäude empfehlenswert ist und worauf Sie achten sollten."*</i>
+    </span>
+  </div> 
 
-    <!-- BAUPHASEN GRID -->
-    <div class="box">
-      <h3>Die 4 Bauphasen der Gründerzeit</h3>
-      <p class="note"><i>„Gibt einen ersten Überblick über das Alter des Gebäudes.“</i></p>
+<!-- BAUPHASEN GRID -->
+  <div class="box">
+    <h3>Die 4 Bauphasen der Gründerzeit</h3>
+    <p class="note"><i>„Gibt einen ersten Überblick über das Alter des Gebäudes.“</i></p>
 
-      <!-- Hidden Field für JS -->
-      <input type="hidden" id="bauphase">
-
+<!-- Hidden Field für JS -->
+    <input type="hidden" id="bauphase">
 
 <!-- VORGRÜNDERZEIT -->
     <div class="grid-container">
@@ -769,99 +769,116 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 <!-- ENDE BODY -->
 
 <script>
-// ===============================
-// Mapping Bauphasen
-// ===============================
-const bauphaseMap = {
-  "Vorgründerzeit": "Vorgründerzeit",
-  "Frühgründerzeit": "Frühgründerzeit",
-  "Hochgründerzeit": "Hochgründerzeit",
-  "Spätgründerzeit": "Spätgründerzeit"
-};
+/* =====================================================
+   ACCORDION FUNCTION
+===================================================== */
+function toggleAccordion(header) {
+  var content = header.nextElementSibling;
+  var arrow = header.querySelector("span:last-child");
+  if (!content) return;
 
-// ===============================
-// Fensteralter Slider Update
-// ===============================
-function updateFensterAlter(rawValue) {
-  // Slider läuft 1 (neu) → 50 (alt)
-  const ageYears = 51 - Number(rawValue);
-  document.getElementById("fensterWert").textContent = ageYears;
-  document.getElementById("fensterAlterAnzeige").textContent = `Alter der Fenster: ${ageYears} Jahre`;
-  window.currentWindowAgeYears = ageYears;
+  content.classList.toggle("open");
+  if (arrow) {
+    arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
+  }
 }
 
-// ===============================
-// Sammeln der Form-Daten (komplett)
-// ===============================
+/* =====================================================
+   HELPER FUNCTIONS
+===================================================== */
+function getString(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  return el.value !== "" ? el.value : null;
+}
+
+function getNumber(id) {
+  var el = document.getElementById(id);
+  if (!el) return null;
+  if (el.value === "") return null;
+  var n = Number(el.value);
+  return Number.isFinite(n) ? n : null;
+}
+
+function getRadio(name) {
+  var checked = document.querySelector('input[name="' + name + '"]:checked');
+  return checked ? checked.value : null;
+}
+
+/* =====================================================
+   COLLECT DATA
+===================================================== */
 function collectData() {
-  const building_phase = document.getElementById("bauphase")?.value || null;
-  const living_area_m2 = Number(document.getElementById("area_m2")?.value) || null;
-  const floors_total = Number(document.getElementById("floor_count")?.value) || null;
-  const windows_per_floor = Number(document.getElementById("windows_per_floor")?.value) || null;
-  const postal_code = document.getElementById("postal_code")?.value || null;
-  const building_type = document.getElementById("building_type")?.value || null;
 
-  const hausZustandRadio = document.querySelector('input[name="haus_zustand"]:checked');
-  const building_condition = hausZustandRadio ? hausZustandRadio.value : null;
-
-  const fensterArtRadio = document.querySelector('input[name="fenster_art"]:checked');
-  const window_type = fensterArtRadio ? fensterArtRadio.value : null;
-
-  const window_age_years = window.currentWindowAgeYears ?? null;
-
-  const heating = [];
+  var heating = [];
   if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
-  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl");
+  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
   if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
-  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch dezentral");
+  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
 
-  const indoor_temp_c = Number(document.getElementById("raumtemp")?.value) || null;
-  const roof_type = document.getElementById("dachform")?.value || null;
-  const roof_orientation = document.getElementById("dachAusrichtung")?.checked ? "Ost/West" : "Süd";
-
-  const goals = [];
+  var goals = [];
   if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
   if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
-  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas/Öl");
+  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
   if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
 
+  var roles = [];
+  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
+  if (document.getElementById("weg")?.checked) roles.push("WEG");
+  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
+  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
+  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
+
+ // Fensteralter kommt zentral vom Slider (global gesetzt)
+var fensterAlterJahre = window.currentWindowAgeYears ?? null;
+
   return {
-    building_phase,
-    living_area_m2,
-    floors_total,
-    windows_per_floor,
-    postal_code,
-    building_type,
-    building_condition,
-    window_type,
-    window_age_years,
-    heating,
-    indoor_temp_c,
-    roof_type,
-    roof_orientation,
-    goals
+    building_phase: getString("bauphase"),
+    building_type: getString("building_type"),
+    roles: roles,
+    living_area_m2: getNumber("area_m2"),
+    floors_total: getNumber("floor_count"),
+    windows_per_floor: getNumber("windows_per_floor"),
+    postal_code: getNumber("postal_code"),
+    building_condition: getRadio("haus_zustand"),
+    window_type: getRadio("fenster_art"),
+    window_age_years: fensterAlterJahre,   // ✅ korrekt
+    heating: heating,
+    indoor_temp_c: getNumber("raumtemp"),
+    roof_type: getString("dachform"),
+    roof_orientation: getString("pv_ausrichtung"),
+    goals: goals
   };
 }
 
-// ===============================
-// Summary Update
-// ===============================
+/* =====================================================
+   SUMMARY UPDATE
+===================================================== */
 function updateSummary() {
-  const d = collectData();
-  const box = document.getElementById("summaryText");
+  var d = collectData();
+  var box = document.getElementById("summaryText");
   if (!box) return;
 
-  if (!d.building_phase) {
+if (
+  !d.building_phase &&
+  d.living_area_m2 === null &&
+  d.floors_total === null &&
+  d.windows_per_floor === null &&
+  d.postal_code === null &&
+  d.window_type === null &&
+  d.window_age_years === null &&
+  d.heating.length === 0 &&
+  d.goals.length === 0
+) {
+
     box.innerHTML = "Noch keine Eingaben.";
     return;
   }
 
-  const phaseText = bauphaseMap[d.building_phase] ?? "–";
-
   box.innerHTML =
     "<ul>" +
-    "<li>Bauphase: " + phaseText + "</li>" +
-    "<li>Wohnfläche: " + (d.living_area_m2 ?? "–") + " m²</li>" +
+    "<li>Bauphase: " + (d.building_phase ?? "–") + "</li>" +
+    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
     "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
     "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
     "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
@@ -871,23 +888,48 @@ function updateSummary() {
       (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
     "</li>" +
     "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
-    "<li>Raumklima: " + (d.indoor_temp_c ?? "–") + " °C</li>" +
+    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
     "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
     "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
     "</ul>";
 }
 
-// ===============================
-// Grid Buttons Setup
-// ===============================
+/* =====================================================
+   SLIDER EVENTS
+===================================================== */
+var fensterAlter = document.getElementById("fensterAlter");
+if (fensterAlter) {
+  fensterAlter.addEventListener("input", function () {
+    var out = document.getElementById("fensterWert");
+
+    // Slider-Wert ist technisch (1–50), Bedeutung ist invertiert
+    var years = 51 - Number(this.value);
+
+    if (out) out.textContent = years;
+    updateSummary();
+  });
+}
+
+var raumtemp = document.getElementById("raumtemp");
+if (raumtemp) {
+  raumtemp.addEventListener("input", function () {
+    var out = document.getElementById("tempWert");
+    if (out) out.textContent = this.value;
+    updateSummary();
+  });
+}
+
+/* =====================================================
+   GRID BUTTONS
+===================================================== */
 function setupGridButtons(buttonClass, hiddenInputId) {
-  const buttons = document.querySelectorAll("." + buttonClass);
-  const hiddenInput = document.getElementById(hiddenInputId);
+  var buttons = document.querySelectorAll("." + buttonClass);
+  var hiddenInput = document.getElementById(hiddenInputId);
   if (!hiddenInput) return;
 
-  buttons.forEach(btn => {
-    btn.addEventListener("click", function() {
-      buttons.forEach(b => b.classList.remove("active"));
+  buttons.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      buttons.forEach(function (b) { b.classList.remove("active"); });
       btn.classList.add("active");
       hiddenInput.value = btn.dataset.value || "";
       updateSummary();
@@ -895,50 +937,78 @@ function setupGridButtons(buttonClass, hiddenInputId) {
   });
 }
 
-// ===============================
-// Event Listeners für Inputs
-// ===============================
-function setupInputListeners() {
-  // Slider
-  document.getElementById("fensterAlter").addEventListener("input", function() {
-    updateFensterAlter(this.value);
-    updateSummary();
-  });
-
-  document.getElementById("raumtemp").addEventListener("input", function() {
-    document.getElementById("tempWert").textContent = this.value;
-    let text = "angenehm";
-    const val = Number(this.value);
-    if (val < 19) text = "kalt";
-    else if (val > 23) text = "warm";
-    document.getElementById("tempText").textContent = text;
-    updateSummary();
-  });
-
-  // Switch
-  document.getElementById("dachAusrichtung").addEventListener("change", updateSummary);
-
-  // Radio & Checkbox
-  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach(el => {
-    el.addEventListener("change", updateSummary);
-  });
-
-  // Dropdowns
-  document.querySelectorAll('select').forEach(el => {
-    el.addEventListener("change", updateSummary);
-  });
-}
-
-// ===============================
-// Initial Setup
-// ===============================
 setupGridButtons("bauphase-btn", "bauphase");
 setupGridButtons("building-btn", "building_type");
 setupGridButtons("dachform-btn", "dachform");
-setupInputListeners();
-updateFensterAlter(document.getElementById("fensterAlter").value);
+
+
+/* =====================================================
+   GOALS CHECKBOX EVENTS
+===================================================== */
+["kosten_senken","komfort","gaslos","klima"].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("change", updateSummary);
+  }
+});
+
+/* =====================================================
+   RADIO EVENTS (Fensterart, Zustand)
+===================================================== */
+["fenster_art","haus_zustand"].forEach(function(name){
+  document
+    .querySelectorAll('input[name="' + name + '"]')
+    .forEach(function(el){
+      el.addEventListener("change", updateSummary);
+    });
+});
+
+/* =====================================================
+   INITIALIZE
+===================================================== */
 updateSummary();
 </script>
+
+<!--
+=====================================================
+P2 / FUTURE DEVELOPMENT NOTES – SAN.APP P1
+=====================================================
+
+Diese Datei bildet den stabilen Stand von Phase P1 ab.
+Fokus von P1 war:
+– Verständlichkeit für Nicht-Techniker
+– visuelle Plausibilität
+– robuste, einfache Logik
+– keine Optimierung auf Wiederverwendbarkeit
+
+Bewusste P1-Entscheidungen:
+– Inline-Styles bei Slidern (z. B. Farbverläufe) zur schnellen visuellen Bewertung
+– Inline-onclick bei Accordion-Headern für maximale Transparenz
+– Keine dynamischen Farb-/Skalenberechnungen
+– Klare, explizite IDs statt abstrakter Datenmodelle
+
+P2 – mögliche, aber NICHT verpflichtende Schritte:
+1) Slider-Styles (z. B. Fensteralter, Raumtemperatur)
+   – Farbverläufe in CSS auslagern
+   – optional dynamisch per JS an Slider-Wert koppeln
+
+2) Accordion-Logik
+   – optional Event-Listener statt Inline-onclick
+   – nur wenn zusätzliche Logik (Tracking, Analytics) nötig wird
+
+3) Summary-Rendering
+   – aktuell bewusst simpel (innerHTML)
+   – erst in P2/P3 auf Templates oder Komponenten umstellen
+
+4) Struktur
+   – Trennung in CSS / JS-Dateien nur dann,
+     wenn mehrere Pages dieselbe Logik teilen
+
+WICHTIG:
+P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
+Änderungen in P2 dürfen keine bestehenden Interaktionen verschlechtern.
+=====================================================
+-->
 
 </body>
 </html>
