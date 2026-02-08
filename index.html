@@ -787,12 +787,13 @@ function setupBauphaseButtons() {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Nur die Zahl wird an den Server geschickt
+      // Bauphase-Zahl
       const num = Number(btn.dataset.num) || 1234;
-      hiddenInput.value = num; // für Server
+      hiddenInput.value = num; // nur für Form/Server falls nötig
       window.selectedBauphase = num; // für Summary
 
       updateSummary();
+      sendBauphaseToServer(num); // <-- direkt an PHP schicken
     });
   });
 }
@@ -800,24 +801,35 @@ function setupBauphaseButtons() {
 setupBauphaseButtons();
 
 /* =====================================================
-   COLLECT DATA (reduziert für Server)
+   SEND TO PHP
 ===================================================== */
-function collectData() {
-  return {
-    building_phase_num: window.selectedBauphase || 1234 // nur die Zahl
+function sendBauphaseToServer(phaseNum) {
+  const payload = {
+    building_phase: phaseNum,   // PHP erwartet genau diesen Key
+    project_id: "meinProjekt"   // optional, je nach PHP
   };
+
+  fetch("/php-endpoint.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Server Response:", data);
+    // hier könntest du z.B. Links zum PDF/DOCX anzeigen
+  })
+  .catch(err => console.error("Fehler beim Senden der Bauphase:", err));
 }
 
 /* =====================================================
-   SUMMARY UPDATE (alles bleibt sichtbar)
+   SUMMARY UPDATE (UI bleibt sichtbar)
 ===================================================== */
 function updateSummary() {
   const phase = window.selectedBauphase || 1234;
   const box = document.getElementById("summaryText");
   if (!box) return;
 
-  // UI: bleibt wie gehabt, z.B. auch Wohnfläche etc.
-  // hier nur Beispiel: Bauphase als Zahl, der Rest unverändert
   const area = document.getElementById("area_m2")?.value || "–";
   const floors = document.getElementById("floor_count")?.value || "–";
   const windows = document.getElementById("windows_per_floor")?.value || "–";
