@@ -761,90 +761,89 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 
 <!-- ENDE BODY -->
 
-
 <script>
-/* =====================================================
-   GLOBAL
-===================================================== */
-window.selectedBauphase = null; // keine Default-Zahl!
+document.addEventListener("DOMContentLoaded", () => {
 
-/* =====================================================
-   GRID BUTTONS SETUP (Bauphase)
-===================================================== */
-function setupBauphaseButtons() {
+  // =====================================================
+  // GLOBAL
+  // =====================================================
+  window.selectedBauphase = null;
+
+  // =====================================================
+  // GRID BUTTONS SETUP (Bauphase)
+  // =====================================================
   const buttons = document.querySelectorAll(".bauphase-btn");
-
   buttons.forEach(btn => {
     btn.addEventListener("click", () => {
       buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
 
-      // Zahl setzen, keine Default-Zahl mehr
+      // Zahl setzen
       const num = Number(btn.dataset.num);
       window.selectedBauphase = num;
 
       updateSummary();
     });
   });
-}
 
-setupBauphaseButtons();
+  // =====================================================
+  // SUMMARY UPDATE
+  // =====================================================
+  function updateSummary() {
+    const phase = window.selectedBauphase;
+    const box = document.getElementById("summaryText");
+    if (!box) return;
 
-/* =====================================================
-   SUMMARY UPDATE
-===================================================== */
-function updateSummary() {
-  const phase = window.selectedBauphase;
-  const box = document.getElementById("summaryText");
-  if (!box) return;
+    const area = document.getElementById("area_m2")?.value || "–";
+    const floors = document.getElementById("floor_count")?.value || "–";
+    const windows = document.getElementById("windows_per_floor")?.value || "–";
 
-  const area = document.getElementById("area_m2")?.value || "–";
-  const floors = document.getElementById("floor_count")?.value || "–";
-  const windows = document.getElementById("windows_per_floor")?.value || "–";
-
-  box.innerHTML =
-    "<ul>" +
-    `<li>Bauphase: ${phase !== undefined ? phase : "–"}</li>` +
-    `<li>Wohnfläche: ${area !== "" ? area + " m²" : "–"}</li>` +
-    `<li>Geschosse: ${floors}</li>` +
-    `<li>Fenster/Geschoss: ${windows}</li>` +
-    "</ul>";
-}
-
-/* =====================================================
-   AUSWERTUNG BUTTON (an PHP senden)
-===================================================== */
-document.getElementById("auswertungBtn")?.addEventListener("click", () => {
-  if (!window.selectedBauphase) {
-    alert("Bitte zuerst eine Bauphase auswählen!");
-    return;
+    box.innerHTML =
+      "<ul>" +
+      `<li>Bauphase: ${phase !== null ? phase : "–"}</li>` +
+      `<li>Wohnfläche: ${area !== "" ? area + " m²" : "–"}</li>` +
+      `<li>Geschosse: ${floors}</li>` +
+      `<li>Fenster/Geschoss: ${windows}</li>` +
+      "</ul>";
   }
 
-  const payload = {
-    building_phase: window.selectedBauphase,
-    project_id: "meinProjekt"
-  };
+  updateSummary(); // initial
 
-  fetch("/php-endpoint.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  })
-  .then(res => res.json())
-  .then(data => {
-    console.log("Server Response:", data);
-    if (data.pdf) {
-      alert("PDF bereit: " + data.pdf.url);
-    }
-  })
-  .catch(err => console.error("Fehler beim Senden der Bauphase:", err));
+  // =====================================================
+  // AUSWERTUNG BUTTON
+  // =====================================================
+  const btnAuswertung = document.getElementById("auswertungBtn");
+  if (btnAuswertung) {
+    btnAuswertung.addEventListener("click", () => {
+      if (window.selectedBauphase === null) {
+        alert("Bitte zuerst eine Bauphase auswählen!");
+        return;
+      }
+
+      const payload = {
+        building_phase: window.selectedBauphase,
+        project_id: "meinProjekt"
+      };
+
+      fetch("/php-endpoint.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .then(data => {
+        console.log("Server Response:", data);
+        if (data.pdf) {
+          alert("PDF bereit: " + data.pdf.url);
+        }
+      })
+      .catch(err => console.error("Fehler beim Senden der Bauphase:", err));
+    });
+  }
+
 });
-
-/* =====================================================
-   INIT
-===================================================== */
-updateSummary();
 </script>
+
 
 
 
