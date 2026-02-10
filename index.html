@@ -756,41 +756,32 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
         return;
       }
 
-      // Daten sammeln
-      const data = collectData();
-      data.building_phase = bauphaseValue;
-      data.project_id = data.project_id || 'project';
-
-      // POST an PHP
+const data = collectData();
 if (!data.building_phase) {
-  alert('Bauphase fehlt – Button wirklich angeklickt?');
+  alert('Bitte zuerst eine Bauphase auswählen!');
   return;
 }
+
+// POST an PHP
 fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    building_phase: data.building_phase
-  })
+  body: JSON.stringify(data)
 })
-.then(res => {
-  console.log('HTTP Status:', res.status);
-  return res.text();   // 👈 KEIN json()
-})
-.then(text => {
-  console.log('RAW RESPONSE:', text);
-  alert('Antwort vom Server erhalten – siehe Konsole');
+.then(res => res.json())
+.then(resp => {
+  if(resp.status !== 'ok') {
+    alert('Fehler: ' + resp.message);
+    return;
+  }
+
+  localStorage.setItem('building_phase', data.building_phase);
+  window.location.href = 'result.html';
 })
 .catch(err => {
-  console.error('FETCH ERROR:', err);
-  alert('Server nicht erreichbar (Netzwerk / Pfad / CORS)');
+  console.error(err);
+  alert('Server nicht erreichbar');
 });
-
-    })();
-  ">
-    Zur Auswertung
-  </button>
-</div>
 
 
 
@@ -835,15 +826,8 @@ function getRadio(name) {
    COLLECT DATA
 ===================================================== */
 function collectData() {
-  // Bauphase von Buttons (Mapping auf 1–4)
-  const bauphaseMap = {
-    "Vorgründerzeit": 1,
-    "Frühgründerzeit": 2,
-    "Hochgründerzeit": 3,
-    "Spätgründerzeit": 4
-  };
-  const selectedBtn = document.querySelector(".bauphase-btn.active");
-  const bauphaseValue = selectedBtn ? bauphaseMap[selectedBtn.dataset.value] : null;
+  // Bauphase sauber aus Hidden Input (1–4)
+  const bauphaseValue = Number(document.getElementById("bauphase").value) || null;
 
   // Rollen
   const roles = [];
@@ -888,6 +872,8 @@ function collectData() {
     goals: goals
   };
 }
+
+
 
 /* =====================================================
    SUMMARY UPDATE
@@ -963,24 +949,38 @@ if (raumtemp) {
 /* =====================================================
    GRID BUTTONS
 ===================================================== */
+
+setupGridButtons("building-btn", "building_type");
+setupGridButtons("dachform-btn", "dachform");
+setupGridButtons("bauphase-btn", "bauphase");
+
 function setupGridButtons(buttonClass, hiddenInputId) {
-  var buttons = document.querySelectorAll("." + buttonClass);
-  var hiddenInput = document.getElementById(hiddenInputId);
+  const buttons = document.querySelectorAll("." + buttonClass);
+  const hiddenInput = document.getElementById(hiddenInputId);
   if (!hiddenInput) return;
 
-  buttons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      buttons.forEach(function (b) { b.classList.remove("active"); });
+  const bauphaseMap = {
+    "Vorgründerzeit": 1,
+    "Frühgründerzeit": 2,
+    "Hochgründerzeit": 3,
+    "Spätgründerzeit": 4
+  };
+
+  buttons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      buttons.forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
-      hiddenInput.value = btn.dataset.value || "";
+
+      if (buttonClass === "bauphase-btn") {
+        hiddenInput.value = bauphaseMap[btn.dataset.value] || "";
+      } else {
+        hiddenInput.value = btn.dataset.value || "";
+      }
+
       updateSummary();
     });
   });
 }
-
-setupGridButtons("bauphase-btn", "bauphase");
-setupGridButtons("building-btn", "building_type");
-setupGridButtons("dachform-btn", "dachform");
 
 
 /* =====================================================
