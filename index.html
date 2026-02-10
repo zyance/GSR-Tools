@@ -95,12 +95,20 @@ body {
    BOXEN
 ===================================================== */
 .box {
-  width: 92%;
-  margin: 3% auto;
-  padding: 3%;
-  background: #fff;
-  border: 1px solid var(--hellgrau);
-  border-radius: 6px;
+  width: 100%;
+  max-width: 600px; /* breit genug auf Handy */
+  margin: 0 auto;
+  padding: 1rem;
+  word-wrap: break-word;  /* lange Wörter umbrechen */
+  font-size: 1rem;        /* größer auf Handy */
+  line-height: 1.4;
+}
+
+@media (max-width: 480px) {
+  .box {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
 }
 
 .summary-box {
@@ -735,19 +743,11 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   </div>
 </div>
 
-<!-- ZUSAMMENFASSUNG -->
-<!-- **************** -->
-<div class="box summary-box">
-  <h3>Zusammenfassung</h3>
-  <p class="note"><i>"Überprüfen Sie nochmal Ihre Eingaben."</i></p>
-  <div id="summaryText">Noch keine Eingaben.</div>
-</div>
-
 
 
 <!-- ZUR AUSWERTUNG -->
-<div class="box">
-  <button type="button" id="auswertungBtn" style="display:none">
+<div class="box" style="text-align:center;">
+  <button id="auswertungBtn" type="button">
     Zur Auswertung
   </button>
 </div>
