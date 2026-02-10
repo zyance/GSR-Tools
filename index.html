@@ -762,6 +762,10 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
       data.project_id = data.project_id || 'project';
 
       // POST an PHP
+if (!data.building_phase) {
+  alert('Bauphase fehlt – Button wirklich angeklickt?');
+  return;
+}
 fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
@@ -1049,4 +1053,3 @@ P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
 
 </body>
 </html>
-     
