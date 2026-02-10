@@ -743,51 +743,19 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   <div id="summaryText">Noch keine Eingaben.</div>
 </div>
 
+
+
 <!-- ZUR AUSWERTUNG -->
 <div class="box">
-  <button type="button" onclick="
-    (function(){
-      const bauphaseMap = { 'Vorgründerzeit':1, 'Frühgründerzeit':2, 'Hochgründerzeit':3, 'Spätgründerzeit':4 };
-      const selectedBtn = document.querySelector('.bauphase-btn.active');
-      const bauphaseValue = selectedBtn ? bauphaseMap[selectedBtn.dataset.value] : null;
-
-      if(!bauphaseValue){
-        alert('Bitte zuerst eine Bauphase auswählen!');
-        return;
-      }
-
-const data = collectData();
-if (!data.building_phase) {
-  alert('Bitte zuerst eine Bauphase auswählen!');
-  return;
-}
-
-// POST an PHP
-fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(data)
-})
-.then(res => res.json())
-.then(resp => {
-  if(resp.status !== 'ok') {
-    alert('Fehler: ' + resp.message);
-    return;
-  }
-
-  localStorage.setItem('building_phase', data.building_phase);
-  window.location.href = 'result.html';
-})
-.catch(err => {
-  console.error(err);
-  alert('Server nicht erreichbar');
-});
-
-
+  <button type="button" id="auswertungBtn" style="display:none">
+    Zur Auswertung
+  </button>
+</div>
 
 <!-- ENDE BODY -->
 
 <script>
+
 /* =====================================================
    ACCORDION FUNCTION
 ===================================================== */
@@ -830,24 +798,30 @@ function collectData() {
   return { building_phase: bauphaseValue };
 }
 
+
 /* =====================================================
    SHOW BUTTON ONLY IF BUILDING PHASE IS SET
 ===================================================== */
 function updateSummary() {
-  const d = collectData();
+  const bauphaseValue = Number(document.getElementById("bauphase").value) || null;
   const btn = document.getElementById("auswertungBtn");
-  if (btn) btn.style.display = d.building_phase !== null ? "inline-block" : "none";
+  if (btn) btn.style.display = bauphaseValue ? "inline-block" : "none";
 }
 
 /* =====================================================
-   BUTTON CLICK -> SEND BUILDING PHASE
+   BUTTON CLICK -> SEND ONLY BUILDING PHASE
 ===================================================== */
 document.getElementById("auswertungBtn")?.addEventListener("click", () => {
-  const data = collectData();
+  const bauphaseValue = Number(document.getElementById("bauphase").value) || null;
+  if (!bauphaseValue) {
+    alert("Bitte zuerst eine Bauphase auswählen!");
+    return;
+  }
+
   fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data)
+    body: JSON.stringify({ building_phase: bauphaseValue })
   })
   .then(res => res.json())
   .then(resp => {
@@ -855,7 +829,7 @@ document.getElementById("auswertungBtn")?.addEventListener("click", () => {
       alert('Fehler: ' + resp.message);
       return;
     }
-    localStorage.setItem('building_phase', data.building_phase);
+    localStorage.setItem('building_phase', bauphaseValue);
     window.location.href = 'result.html';
   })
   .catch(err => {
@@ -863,6 +837,8 @@ document.getElementById("auswertungBtn")?.addEventListener("click", () => {
     alert('Server nicht erreichbar');
   });
 });
+
+
 
 
 
