@@ -117,11 +117,11 @@ window.addEventListener("load", () => {
   const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultBox");
 
-  // Daten aus LocalStorage (z.B. Bauphase und Projekt-ID)
+  // Daten aus LocalStorage (Bauphase + Projekt-ID)
   const raw = localStorage.getItem("gzh_raw_data");
   const d = raw ? JSON.parse(raw) : {};
 
-  const buildingPhase = d.building_phase;
+  const buildingPhase = parseInt(d.building_phase) || null;
   const projectId     = d.project_id || "project";
 
   if (!buildingPhase) {
@@ -131,11 +131,15 @@ window.addEventListener("load", () => {
     return;
   }
 
+  // Loader anzeigen während Fetch läuft
+  loader.style.display = "block";
+  resultBox.style.display = "none";
+
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      building_phase: parseInt(buildingPhase),
+      building_phase: buildingPhase,
       project_id: projectId
     })
   })
@@ -145,14 +149,15 @@ window.addEventListener("load", () => {
     resultBox.style.display = "block";
 
     if (res.status !== "ok") {
-      resultBox.innerText = "Fehler bei der PDF-Erstellung: " + (res.message || "");
+      resultBox.innerText = "Fehler bei der PDF-Erstellung: " + (res.message || "Unbekannter Fehler");
       return;
     }
 
-    // HTML für Download-Link + Text
     const pdfUrl  = res.url;
     const pdfName = res.filename;
+    const text    = res.text || "Keine weiteren Informationen verfügbar.";
 
+    // HTML für Download-Link + Text
     resultBox.innerHTML = `
       <div style="text-align:center; margin-bottom:20px;">
         <a href="${pdfUrl}" download="${pdfName}" style="
@@ -167,8 +172,8 @@ window.addEventListener("load", () => {
           PDF herunterladen
         </a>
       </div>
-      <div style="max-width:600px; margin:0 auto; text-align:left; line-height:1.4;">
-        ${res.text || "Keine weiteren Informationen verfügbar."}
+      <div style="max-width:600px; margin:0 auto; text-align:left; line-height:1.5; word-break:break-word;">
+        ${text}
       </div>
     `;
   })
