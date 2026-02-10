@@ -762,32 +762,24 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
       data.project_id = data.project_id || 'project';
 
       // POST an PHP
- fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
+fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({
     building_phase: data.building_phase
   })
 })
-.then(res => res.json())
-.then(resp => {
-  if (resp.status !== 'ok') {
-    alert('Fehler beim Speichern');
-    return;
-  }
-
-  // optional: lokal merken
-  localStorage.setItem(
-    'building_phase',
-    String(data.building_phase)
-  );
-
-  // Weiterleitung
-  window.location.href = 'result.html';
+.then(res => {
+  console.log('HTTP Status:', res.status);
+  return res.text();   // 👈 KEIN json()
+})
+.then(text => {
+  console.log('RAW RESPONSE:', text);
+  alert('Antwort vom Server erhalten – siehe Konsole');
 })
 .catch(err => {
-  console.error(err);
-  alert('Server nicht erreichbar.');
+  console.error('FETCH ERROR:', err);
+  alert('Server nicht erreichbar (Netzwerk / Pfad / CORS)');
 });
 
     })();
@@ -1057,3 +1049,4 @@ P1-Code ist NICHT „unsauber“, sondern bewusst einfach.
 
 </body>
 </html>
+     
