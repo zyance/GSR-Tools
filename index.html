@@ -823,101 +823,46 @@ function getRadio(name) {
 }
 
 /* =====================================================
-   COLLECT DATA
+   COLLECT ONLY BUILDING PHASE
 ===================================================== */
 function collectData() {
-  // Bauphase sauber aus Hidden Input (1–4)
-  const bauphaseValue = Number(document.getElementById("bauphase").value) || null;
-
-  // Rollen
-  const roles = [];
-  if (document.getElementById("eigentuemer")?.checked) roles.push("Eigentümer:in");
-  if (document.getElementById("weg")?.checked) roles.push("WEG");
-  if (document.getElementById("mieter")?.checked) roles.push("Mieter:in");
-  if (document.getElementById("hausverwaltung")?.checked) roles.push("Hausverwaltung");
-  if (document.getElementById("energieberater")?.checked) roles.push("Energieberater:in");
-
-  // Heizung
-  const heating = [];
-  if (document.getElementById("fernwaerme")?.checked) heating.push("Fernwärme");
-  if (document.getElementById("gas")?.checked) heating.push("Gas / Öl zentral");
-  if (document.getElementById("dezGas")?.checked) heating.push("Gasthermen dezentral");
-  if (document.getElementById("elektrisch")?.checked) heating.push("Elektrisch");
-
-  // Ziele
-  const goals = [];
-  if (document.getElementById("kosten_senken")?.checked) goals.push("Kosten senken");
-  if (document.getElementById("komfort")?.checked) goals.push("Komfort steigern");
-  if (document.getElementById("gaslos")?.checked) goals.push("Raus aus Gas und Öl");
-  if (document.getElementById("klima")?.checked) goals.push("Klimaschutz");
-
-  // Fensteralter Slider (global)
-  const fensterAlterJahre = window.currentWindowAgeYears ?? null;
-
-  return {
-    building_phase: bauphaseValue,              // ✅ Zahl 1–4 oder null
-    building_type: getString("building_type"),
-    roles: roles,
-    living_area_m2: getNumber("area_m2"),
-    floors_total: getNumber("floor_count"),
-    windows_per_floor: getNumber("windows_per_floor"),
-    postal_code: getNumber("postal_code"),
-    building_condition: getRadio("haus_zustand"),
-    window_type: getRadio("fenster_art"),
-    window_age_years: fensterAlterJahre,
-    heating: heating,
-    indoor_temp_c: getNumber("raumtemp"),
-    roof_type: getString("dachform"),
-    roof_orientation: getString("pv_ausrichtung"),
-    goals: goals
-  };
+  const bauphaseValue = Number(document.getElementById("bauphase")?.value) || null;
+  return { building_phase: bauphaseValue };
 }
-
-
 
 /* =====================================================
-   SUMMARY UPDATE
+   SHOW BUTTON ONLY IF BUILDING PHASE IS SET
 ===================================================== */
 function updateSummary() {
-  var d = collectData();
-  var box = document.getElementById("summaryText");
-  if (!box) return;
-
-  // Keine Eingaben
-  if (
-    d.building_phase === null &&
-    d.living_area_m2 === null &&
-    d.floors_total === null &&
-    d.windows_per_floor === null &&
-    d.postal_code === null &&
-    d.window_type === null &&
-    d.window_age_years === null &&
-    d.heating.length === 0 &&
-    d.goals.length === 0
-  ) {
-    box.innerHTML = "Noch keine Eingaben.";
-    return;
-  }
-
-  box.innerHTML =
-    "<ul>" +
-    "<li>Bauphase: " + (d.building_phase ?? "–") + "</li>" +
-    "<li>Wohnfläche: " + (d.living_area_m2 !== null ? d.living_area_m2 + " m²" : "–") + "</li>" +
-    "<li>Geschosse: " + (d.floors_total ?? "–") + "</li>" +
-    "<li>Fenster/Geschoss: " + (d.windows_per_floor ?? "–") + "</li>" +
-    "<li>Postleitzahl: " + (d.postal_code ?? "–") + "</li>" +
-    "<li>Bebauung: " + (d.building_type ?? "–") + "</li>" +
-    "<li>Zustand: " + (d.building_condition ?? "–") + "</li>" +
-    "<li>Fenster: " + (d.window_type ?? "–") +
-      (d.window_age_years !== null ? " (" + d.window_age_years + " Jahre)" : "") +
-    "</li>" +
-    "<li>Heizung: " + (d.heating.length ? d.heating.join(", ") : "keine Angabe") + "</li>" +
-    "<li>Raumklima: " + (d.indoor_temp_c !== null ? d.indoor_temp_c + " °C" : "–") + "</li>" +
-    "<li>Dach: " + (d.roof_type ?? "–") + " / " + (d.roof_orientation ?? "–") + "</li>" +
-    "<li>Ziele: " + (d.goals.length ? d.goals.join(", ") : "keine Angabe") + "</li>" +
-    "</ul>";
+  const d = collectData();
+  const btn = document.getElementById("auswertungBtn");
+  if (btn) btn.style.display = d.building_phase !== null ? "inline-block" : "none";
 }
 
+/* =====================================================
+   BUTTON CLICK -> SEND BUILDING PHASE
+===================================================== */
+document.getElementById("auswertungBtn")?.addEventListener("click", () => {
+  const data = collectData();
+  fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(resp => {
+    if (resp.status !== 'ok') {
+      alert('Fehler: ' + resp.message);
+      return;
+    }
+    localStorage.setItem('building_phase', data.building_phase);
+    window.location.href = 'result.html';
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Server nicht erreichbar');
+  });
+});
 
 
 
@@ -1005,9 +950,17 @@ function setupGridButtons(buttonClass, hiddenInputId) {
 });
 
 /* =====================================================
-   INITIALIZE
+   INIT
 ===================================================== */
 updateSummary();
+
+// Trigger: wenn Bauphase geändert wird
+document.querySelectorAll(".bauphase-btn").forEach(btn => {
+  btn.addEventListener("click", updateSummary);
+});
+
+
+;
 </script>
 
 <!--
