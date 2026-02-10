@@ -560,7 +560,7 @@ input:checked + .slider:before {
 <!-- ****************** -->
       <h3>Zustand des Hauses:</h3>
       <p class="note" style="margin-top: 20px;"><i>"Der Zustand entscheidet über den Umfang der Sanierungsarbeiten."</i></p>
-      <label><input type="radio" name="haus_zustand" value="schlecht"> dringend sanierungsbedürftig</label><br>
+      <label><input type="radio" name="haus_zustand" value="schlecht"> sanierungsbedürftig</label><br>
       <label><input type="radio" name="haus_zustand" value="zufrieden"> zufriedenstellend</label><br>
       <label><input type="radio" name="haus_zustand" value="sehr gut"> ausgezeichnet, gepflegt</label><br>
 
@@ -767,31 +767,33 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
       data.project_id = data.project_id || 'project';
 
       // POST an PHP
-      fetch('/php/generate_pdf.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          project_id: data.project_id,
-          building_phase: data.building_phase
-        })
-      })
-      .then(res => res.json())
-      .then(resp => {
-        if(resp.status !== 'ok'){
-          alert('Fehler beim PDF erzeugen: ' + (resp.message || 'unbekannt'));
-          return;
-        }
+     fetch('php/save_user_data.php', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    building_phase: data.building_phase
+  })
+})
+.then(res => res.json())
+.then(resp => {
+  if (resp.status !== 'ok') {
+    alert('Fehler beim Speichern');
+    return;
+  }
 
-        // PDF erfolgreich -> Daten für result.html speichern
-        localStorage.setItem('gzh_raw_data', JSON.stringify(data));
+  // optional: lokal merken
+  localStorage.setItem(
+    'building_phase',
+    String(data.building_phase)
+  );
 
-        // Weiterleitung
-        window.location.href = 'result.html';
-      })
-      .catch(err => {
-        console.error(err);
-        alert('Server nicht erreichbar.');
-      });
+  // Weiterleitung
+  window.location.href = 'result.html';
+})
+.catch(err => {
+  console.error(err);
+  alert('Server nicht erreichbar.');
+});
 
     })();
   ">
