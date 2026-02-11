@@ -78,6 +78,7 @@ a.download:hover{ background:#4a748b; }
   from{ transform:rotate(0deg); }
   to{ transform:rotate(360deg); }
 }
+
 /* Docx-Text im Result-Container */
 .result-box p,
 .result-box strong,
@@ -86,8 +87,10 @@ a.download:hover{ background:#4a748b; }
   line-height: 1.5;     /* optional: angenehme Zeilenhöhe */
   margin: 0 0 1em 0;    /* Absätze mit Abstand */
 }
+
 </style>
 </head>
+
 
 <body>
 <div class="app-container">
@@ -101,103 +104,105 @@ a.download:hover{ background:#4a748b; }
       Sie ersetzt keine Planung und keine Kostenschätzung.
     </div>
 
-  <!-- Loader -->
+     <!-- Loader -->
   <div id="loader" style="text-align:center; padding:40px;">
-    <div class="spinner"></div>
     PDF wird erzeugt …
   </div>
 
   <!-- Ergebnis -->
-  <div class="app-container">
-    <div class="content">
-      <h2>Ergebnis</h2>
-      <div id="resultBox" class="result-box" style="display:none;"></div>
-        <div id="resultText"></div>
-        <a id="pdfLink" class="download" href="#" download>PDF herunterladen</a>
-        <div class="note">Langfassung als PDF speichern</div>
-      </div>
-
- <div class="body">
-<strong>Nächster Schritt</strong>
-Bis 31.12.2027 ist ein Bauwerksbuch in Wien verpflichtend zu erstellen. Ein erstes Sanierungskonzept wird von der Stadt Wien mit bis zu 5.000 € gefördert. Gemeinsam bilden beide eine gute Basis für die Planung einer umfassenden Sanierung Ihres Gründerzeithauses.
-    </div>
+  <div id="resultBox" style="display:none;"></div>
 
 
-
-   <div class="note">
+    <div class="note">
       Die Aussagen sind bewusst vorsichtig formuliert.
       Ob und wie Maßnahmen sinnvoll umsetzbar sind,
       muss immer am konkreten Gebäude geprüft werden.
     </div>
-    </div>
+
   </div>
+</div>
 
 <script>
 window.addEventListener("load", () => {
-  const loader = document.getElementById("loader");
+
+  const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultBox");
-  const resultText = document.getElementById("resultText");
-  const pdfLink = document.getElementById("pdfLink");
 
-  // Daten aus LocalStorage
-  const raw = localStorage.getItem("gzh_raw_data");
-  const d = raw ? JSON.parse(raw) : {};
-
-  const buildingPhase = d.building_phase;
-  const projectId = d.project_id || "project";
+  /* =====================================================
+     1️⃣ Bauphase aus LocalStorage holen
+  ===================================================== */
+  const buildingPhase = localStorage.getItem("building_phase");
 
   if (!buildingPhase) {
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultText.innerHTML = "<p>Keine Bauphase gefunden!</p>";
-    pdfLink.style.display = "none";
+    resultBox.innerText = "Keine Bauphase gefunden.";
     return;
   }
 
+  /* =====================================================
+     2️⃣ PHP aufrufen
+  ===================================================== */
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      building_phase: parseInt(buildingPhase),
-      project_id: projectId
+      building_phase: parseInt(buildingPhase)
     })
   })
   .then(r => r.json())
   .then(res => {
+
     loader.style.display = "none";
     resultBox.style.display = "block";
 
     if (res.status !== "ok") {
-      resultText.innerHTML = "<p>Fehler bei der PDF-Erstellung: " + (res.message || "") + "</p>";
-      pdfLink.style.display = "none";
+      resultBox.innerText = "Fehler: " + (res.message || "");
       return;
     }
 
-    // DOCX-Text in Absätze aufteilen
-    let formattedText = res.text
-      .split(/\n\s*\n/)          // Doppelzeilenumbrüche als Absatz
-      .map(p => p.trim())
-      .filter(p => p.length)
-      .map(p => `<p>${p}</p>`)
-      .join("");
+    const pdfUrl  = res.url;
+    const pdfName = res.filename;
+    const text    = res.text || "Keine weiteren Informationen verfügbar.";
 
-    resultText.innerHTML = formattedText || "<p>Keine weiteren Informationen verfügbar.</p>";
+    /* =====================================================
+       3️⃣ Text + PDF-Link anzeigen
+    ===================================================== */
+    resultBox.innerHTML = `
+      <div style="
+          max-width:700px;
+          margin:0 auto 40px auto;
+          padding:0 20px;
+          line-height:1.7;
+          font-size:16px;
+          text-align:left;
+          word-wrap:break-word;
+        ">
+        ${text}
+      </div>
 
-    // PDF-Link setzen
-    pdfLink.href = res.url;
-    pdfLink.download = res.filename;
-    pdfLink.style.display = "inline-block";
+      <div style="text-align:center;">
+        <a href="${pdfUrl}" download="${pdfName}" style="
+          font-weight:bold;
+          text-decoration:underline;
+          font-size:16px;
+          cursor:pointer;
+          color:#007BFF;
+        ">
+          Langfassung als PDF speichern
+        </a>
+      </div>
+    `;
   })
   .catch(err => {
     console.error(err);
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultText.innerHTML = "<p>Server nicht erreichbar.</p>";
-    pdfLink.style.display = "none";
+    resultBox.innerText = "Server nicht erreichbar.";
   });
+
 });
 </script>
-
 
 </body>
 </html>
