@@ -809,37 +809,45 @@ function updateSummary() {
 }
 
 /* =====================================================
-   BUTTON CLICK -> SEND ONLY BUILDING PHASE
+   BUTTON CLICK -> CALL PHP + STORE COMPLETE RESPONSE
 ===================================================== */
 document.getElementById("auswertungBtn")?.addEventListener("click", () => {
+
   const bauphaseValue = Number(document.getElementById("bauphase").value) || null;
+
   if (!bauphaseValue) {
     alert("Bitte zuerst eine Bauphase auswählen!");
     return;
   }
 
-  fetch('https://app.sunsunsun.at/wien/gzh/php/save_user_data.php', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ building_phase: bauphaseValue })
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      building_phase: bauphaseValue
+    })
   })
   .then(res => res.json())
   .then(resp => {
-    if (resp.status !== 'ok') {
-      alert('Fehler: ' + resp.message);
+
+    if (resp.status !== "ok") {
+      alert("Fehler: " + resp.message);
       return;
     }
-    localStorage.setItem('building_phase', bauphaseValue);
-    window.location.href = 'result.html';
+
+    // 🔥 GANZ WICHTIG:
+    // komplettes PHP-Ergebnis speichern (nicht nur building_phase)
+
+    localStorage.setItem("gzh_result", JSON.stringify(resp));
+
+    // weiterleiten
+    window.location.href = "result.html";
   })
   .catch(err => {
     console.error(err);
-    alert('Server nicht erreichbar');
+    alert("Server nicht erreichbar");
   });
 });
-
-
-
 
 
 /* =====================================================
