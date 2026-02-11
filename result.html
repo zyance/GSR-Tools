@@ -83,34 +83,15 @@ a.download:hover{ background:#4a748b; }
 
 
 <body>
-<div class="app-container">
-  <div class="content">
 
-    <h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
-
-    <div class="note">
-      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
-      grundsätzliche Möglichkeiten und bekannte Einschränkungen.
-      Sie ersetzt keine Planung und keine Kostenschätzung.
-    </div>
-
-    <!-- LOADER -->
-    <div id="loader">
-      <div class="spinner"></div>
-      <div class="note">PDF wird erzeugt …</div>
-    </div>
-
-    <!-- RESULT -->
-    <div id="resultBox" class="result-box" style="display:none;"></div>
-
-    <div class="note">
-      Die Aussagen sind bewusst vorsichtig formuliert.
-      Ob und wie Maßnahmen sinnvoll umsetzbar sind,
-      muss immer am konkreten Gebäude geprüft werden.
-    </div>
-
+  <!-- Loader -->
+  <div id="loader" style="text-align:center; padding:40px;">
+    PDF wird erzeugt …
   </div>
-</div>
+
+  <!-- Ergebnis -->
+  <div id="resultBox" style="display:none;"></div>
+
 
 <script>
 window.addEventListener("load", () => {
@@ -118,64 +99,79 @@ window.addEventListener("load", () => {
   const loader    = document.getElementById("loader");
   const resultBox = document.getElementById("resultBox");
 
-  // 🔹 PHP-Ergebnis aus Index lesen
-  const raw = localStorage.getItem("gzh_result");
+  /* =====================================================
+     1️⃣ Bauphase aus LocalStorage holen
+  ===================================================== */
+  const buildingPhase = localStorage.getItem("building_phase");
 
-  if (!raw) {
+  if (!buildingPhase) {
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = "Keine Ergebnisse gefunden.";
+    resultBox.innerText = "Keine Bauphase gefunden.";
     return;
   }
 
-  const res = JSON.parse(raw);
+  /* =====================================================
+     2️⃣ PHP aufrufen
+  ===================================================== */
+  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      building_phase: parseInt(buildingPhase)
+    })
+  })
+  .then(r => r.json())
+  .then(res => {
 
-  // 🔹 Sicherheit: prüfen ob Status ok war
-  if (res.status !== "ok") {
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = "Fehler: " + (res.message || "Unbekannter Fehler");
-    return;
-  }
 
-  // 🔹 Loader ausblenden
-  loader.style.display = "none";
-  resultBox.style.display = "block";
+    if (res.status !== "ok") {
+      resultBox.innerText = "Fehler: " + (res.message || "");
+      return;
+    }
 
-  // 🔹 PDF-Daten
-  const pdfUrl  = res.url;
-  const pdfName = res.filename;
-  const text    = res.text || "Keine weiteren Informationen verfügbar.";
+    const pdfUrl  = res.url;
+    const pdfName = res.filename;
+    const text    = res.text || "Keine weiteren Informationen verfügbar.";
 
-  // 🔹 HTML erzeugen
-  resultBox.innerHTML = `
-    <div style="text-align:center; margin-bottom:25px;">
-      <a href="${pdfUrl}" download="${pdfName}" style="
-        display:inline-block;
-        padding:14px 24px;
-        background:#007BFF;
-        color:white;
-        font-weight:bold;
-        border-radius:10px;
-        text-decoration:none;
-        font-size:16px;
-      ">
-        PDF herunterladen
-      </a>
-    </div>
+    /* =====================================================
+       3️⃣ Text + PDF-Link anzeigen
+    ===================================================== */
+    resultBox.innerHTML = `
+      <div style="
+          max-width:700px;
+          margin:0 auto 40px auto;
+          padding:0 20px;
+          line-height:1.7;
+          font-size:16px;
+          text-align:left;
+          word-wrap:break-word;
+        ">
+        ${text}
+      </div>
 
-    <div style="
-        max-width:700px;
-        margin:0 auto;
-        padding:0 20px;
-        line-height:1.6;
-        font-size:16px;
-        text-align:left;
-        word-wrap:break-word;
-      ">
-      ${text}
-    </div>
-  `;
+      <div style="text-align:center;">
+        <a href="${pdfUrl}" download="${pdfName}" style="
+          font-weight:bold;
+          text-decoration:underline;
+          font-size:16px;
+          cursor:pointer;
+          color:#007BFF;
+        ">
+          Langfassung als PDF speichern
+        </a>
+      </div>
+    `;
+  })
+  .catch(err => {
+    console.error(err);
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText = "Server nicht erreichbar.";
+  });
+
 });
 </script>
 
