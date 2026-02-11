@@ -118,18 +118,15 @@ window.addEventListener("load", () => {
   const resultBox = document.getElementById("resultBox");
 
   // Daten aus LocalStorage (Bauphase + Projekt-ID)
-  const raw = localStorage.getItem("gzh_raw_data");
-  const d = raw ? JSON.parse(raw) : {};
+const data = collectData(); // data.building_phase muss gesetzt sein
+localStorage.setItem("gzh_raw_data", JSON.stringify({
+    building_phase: data.building_phase,
+    project_id: data.project_id || "project"
+}));
+window.location.href = 'result.html';
 
-  const buildingPhase = parseInt(d.building_phase) || null;
-  const projectId     = d.project_id || "project";
 
-  if (!buildingPhase) {
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "Keine Bauphase gefunden!";
-    return;
-  }
+
 
   // Loader anzeigen während Fetch läuft
   loader.style.display = "block";
