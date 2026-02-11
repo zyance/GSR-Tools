@@ -78,16 +78,6 @@ a.download:hover{ background:#4a748b; }
   from{ transform:rotate(0deg); }
   to{ transform:rotate(360deg); }
 }
-
-/* Docx-Text im Result-Container */
-.result-box p,
-.result-box strong,
-.result-box br {
-  font-size: 20px;      /* gleiche Größe wie Haupttext */
-  line-height: 1.5;     /* optional: angenehme Zeilenhöhe */
-  margin: 0 0 1em 0;    /* Absätze mit Abstand */
-}
-
 </style>
 </head>
 
@@ -129,12 +119,15 @@ window.addEventListener("load", () => {
   const resultBox = document.getElementById("resultBox");
 
   /* =====================================================
-     1️⃣ Bauphase aus LocalStorage holen, Fallback auf 1
+     1️⃣ Bauphase aus LocalStorage holen
   ===================================================== */
-  let buildingPhase = parseInt(localStorage.getItem("building_phase"));
-  if (!buildingPhase || isNaN(buildingPhase)) {
-    buildingPhase = 1; // Default Bauphase
-    console.warn("Keine Bauphase im LocalStorage, Standard 1 wird genutzt.");
+  const buildingPhase = localStorage.getItem("building_phase");
+
+  if (!buildingPhase) {
+    loader.style.display = "none";
+    resultBox.style.display = "block";
+    resultBox.innerText = "Keine Bauphase gefunden.";
+    return;
   }
 
   /* =====================================================
@@ -143,7 +136,9 @@ window.addEventListener("load", () => {
   fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ building_phase: buildingPhase })
+    body: JSON.stringify({
+      building_phase: parseInt(buildingPhase)
+    })
   })
   .then(r => r.json())
   .then(res => {
@@ -152,7 +147,7 @@ window.addEventListener("load", () => {
     resultBox.style.display = "block";
 
     if (res.status !== "ok") {
-      resultBox.innerText = "Fehler: " + (res.message || "Unbekannt");
+      resultBox.innerText = "Fehler: " + (res.message || "");
       return;
     }
 
@@ -169,7 +164,7 @@ window.addEventListener("load", () => {
           margin:0 auto 40px auto;
           padding:0 20px;
           line-height:1.7;
-          font-size:20px; /* gleiche Größe wie Haupttext */
+          font-size:16px;
           text-align:left;
           word-wrap:break-word;
         ">
@@ -180,7 +175,7 @@ window.addEventListener("load", () => {
         <a href="${pdfUrl}" download="${pdfName}" style="
           font-weight:bold;
           text-decoration:underline;
-          font-size:20px;
+          font-size:16px;
           cursor:pointer;
           color:#007BFF;
         ">
