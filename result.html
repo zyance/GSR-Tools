@@ -115,127 +115,69 @@ a.download:hover{ background:#4a748b; }
 <script>
 window.addEventListener("load", () => {
 
-  // ===============================
-  // DOM Elemente holen
-  // ===============================
-  const loader    = document.getElementById("loader");     // Lade-Animation
-  const resultBox = document.getElementById("resultBox");  // Bereich für Ergebnis
+  const loader    = document.getElementById("loader");
+  const resultBox = document.getElementById("resultBox");
 
-  // ===============================
-  // Daten aus LocalStorage laden
-  // ===============================
-  // Dort wurde vorher building_phase + project_id gespeichert
-  const raw = localStorage.getItem("gzh_raw_data");
+  // 🔹 PHP-Ergebnis aus Index lesen
+  const raw = localStorage.getItem("gzh_result");
 
-  // JSON sicher parsen
-  const d = raw ? JSON.parse(raw) : {};
-
-  // Bauphase als Integer erzwingen
-  const buildingPhase = parseInt(d.building_phase);
-
-  // Projekt-ID fallback falls nichts vorhanden
-  const projectId = d.project_id || "project";
-
-  // ===============================
-  // Sicherheitsprüfung: Bauphase vorhanden?
-  // ===============================
-  if (!buildingPhase) {
+  if (!raw) {
     loader.style.display = "none";
     resultBox.style.display = "block";
-    resultBox.innerText = "Keine Bauphase gefunden!";
+    resultBox.innerText = "Keine Ergebnisse gefunden.";
     return;
   }
 
-  // ===============================
-  // Anfrage an PHP senden
-  // ===============================
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      building_phase: buildingPhase,   // Bauphase an Server senden
-      project_id: projectId            // Projekt-ID an Server senden
-    })
-  })
+  const res = JSON.parse(raw);
 
-  // ===============================
-  // Antwort vom Server lesen
-  // ===============================
-  .then(async response => {
-
-    // ZUERST als Text lesen (wichtig!)
-    // Wenn PHP einen Warning ausgibt, würde json() crashen
-    const rawText = await response.text();
-
-    try {
-      // Versuchen Text in JSON zu parsen
-      return JSON.parse(rawText);
-    } catch (e) {
-      // Wenn Parsing fehlschlägt → Fehler werfen
-      throw new Error("Ungültige Server-Antwort: " + rawText);
-    }
-  })
-
-  // ===============================
-  // Erfolgreiche JSON-Antwort
-  // ===============================
-  .then(res => {
-
-    if (res.status !== "ok") {
-      throw new Error(res.message || "Unbekannter Fehler");
-    }
-
-    // Loader ausblenden
+  // 🔹 Sicherheit: prüfen ob Status ok war
+  if (res.status !== "ok") {
     loader.style.display = "none";
-
-    // Ergebnis anzeigen
     resultBox.style.display = "block";
+    resultBox.innerText = "Fehler: " + (res.message || "Unbekannter Fehler");
+    return;
+  }
 
-    // PDF-Link + Text einbauen
-    resultBox.innerHTML = `
-      <div style="text-align:center; margin-bottom:20px;">
-        <a href="${res.url}" download="${res.filename}" style="
-          display:inline-block;
-          padding:12px 20px;
-          background:#007BFF;
-          color:white;
-          font-weight:bold;
-          border-radius:8px;
-          text-decoration:none;">
-          PDF herunterladen
-        </a>
-      </div>
+  // 🔹 Loader ausblenden
+  loader.style.display = "none";
+  resultBox.style.display = "block";
 
-      <div style="
-        max-width:600px;
+  // 🔹 PDF-Daten
+  const pdfUrl  = res.url;
+  const pdfName = res.filename;
+  const text    = res.text || "Keine weiteren Informationen verfügbar.";
+
+  // 🔹 HTML erzeugen
+  resultBox.innerHTML = `
+    <div style="text-align:center; margin-bottom:25px;">
+      <a href="${pdfUrl}" download="${pdfName}" style="
+        display:inline-block;
+        padding:14px 24px;
+        background:#007BFF;
+        color:white;
+        font-weight:bold;
+        border-radius:10px;
+        text-decoration:none;
+        font-size:16px;
+      ">
+        PDF herunterladen
+      </a>
+    </div>
+
+    <div style="
+        max-width:700px;
         margin:0 auto;
+        padding:0 20px;
+        line-height:1.6;
+        font-size:16px;
         text-align:left;
-        line-height:1.4;">
-        ${res.text || "Keine weiteren Informationen verfügbar."}
-      </div>
-    `;
-  })
-
-  // ===============================
-  // Fehlerbehandlung
-  // ===============================
-  .catch(error => {
-
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-
-    resultBox.innerText = "Fehler: " + error.message;
-
-    console.error("Fetch Error:", error);
-  });
-
+        word-wrap:break-word;
+      ">
+      ${text}
+    </div>
+  `;
 });
 </script>
-
-
-
 
 </body>
 </html>
