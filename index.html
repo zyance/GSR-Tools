@@ -777,31 +777,6 @@ function toggleAccordion(header) {
 }
 
 /* =====================================================
-   BUTTON SICHTBAR NUR WENN BAUPHASE GESETZT
-===================================================== */
-function updateSummary() {
-  const bauphaseValue = Number(document.getElementById("bauphase")?.value) || null;
-  const btn = document.getElementById("auswertungBtn");
-  if (btn) btn.style.display = bauphaseValue ? "inline-block" : "none";
-}
-
-/* =====================================================
-   BUTTON CLICK → DIREKT ZU RESULT MIT PARAMETER
-===================================================== */
-document.getElementById("auswertungBtn")?.addEventListener("click", () => {
-
-  const bauphaseValue = Number(document.getElementById("bauphase")?.value) || null;
-
-  if (!bauphaseValue) {
-    alert("Bitte zuerst eine Bauphase auswählen!");
-    return;
-  }
-
-  window.location.href = "result.html?building_phase=" + bauphaseValue;
-});
-
-
-/* =====================================================
    GRID BUTTONS (ALLE BEIBEHALTEN)
 ===================================================== */
 setupGridButtons("building-btn", "building_type");
@@ -826,20 +801,47 @@ function setupGridButtons(buttonClass, hiddenInputId) {
       btn.classList.add("active");
 
       if (buttonClass === "bauphase-btn") {
-        hiddenInput.value = bauphaseMap[btn.dataset.value] || "";
-        updateSummary();
+        const value = bauphaseMap[btn.dataset.value];
+        if (value !== undefined) {
+          hiddenInput.value = value;
+          console.log("Bauphase gesetzt auf:", hiddenInput.value); // Debug
+          updateSummary();
+        } else {
+          console.warn("Unbekannte Bauphase:", btn.dataset.value);
+          hiddenInput.value = "";
+        }
       } else {
         hiddenInput.value = btn.dataset.value || "";
+        console.log(hiddenInputId, "gesetzt auf:", hiddenInput.value); // Debug
       }
     });
   });
 }
 
 /* =====================================================
+   BUTTON CLICK → DIREKT ZU RESULT MIT PARAMETER
+===================================================== */
+const auswertungBtn = document.getElementById("auswertungBtn");
+
+auswertungBtn?.addEventListener("click", () => {
+  const hiddenInput = document.getElementById("bauphase");
+  const bauphaseValue = Number(hiddenInput?.value);
+
+  console.log("Bauphase beim Klick:", bauphaseValue); // Debug
+
+  if (!bauphaseValue || bauphaseValue < 1 || bauphaseValue > 4) {
+    alert("Bitte zuerst eine Bauphase auswählen!");
+    return;
+  }
+
+  // Saubere Weiterleitung mit Parameter
+  window.location.href = "result.html?building_phase=" + bauphaseValue;
+});
+
+/* =====================================================
    INIT
 ===================================================== */
 updateSummary();
-
 </script>
 
 </body>
