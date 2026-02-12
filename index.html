@@ -601,6 +601,149 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 >
 <span id="fensterAlterAnzeige"></span>
 
+<script>
+  function updateFensterAlter(rawValue) {
+    // Slider läuft 1 (neu) → 50 (alt)
+    // Bedeutung soll sein: links alt (50), rechts neu (1)
+    const ageYears = 51 - Number(rawValue);
+
+    // Anzeige neben dem Slider
+    document.getElementById("fensterAlterAnzeige").textContent =
+      `Alter der Fenster: ${ageYears} Jahre`;
+
+    // zentral speichern (für Summary / collectData)
+    window.currentWindowAgeYears = ageYears;
+  }
+
+  // Initial setzen
+  updateFensterAlter(document.getElementById("fensterAlter").value);
+</script>
+
+<div class="slider-label" style="display:flex; justify-content:space-between; margin-top:6px; font-size:14px;">
+  <span>sehr alt</span>
+  <span>neuwertig</span>
+</div>
+
+</div>  <!-- ENDE accordion-content Thermische Sanierung -->
+</div>  <!-- ENDE box Thermische Sanierung -->
+
+
+
+<!-- ********************** -->
+<!-- HEIZUNG UND WARMWASSER -->
+<!-- ********************** -->
+<div class="box">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <span>Heizung & Warmwasser</span><span>▼</span>
+  </div>
+  <div class="accordion-content">
+    <p class="note"><i>"Die Umstellung auf erneuerbare Energie ist oft Hauptziel der Sanierung."</i></p>
+
+    <h3>Bestehendes HZ und WW System</h3>
+    <label><input type="checkbox" id="fernwaerme"> Fernwärme, zentral</label><br>
+    <label><input type="checkbox" id="gas"> Gas / Öl, zentral</label><br>
+    <label><input type="checkbox" id="dezGas"> Gasthermen, dezentral</label><br>
+    <label><input type="checkbox" id="elektrisch"> Elektrisch, dezentral</label>
+
+<!-- WOHNKOMFORT -->
+<!-- *********** -->
+    <h3 style="margin-top: 20px;">Wohnkomfort</h3>
+    <p class="note"><i>"Das subjektive Wärme- oder Kälteempfinden entscheidet über die Behaglichkeit."</i></p>
+
+<h3>Raumklima: <span id="tempWert">21</span> °C</h3>
+
+<div class="slider-wrapper">
+<input
+  type="range"
+  id="raumtemp"
+  min="17"
+  max="25"
+  value="21"
+>
+
+  <div class="scale">
+    <span>17°</span>
+    <span>19°</span>
+    <span>21°</span>
+    <span>23°</span>
+    <span>25°</span>
+  </div>
+</div>
+
+<div class="rating">Empfinden: <span id="tempText">angenehm</span></div>
+
+    </div>          
+ </div>           
+
+<!-- ******************* -->
+<!-- PHOTOVOLTAIC ANLAGE -->
+<!-- ******************* -->
+<div class="box">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <span>Photovoltaik-Anlage</span><span>▼</span>
+  </div>
+  <div class="accordion-content">
+    <h3>Die Dachform</h3>
+    <input type="hidden" id="dachform">
+    <p class="note"><i>"Gibt Auskunft über den Stromertrag eine PV-Anlage."</i></p>
+
+<!-- DACHFORM -->
+<!-- ******** -->
+    <div class="grid-container">
+      <button type="button" class="grid-btn dachform-btn" data-value="Satteldach">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgQRtaL69qeHPxzfZvdug64juBuEkvjkGY3-bEC3C0uc07Pus0c3nRHlSgKn3BvnUzKpVh6G_RWBgcWjbVmCvYK17OISI9H3BaNi3f17KQ8m6CiQljzkgRdA5uJuIMfEruLlPrGJvrj6W3TneRBJcCXqU5IJUitvBSw08HIlHI2f5cjGeim8JgLmXkINF_k/s320/DACH_1.png" alt="Satteldach">
+      </button>
+
+      <button type="button" class="grid-btn dachform-btn" data-value="Satteldach mit Gauben">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhp9eaBs2FIL7K04CdA0vq8Ddi2oibTa5PCcQR5dlZz-8-X8vUFTLL4CUaewqQL93FczbZTCQ4JhBv1-dBBU8P5fHAPI86xK_06-q1UDaYW3JJwi_GzIgjHoJgtcxIvVpIPlOz00IVURg9hwz5F_0VuUVuxJ8mg0d4qBcMpq7BZdQx52WIwreNh5U4wMmXx/s320/DACH_2.png" alt="Satteldach mit Gauben">
+      </button>
+
+      <button type="button" class="grid-btn dachform-btn" data-value="Mansarddach">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhT1wPuN97D1yW7hLl-rB7G4EwYUWIq8DeI42ffdW3OHIQkKLpo5GX3uBry1t2CnrpiKluplfFoPYFF87SLTigt6lYJQYltDYWukwNAztSy1ZefVEK9ktFd-ZPuhoxPNjtJtTwzGllxItu-2lAsOgzG8N8BJ0Ee_fUhZDkcwhURIwDVi0nKMEbM41ZyZJW7/s320/DACH_3.png" alt="Mansarddach">
+      </button>
+
+      <button type="button" class="grid-btn dachform-btn" data-value="Walmdach">
+        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEha87YkqXQLZK8E43kfOdRd1NZ-EwaxuMDQjq3Lj_CumrS5EkBXGEnsle3FmmP433vr3ZU0dEDGsPEUPNp_sjT727DMGo1XgURFRvGmT8rJ7NnBTa-dvxpctALsK7eDOAsZAAcWk2grgC4lLvMMDa4CGQV8FrhiqL_nLJhjv7MdNAVzqVAYXlLnUFHy8iad/s320/DACH_4.png" alt="Walmdach">
+      </button>
+    </div>
+
+<!-- DACHAUSRICHTUNG -->
+<!-- *************** -->
+<h3 style="margin-top: 20px;">Dachausrichtung:</h3>
+
+<input type="hidden" id="pv_ausrichtung" value="Süd">
+
+<div class="main-wrapper">
+  <span id="label-sued" class="label label-left is-active">Süd</span>
+
+  <label class="switch">
+    <input type="checkbox" id="dachAusrichtung">
+    <span class="slider"></span>
+  </label>
+
+  <span id="label-ow" class="label label-right">Ost/West</span>
+</div>
+
+</div>  <!-- ENDE .accordion-content Photovoltaik -->
+</div>  <!-- ENDE .box Photovoltaik -->
+
+<!-- ZIELE DER SANIERUNG -->
+<!-- ******************** -->
+<div class="box">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <span>Ziele der Sanierung</span><span>▼</span>
+  </div>
+
+  <div class="accordion-content">
+    <p class="note"><i>"Für die erfolgreiche Sanierung braucht es klare Ziele."</i></p>
+    <label><input type="checkbox" id="kosten_senken"> Kosten senken</label><br>
+    <label><input type="checkbox" id="komfort"> Komfort steigern</label><br>
+    <label><input type="checkbox" id="gaslos"> Raus aus Gas und Öl</label><br>
+    <label><input type="checkbox" id="klima"> Klimaschutz</label>
+  </div>
+</div>
+
+
 <!-- ZUR AUSWERTUNG -->
 <!-- **************** -->
 <div class="box" style="display:flex; justify-content:center; align-items:center;">
@@ -615,9 +758,6 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
 
 </form>
 </div>
-
-
-
 
 
 <script>
