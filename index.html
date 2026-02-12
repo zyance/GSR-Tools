@@ -796,6 +796,7 @@ function updateSummary() {
 ===================================================== */
 document.getElementById("auswertungBtn")?.addEventListener("click", () => {
 
+  // Hidden-Input, der die Zahl der gewählten Bauphase enthält
   const bauphaseValue = Number(document.getElementById("bauphase")?.value) || null;
 
   if (!bauphaseValue) {
@@ -803,9 +804,19 @@ document.getElementById("auswertungBtn")?.addEventListener("click", () => {
     return;
   }
 
-  // Direkt weiterleiten mit building_phase
-window.location.href = "result.html?phase=" + bauphaseValue;
+  // Direkt weiterleiten: Phase als Zahl übergeben
+  window.location.href = "result.html?phase=" + bauphaseValue;
 });
+
+// Sichtbarkeit des Buttons aktualisieren
+function updateSummary() {
+  const bauphaseValue = Number(document.getElementById("bauphase")?.value) || null;
+  const btn = document.getElementById("auswertungBtn");
+  if (btn) btn.style.display = bauphaseValue ? "inline-block" : "none";
+}
+
+// Initial ausführen
+updateSummary();
 
 
 /* =====================================================
