@@ -62,7 +62,10 @@ h2 {
 }
 
 .result-box h2 {
-  font-weight: 500;
+  font-size: 20px;   /* gleiche Größe wie body */
+  font-weight: bold;  /* strong */
+  text-align: left;   /* linksbündig */
+  margin: 0 0 1em 0;
 }
 
 a.download {
@@ -143,12 +146,9 @@ window.addEventListener("load", () => {
   const loader = document.getElementById("loader");
   const resultBox = document.getElementById("resultBox");
 
-  // 1️⃣ Bauphase aus LocalStorage holen, Fallback auf 1
-  let buildingPhase = parseInt(localStorage.getItem("building_phase"));
-  if (!buildingPhase || isNaN(buildingPhase)) {
-    buildingPhase = 1;
-    console.warn("Keine Bauphase im LocalStorage, Standard 1 wird genutzt.");
-  }
+  // 1️⃣ Bauphase aus URL holen, Fallback auf 1
+  const params = new URLSearchParams(window.location.search);
+  const buildingPhase = parseInt(params.get("phase")) || 1;
 
   // 2️⃣ Texte und PDFs fest hinterlegen
   const texts = {
@@ -258,10 +258,13 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
 <p>PV ist oft durch Dachform, Ausbauten, Schutzzonen und elektrische Kapazitäten begrenzt. Immer objektspezifisch zu prüfen.</p>
 <h2>Kostenschätzung & Förderung</h2>
 <p>Als erster sehr grober Richtwert gelten Durchnittskosten für Sanierungen von GZH in Wien von ca. 1.800 €/m² inkl. Nebenkosten. Förderungen können im Schnitt etwa 25 % der Kosten abdecken. </p>`
-    }
+    },
+    2: { /* Texte Phase 2 */ },
+    3: { /* Texte Phase 3 */ },
+    4: { /* Texte Phase 4 */ }
   };
 
-  // 3️⃣ Text + PDF-Link anzeigen
+  // 3️⃣ Text + PDF-Link anzeigen nach kurzer Ladezeit
   setTimeout(() => {
     loader.style.display = "none";
     resultBox.style.display = "block";
@@ -269,12 +272,14 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
     const { html, pdf } = texts[buildingPhase];
 
     resultBox.innerHTML = `
-      <div>${html}</div>
-      <div style="text-align:center;">
-        <a href="${pdf}" download class="pdf-link">Langfassung als PDF speichern</a>
+      <div class="result-box">
+        ${html}
+      </div>
+      <div style="text-align:center; margin-top:12px;">
+        <a href="${pdf}" download class="download">Langfassung als PDF speichern</a>
       </div>
     `;
-  }, 500); // 0,5 Sekunde Loader
+  }, 500);
 
 });
 </script>
