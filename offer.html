@@ -1,271 +1,229 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unser Angebot – Gründerzeithaus</title>
 
-  <title>Unser Angebot – Gründerzeithaus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
 
-  <!-- =====================================================
-       GOOGLE FONT: FIRA SANS
-       Einheitliche Typografie für san.app
-  ===================================================== -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg-main:#5c88a1;
+  --bg-box:#f2f2f2;
+  --text-main:#333;
+  --text-note:#555;
+  --baukult:#7090a7;
+}
 
-  <!-- =====================================================
-       ZENTRALES APP-STYLESHEET
-       Gemeinsames Layout für alle Seiten
-  ===================================================== -->
-  <link rel="stylesheet" href="assets/css/style.css">
+html{ font-size:18px; }
 
-  <style>
-  /* =====================================================
-     GRUNDVARIABLEN – FARBEN UND AKZENTE
-  ===================================================== */
-  :root{
-    --bg-main:#5c88a1;      /* Hintergrund App */
-    --bg-box:#f2f2f2;      /* Box-Hintergrund */
-    --text-main:#333;     /* Haupttext */
-    --text-note:#555;     /* Hinweistext */
-    --baukult:#7090a7;    /* Akzentfarbe Buttons/Links */
-    --mittelgrau:#b5b5b5;/* Linien und Trennungen */
-  }
+body{
+  margin:0;
+  font-family:"Fira Sans", Arial, sans-serif;
+  background:var(--bg-main);
+  color:var(--text-main);
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  padding:20px 0;
+}
 
-  /* =====================================================
-     BASIS-EINSTELLUNGEN
-  ===================================================== */
-  html{
-    font-size:18px;       /* Basis für rem-Werte */
-  }
+.app-container{
+  width:100%;
+  max-width:600px;
+  background:#fff;
+  border-radius:8px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
+}
 
-  body{
-    margin:0;
-    font-family:"Fira Sans", Arial, sans-serif;
-    background:var(--bg-main);
-    color:var(--text-main);
+.content{ padding:24px; }
 
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
+h2{
+  text-align:center;
+  font-weight:500;
+  margin-top:0;
+}
 
-    padding:20px 0;
-  }
+p{
+  line-height:1.6;
+  margin:16px 0;
+}
 
-  /* =====================================================
-     APP-CONTAINER – GLEICH WIE ANDERE SEITEN
-  ===================================================== */
-  .app-container{
-    width:100%;
-    max-width:600px;
-    background:#ffffff;
-    border-radius:8px;
-    box-shadow:0 10px 25px rgba(0,0,0,.25);
-  }
+.note{
+  font-style:italic;
+  color:var(--text-note);
+  text-align:center;
+  margin:18px 0;
+}
 
-  .content{
-    padding:24px;
-  }
+.offer-box{
+  background:var(--bg-box);
+  padding:20px;
+  border-radius:6px;
+  margin:24px 0;
+  line-height:1.6;
+}
+.offer-box input,
+.offer-box select {
+  font-size:16px;
+  padding:6px 8px; /* optional: angenehme Innenabstände */
+  box-sizing:border-box;
+}
 
-  /* =====================================================
-     TYPOGRAFIE
-  ===================================================== */
-  h1, h2{
-    text-align:center;
-    font-weight:500;
-    margin-top:0;
-  }
+/* Accordion */
+.box{
+  background:var(--bg-box);
+  border-radius:6px;
+  margin:24px 0;
+  overflow:hidden;
+}
 
-  p{
-    line-height:1.6;
-    margin:16px 0;
-  }
+.accordion-header{
+  padding:18px 20px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  font-weight:500;
+  background:#e9e9e9;
+  user-select:none;
+}
 
-  .note{
-    font-style:italic;
-    color:var(--text-note);
-    text-align:center;
-    margin:18px 0;
-  }
+.accordion-header:hover{
+  background:#dcdcdc;
+}
 
-  /* =====================================================
-     INHALTS-BOXEN (für Angebotsbausteine)
-  ===================================================== */
-  .offer-box{
-    background:var(--bg-box);
-    padding:20px;
-    border-radius:6px;
-    margin:24px 0;
-    line-height:1.6;
-  }
+.accordion-content{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height 0.3s ease;
+  padding:0 20px;
+}
 
-  /* =====================================================
-     BUTTONS – IDENT ZU RESULT-PAGE
-  ===================================================== */
-  .button-wrapper{
-    margin-top:30px;
-    text-align:center;
-  }
-
-  .app-button{
-    display:inline-block;
-
-    background:var(--baukult);
-    color:#ffffff;
-    text-decoration:none;
-
-    border-radius:6px;
-    padding:12px 24px;
-
-    font-size:1rem;
-    font-family:"Fira Sans", Arial, sans-serif;
-    font-weight:500;
-
-    cursor:pointer;
-  }
-
-  .app-button:hover{
-    background:#5a7a91;
-  }
-
-  /* =====================================================
-     TRENNLINIEN / SEKTIONEN
-  ===================================================== */
-  .section-separator{
-    margin:40px 0 20px 0;
-    border-top:1px solid var(--mittelgrau);
-  }
-
-  </style>
+.accordion-content.open{
+  padding:20px;
+  max-height:1000px;
+}
+</style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     APP-CONTAINER – ZENTRALES RASTER
-===================================================== -->
 <div class="app-container">
-  <div class="content">
+<div class="content">
 
-    <!-- =====================================================
-         SEITENTITEL
-    ===================================================== -->
-    <h2>Unser Angebot</h2>
+<h2>Sanierung vorbereiten</h2>
 
-    <!-- =====================================================
-         EINLEITENDE NOTE
-    ===================================================== -->
-    <div class="note">
-      Um die Sanierung eines Gründerzeithauses erfolgreich planen zu können,
-      muss man es erst „auf Herz und Nieren“ prüfen und in der Tiefe kennenlernen
-      und verstehen.
-    </div>
-
-    <!-- =====================================================
-         HAUPTTEXT – ANGEBOTSBESCHREIBUNG
-    ===================================================== -->
-    <div class="offer-box">
-
-      <p>
-        Wir erstellen mit Ihnen ein gefördertes Sanierungskonzept (die Stadt Wien zahlt bis zu € 5.000 dazu).
-        Diese Machbarkeitsstudie enthält auch das Bauwerksbuch (Pflicht für alle
-        Gründerzeithäuser in Wien bis zum 31.12.2027).
-      </p>
-
-      <p>
-        So wird aus der „Pflichtübung“ Bauwerksbuch die Grundlage, um den Bewohnern des Hauses das Sanierungskonzept vorzustellen und
-        Einigkeit über den gemeinsamen Weg zu erzielen, noch bevor die 
-        Planung begonnen hat. Das führt schneller und sicherer zum Ziel und vermeidet
-        unnötige Kosten.
-      </p>
-
-      <p>
-        Das Sanierungskonzept ist unserer Erfahrung nach eine solide Basis und
-        Voraussetzung, um gemeinsam die Planung der umfassenden Sanierung in Angriff
-        zu nehmen und erfolgreich umzusetzen.
-      </p>
-
-    </div>
-
-    <!-- =====================================================
-     EINLEITUNG VOR DEM FORMULAR
-===================================================== -->
 <div class="note">
-  Wenn wir Ihr Interesse geweckt haben, senden Sie uns bitte eine E-Mail,
-  um einen Termin mit uns zu vereinbaren.
+Die Planung einer umfassenden Sanierung Ihres Gründerzeithauses lässt sich gut mit der Erstellung eines Bauwerksbuchs verbinden.
 </div>
 
-<!-- =====================================================
-     FORMULAR – KONTAKTDATEN + HAUSADRESSE
-===================================================== -->
-<div class="offer-box">
-
-  <!-- Erklärungstext -->
-  <p style="font-size:14px; color:var(--text-note); text-align:center;">
-    Bitte geben Sie hier Ihre Kontaktdaten an, damit wir Sie für ein unverbindliches Gespräch erreichen können.
-  </p>
-
-  <!-- Titel + Anrede + Firma -->
-  <p>
-    <select id="user_title" name="user_title" style="width:30%;">
-      <option value="">Titel</option>
-      <option value="Dr.">Dr.</option>
-      <option value="Mag.">Mag.</option>
-      <option value="Mag. Mag.">Mag. Mag.</option>
-      <option value="FH">FH</option>
-      <option value="DI">DI</option>
-    </select>
-
-    <select id="user_salutation" name="user_salutation" style="width:30%; margin-left:5px;">
-      <option value="">Anrede</option>
-      <option value="frau">Frau</option>
-      <option value="herr">Herr</option>
-    </select>
-
-    <input type="text" id="user_company" name="user_company" placeholder="Firma" style="width:35%; margin-left:5px;">
-  </p>
-
-  <!-- Vorname + Name -->
-  <p>
-    <input type="text" id="first_name" name="first_name" placeholder="Vorname" style="width:40%;">
-    <input type="text" id="last_name" name="last_name" placeholder="Name" style="width:50%; margin-left:5px;">
-  </p>
-
-  <!-- Ihre Adresse -->
-  <p>
-    <input type="text" id="user_street" name="user_street" placeholder="Gasse / Straße" style="width:50%;">
-    <input type="text" id="user_number" name="user_number" placeholder="Nr." style="width:15%; margin-left:5px;">
-    <input type="text" id="user_zip" name="user_zip" placeholder="PLZ" style="width:25%; margin-left:5px;">
-  </p>
-
-  <!-- Telefonnummer -->
-  <p>
-    <input type="text" id="user_phone" name="user_phone" placeholder="Telefonnummer" style="width:100%;">
-  </p>
-
-  <!-- Adresse des Gründerzeithauses -->
-  <p style="margin-top:30px; font-weight:500; text-align:center;">
-    Adresse des Gründerzeithauses
-  </p>
-
-  <p>
-    <input type="text" id="house_street" name="house_street" placeholder="Gasse / Straße" style="width:50%;">
-    <input type="text" id="house_number" name="house_number" placeholder="Nr." style="width:15%; margin-left:5px;">
-    <input type="text" id="house_zip" name="house_zip" placeholder="PLZ" style="width:25%; margin-left:5px;">
-  </p>
-
-</div>
-
-<!-- =====================================================
-     ABSCHLUSS NACH DEM FORMULAR
-===================================================== -->
-<div class="note">
-  Wir freuen uns auf ein unverbindliches Gespräch mit Ihnen.
-</div>
-
+<!-- BAUWERKSBUCH -->
+<div class="box">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <span>Näheres zum Bauwerksbuch</span><span>▼</span>
+  </div>
+  <div class="accordion-content">
+    <p><strong>Bauwerksbuch – was Eigentümer wissen müssen</strong></p>
+    <p>
+    Das Bauwerksbuch (BWB) ist ein gesetzlich vorgeschriebenes Gebäudedokumentations- und Prüfhandbuch gemäß Wiener Bauordnung.
+    </p>
+    <p>
+    Für Gründerzeithäuser in Wien ist es bis 31.12.2027 verpflichtend zu erstellen und laufend zu aktualisieren.
+    </p>
   </div>
 </div>
+
+<!-- SANIERUNGSKONZEPT -->
+<div class="box">
+  <div class="accordion-header" onclick="toggleAccordion(this)">
+    <span>Näheres zum Sanierungskonzept</span><span>▼</span>
+  </div>
+  <div class="accordion-content">
+    <p><strong>Gefördertes Grobsanierungskonzept – Stadt Wien</strong></p>
+    <p>
+    Das Grobsanierungskonzept analysiert den baulichen Zustand und priorisiert sinnvolle Maßnahmen.
+    </p>
+    <p>
+    Die Erstellung wird von der Stadt Wien mit bis zu 5.000 € gefördert.
+    </p>
+  </div>
+</div>
+
+<p>
+Es gibt große inhaltliche Überschneidungen zwischen Bauwerksbuch und Sanierungskonzept in der Bestandsaufnahme und Bauteilbewertung.<br>
+Durch die Zusammenführung entsteht ein Gesamtbild aus Zustandsfeststellung, Sanierungsbedarf und Kosteneinschätzung – eine solide Grundlage für die Planung einer umfassenden Sanierung.
+</p>
+
+<div class="note">
+Wenn wir Ihr Interesse geweckt haben, senden Sie uns bitte eine E-Mail, um einen Termin zu vereinbaren.
+</div>
+
+<!-- FORMULAR -->
+<div class="offer-box">
+
+<p style="font-size:18px; color:var(--text-note); text-align:center;">
+Bitte geben Sie hier Ihre Kontaktdaten an.
+</p>
+
+<p>
+<select style="width:15%;">
+<option value="">Titel</option>
+<option>Dr.</option>
+<option>Mag.</option>
+<option>DI</option>
+</select>
+<select style="width:20%; margin-left:5px;">
+<option value="">Anrede</option>
+<option>Frau</option>
+<option>Herr</option>
+</select>
+</p>
+<p>
+<input type="text" placeholder="Vorname" style="width:40%;">
+<input type="text" placeholder="Name" style="width:55%; margin-left:5px;">
+</p>
+<p>
+<input type="text" placeholder="Straße" style="width:60%;">
+<input type="text" placeholder="Nr." style="width:15%; margin-left:5px;">
+<input type="text" placeholder="PLZ" style="width:15%; margin-left:5px;">
+</p>
+<p>
+<input type="text" placeholder="Telefonnummer" style="width:60%;">
+
+</p>
+<p style="font-size:20px; color:var(--text-note); text-align:center;">
+Adresse des Gründerzeithauses.
+</p>
+<p>
+<input type="text" placeholder="Straße" style="width:60%;">
+<input type="text" placeholder="Nr." style="width:15%; margin-left:5px;">
+<input type="text" placeholder="PLZ" style="width:15%; margin-left:5px;">
+</p>
+
+</div>
+
+<div class="note">
+Wir freuen uns auf ein unverbindliches Gespräch mit Ihnen.
+</div>
+
+</div> <!-- content -->
+</div> <!-- app-container -->
+
+<script>
+function toggleAccordion(header) {
+  var content = header.nextElementSibling;
+  var arrow = header.querySelector("span:last-child");
+  if (!content) return;
+
+  content.classList.toggle("open");
+  arrow.textContent = content.classList.contains("open") ? "▲" : "▼";
+}
+</script>
 
 </body>
 </html>
