@@ -188,7 +188,7 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
       title: "Kurz-Einschätzung Ihres Frühgründerzeithauses",
       pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_2.pdf",
       html: `
-<h1>Kurz-Einschätzung Ihres Frühgründerzeithauses</h1>
+<h2>Kurz-Einschätzung Ihres Frühgründerzeithauses</h2>
 <p>Gründerzeithäuser sind ein zentraler Bestandteil des Wiener Stadtbilds und bis heute aktiv genutzt. Als Eigentümer:in besitzen oder als Bewohner:in nutzen Sie ein historisch wertvolles, technisch anspruchsvolles Gebäude.</p>
 <h2>Bauzeit und Substanz</h2>
 <p>Ihr Haus stammt aus der Frühgründerzeit (ca. 1845–1864). Typisch sind regelmäßigere Ziegelmauerwerke, hohe Wandstärken und meist gute Tragreserven, oft fehlen jedoch Abdichtungen und es gibt Feuchteprobleme, vor allem im Keller.</p>
@@ -215,7 +215,7 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
       title: "Kurz-Einschätzung Ihres Hochgründerzeithauses",
       pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_3.pdf",
       html: `
-<h1>Kurz-Einschätzung Ihres Hochgründerzeithauses</h1>
+<h2>Kurz-Einschätzung Ihres Hochgründerzeithauses</h2>
 <p>Gründerzeithäuser prägen das Wiener Stadtbild bis heute. 
 Als Eigentümer:in besitzen oder als Bewohner:in nutzen Sie ein historisch wertvolles, technisch komplexes Gebäude aus einer Phase intensiver Stadterweiterung.</p>
 <h2>Bauzeit und Substanz</h2>
@@ -244,7 +244,7 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
       title: "Kurz-Einschätzung Ihres Spätgründerzeithauses",
       pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_4.pdf",
       html: `
-<h1>Kurz-Einschätzung Ihres Spätgründerzeithauses</h1>
+<h2>Kurz-Einschätzung Ihres Spätgründerzeithauses</h2>
 <p>Gründerzeithäuser sind ein prägender Teil Wiens und werden bis heute aktiv genutzt. Als Eigentümer:in verwalten oder als Bewohner:in nutzen Sie ein historisch wertvolles, aber technisch anspruchsvolles Gebäude, dessen Eigenschaften stark von seiner Entstehungszeit geprägt sind.</p>
 <h2>Bauzeit und Charakter</h2>
 <p>Ihr Haus stammt aus der Spätgründerzeit (ca. 1890–1918). Typisch sind ruhigere Fassaden, heterogene Bauweisen, erste Haustechnik und veränderte Grundrisse. Viele heutige Probleme resultieren aus späteren Einbauten, nicht aus dem Ursprungsbau.</p>
@@ -271,14 +271,16 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
 
     const { html, pdf } = texts[buildingPhase];
 
-    resultBox.innerHTML = `
-      <div class="result-box">
-        ${html}
-      </div>
-      <div style="text-align:center; margin-top:12px;">
-        <a href="${pdf}" download class="download">Langfassung als PDF speichern</a>
-      </div>
-    `;
+resultBox.innerHTML = `
+  <div class="result-box">
+    ${html}
+  </div>
+  <div style="text-align:center; margin-top:12px; font-size:20px; line-height:1.5;">
+    <a href="${pdf}" download style="color:#007BFF; text-decoration:underline; font-weight:normal;">
+      ${pdf}
+    </a>
+  </div>
+`;
   }, 500);
 
 });
