@@ -271,16 +271,20 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
 
     const { html, pdf } = texts[buildingPhase];
 
-resultBox.innerHTML = `
-  <div class="result-box">
-    ${html}
-  </div>
-  <div style="text-align:center; margin-top:12px; font-size:20px; line-height:1.5;">
-    <a href="${pdf}" download style="color:#007BFF; text-decoration:underline; font-weight:normal;">
-      Langfassung als PDF downloaden!
-    </a>
-  </div>
-`;
+setTimeout(() => {
+  loader.style.display = "none";
+  resultBox.style.display = "block";
+  resultBox.innerHTML = `
+    <div class="result-box">
+      ${html}
+    </div>
+    <div style="text-align:center; margin-top:12px; font-size:20px; line-height:1.5;">
+      <a href="${pdf}" download style="color:#007BFF; text-decoration:underline; font-weight:normal;">
+        Langfassung als PDF downloaden!
+      </a>
+    </div>
+  `;
+}, 500);
 
 });
 </script>
