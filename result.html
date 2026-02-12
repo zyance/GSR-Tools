@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Ergebnis – Gründerzeithaus</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,107 +10,123 @@
 <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg-main:#5c88a1;
-  --bg-box:#f2f2f2;
-  --text-main:#333;
-  --text-note:#555;
+:root {
+  --bg-main: #5c88a1;
+  --bg-box: #f2f2f2;
+  --text-main: #333;
+  --text-note: #555;
 }
-html{ font-size:20px; }
-body{
-  margin:0;
-  font-family:"Fira Sans", Arial, sans-serif;
-  background:var(--bg-main);
-  color:var(--text-main);
-  display:flex;
-  justify-content:center;
-  padding:20px 0;
-}
-.app-container{
-  width:100%;
-  max-width:600px;
-  background:#fff;
-  border-radius:8px;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
-}
-.content{ padding:24px; }
-h2{ text-align:center; font-weight:500; }
-.note{
-  font-style:italic;
-  color:var(--text-note);
-  text-align:center;
-  margin:18px 0;
-}
-.result-box{
-  background:var(--bg-box);
-  padding:20px;
-  border-radius:6px;
-  margin:24px 0;
-  text-align:center;
-}
-a.download{
-  display:inline-block;
-  margin-top:12px;
-  padding:12px 18px;
-  background:#5c88a1;
-  color:#fff;
-  text-decoration:none;
-  border-radius:6px;
-  font-weight:500;
-}
-a.download:hover{ background:#4a748b; }
 
-#loader{
-  text-align:center;
-  padding:20px;
+html { font-size: 20px; }
+
+body {
+  margin: 0;
+  font-family: "Fira Sans", Arial, sans-serif;
+  background: var(--bg-main);
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
 }
-.spinner{
-  width:40px;
-  height:40px;
-  border:4px solid #ccc;
-  border-top:4px solid #7090a7;
-  border-radius:50%;
-  margin:0 auto 12px;
-  animation:spin 1s linear infinite;
+
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
 }
-@keyframes spin{
-  from{ transform:rotate(0deg); }
-  to{ transform:rotate(360deg); }
+
+.content {
+  padding: 24px;
+}
+
+h2 {
+  text-align: center;
+  font-weight: 500;
+}
+
+.note {
+  font-style: italic;
+  color: var(--text-note);
+  text-align: center;
+  margin: 18px 0;
+}
+
+.result-box {
+  background: var(--bg-box);
+  padding: 20px;
+  border-radius: 6px;
+  margin: 24px 0;
+  text-align: left;
+}
+
+.result-box h2 {
+  font-weight: 500;
+}
+
+a.download {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 12px 18px;
+  background: #5c88a1;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+a.download:hover {
+  background: #4a748b;
+}
+
+#loader {
+  text-align: center;
+  padding: 20px;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #ccc;
+  border-top: 4px solid #7090a7;
+  border-radius: 50%;
+  margin: 0 auto 12px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 /* Docx-Text im Result-Container */
 .result-box p,
 .result-box strong,
 .result-box br {
-  font-size: 20px;      /* gleiche Größe wie Haupttext */
-  line-height: 1.5;     /* optional: angenehme Zeilenhöhe */
-  margin: 0 0 1em 0;    /* Absätze mit Abstand */
+  font-size: 20px;
+  line-height: 1.5;
+  margin: 0 0 1em 0;
 }
-
 </style>
 </head>
-
-
 <body>
+
 <div class="app-container">
   <div class="content">
 
     <h2>Erste Einschätzung zur Sanierung Ihres Gründerzeithauses</h2>
 
     <div class="note">
-      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale,
-      grundsätzliche Möglichkeiten und bekannte Einschränkungen.
+      Diese Einschätzung basiert auf wenigen Angaben und zeigt typische Merkmale und bekannte Einschränkungen.
       Sie ersetzt keine Planung und keine Kostenschätzung.
     </div>
 
-     <!-- Loader -->
-  <div id="loader" style="text-align:center; padding:40px;">
-    PDF wird erzeugt …
-  </div>
+    <!-- Loader -->
+    <div id="loader">PDF wird erzeugt …</div>
 
-  <!-- Ergebnis -->
-  <div id="resultBox" style="display:none;"></div>
-
+    <!-- Ergebnis -->
+    <div id="resultBox" style="display:none;"></div>
 
     <div class="note">
       Die Aussagen sind bewusst vorsichtig formuliert.
@@ -125,76 +140,141 @@ a.download:hover{ background:#4a748b; }
 <script>
 window.addEventListener("load", () => {
 
-  const loader    = document.getElementById("loader");
+  const loader = document.getElementById("loader");
   const resultBox = document.getElementById("resultBox");
 
-  /* =====================================================
-     1️⃣ Bauphase aus LocalStorage holen, Fallback auf 1
-  ===================================================== */
+  // 1️⃣ Bauphase aus LocalStorage holen, Fallback auf 1
   let buildingPhase = parseInt(localStorage.getItem("building_phase"));
   if (!buildingPhase || isNaN(buildingPhase)) {
-    buildingPhase = 1; // Default Bauphase
+    buildingPhase = 1;
     console.warn("Keine Bauphase im LocalStorage, Standard 1 wird genutzt.");
   }
 
-  /* =====================================================
-     2️⃣ PHP aufrufen
-  ===================================================== */
-  fetch("https://app.sunsunsun.at/wien/gzh/php/save_user_data.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ building_phase: buildingPhase })
-  })
-  .then(r => r.json())
-  .then(res => {
+  // 2️⃣ Texte und PDFs fest hinterlegen
+  const texts = {
+    1: {
+      title: "Kurz-Einschätzung Ihres Vorgründerzeithauses",
+      pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_1.pdf",
+      html: `
+<h2>Kurz-Einschätzung Ihres Vorgründerzeithauses</h2>
+<p>Gründerzeithäuser sind ein prägender Teil Wiens und werden bis heute aktiv genutzt. 
+Als Eigentümer:in verwalten oder als Bewohner:in nutzen Sie ein historisch wertvolles, 
+aber technisch anspruchsvolles Gebäude, dessen Eigenschaften stark von seiner Entstehungszeit geprägt sind.</p>
+<h2>Bauzeit und Substanz</h2>
+<p>Ihr Haus stammt aus der Vorgründerzeit (ca. 1830–1844). Typisch sind handwerkliche Bauweise, individuelle Konstruktionen, einfache Fundamente sowie eine erhöhte Anfälligkeit für Setzungen 
+und Feuchte, besonders im Keller.</p>
+<h2>Sanierung und Energie</h2>
+<p>Thermische Verbesserungen sind möglich, aber stark vom Einzelfall abhängig. 
+Straßenseitige Fassaden sind oft geschützt, während Dächer, Kellerdecken und Hofseiten 
+das größte Einsparpotenzial bieten. Sanierungen erfolgen meist schrittweise 
+und nicht an allen Bauteilen gleichzeitig.</p>
+<h2>Fenster</h2>
+<p>Wiener Kastenfenster sind gestalterisch wichtig und meist erhaltenswert. 
+Eine Sanierung oder ein Tausch ist energetisch relevant, kostenintensiv 
+und mit Eingriffen in die Wohnungen verbunden.</p>
+<h2>Heizung und Technik</h2>
+<p>Erneuerbare Heizsysteme sind grundsätzlich machbar, werden aber oft durch Platzmangel, 
+alte Leitungen und begrenzte Stromleistung eingeschränkt. Fernwärme ist oft erste Wahl, 
+Wärmepumpen kommen infrage, sofern die Infrastruktur dies zulässt.</p>
+<h2>Photovoltaik</h2>
+<p>PV ist oft durch Dachform, Ausbauten, Schutzzonen und elektrische Kapazitäten begrenzt. 
+Immer objektspezifisch zu prüfen.</p>
+<h2>Kostenschätzung & Förderung</h2>
+<p>Als erster sehr grober Richtwert gelten Durchschnittskosten für Sanierungen von 
+Gründerzeithäusern in Wien von ca. 1.800 €/m² inkl. Nebenkosten. 
+Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
+    },
+    2: {
+      title: "Kurz-Einschätzung Ihres Frühgründerzeithauses",
+      pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_2.pdf",
+      html: `
+<h2>Kurz-Einschätzung Ihres Frühgründerzeithauses</h2>
+<p>Gründerzeithäuser sind ein zentraler Bestandteil des Wiener Stadtbilds und bis heute aktiv genutzt. Als Eigentümer:in besitzen oder als Bewohner:in nutzen Sie ein historisch wertvolles, technisch anspruchsvolles Gebäude.</p>
+<h2>Bauzeit und Substanz</h2>
+<p>Ihr Haus stammt aus der Frühgründerzeit (ca. 1845–1864). Typisch sind regelmäßigere Ziegelmauerwerke, hohe Wandstärken und meist gute Tragreserven, oft fehlen jedoch Abdichtungen und es gibt Feuchteprobleme, vor allem im Keller.</p>
+<h2>Energie und Sanierung</h2>
+<p>Thermische Verbesserungen sind grundsätzlich gut möglich, aber stark vom Einzelfall abhängig. Hofseiten, Dächer und Kellerdecken bieten meist das größte Einsparpotenzial, 
+während straßenseitige Fassaden oft geschützt sind.</p>
+<h2>Fenster</h2>
+<p>Wiener Kastenfenster prägen das Haus und sind meist erhaltenswert. 
+Sanierung oder Tausch ist energetisch wichtig, aber kostenintensiv und mit Eingriffen in die Wohnungen verbunden.</p>
+<h2>Heizung und Technik</h2>
+<p>Erneuerbare Heizsysteme sind möglich, werden jedoch häufig durch Platzmangel, 
+alte Leitungen und begrenzte Stromleistung eingeschränkt. Fernwärme ist oft erste Wahl, 
+Wärmepumpen kommen infrage, sofern die Infrastruktur dies zulässt.</p>
+<h2>Photovoltaik</h2>
+<p>PV ist oft durch Dachform, Ausbauten, Schutzzonen und elektrische Kapazitäten begrenzt. 
+Immer objektspezifisch zu prüfen.</p>
+<h2>Kostenschätzung & Förderung</h2>
+<p>Als erster sehr grober Richtwert gelten Durchschnittskosten für Sanierungen von 
+Gründerzeithäusern in Wien von ca. 1.800 €/m² inkl. Nebenkosten. 
+Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
+    },
+    3: {
+      title: "Kurz-Einschätzung Ihres Hochgründerzeithauses",
+      pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_3.pdf",
+      html: `
+<h2>Kurz-Einschätzung Ihres Hochgründerzeithauses</h2>
+<p>Gründerzeithäuser prägen das Wiener Stadtbild bis heute. 
+Als Eigentümer:in besitzen oder als Bewohner:in nutzen Sie ein historisch wertvolles, technisch komplexes Gebäude aus einer Phase intensiver Stadterweiterung.</p>
+<h2>Bauzeit und Substanz</h2>
+<p>Ihr Haus stammt aus der Hochgründerzeit (ca. 1865–1889). Typisch sind regelmäßige Bauweisen, gut nachvollziehbare Tragstrukturen und hohe Ausnutzung der Bauplätze. 
+Feuchteprobleme im Keller und enge Hofverhältnisse sind nicht unüblich.</p>
+<h2>Energie und Sanierung</h2>
+<p>Energetische Verbesserungen sind meist gut planbar, aber lageabhängig. 
+Dächer, oberste Geschoßdecken und Hofseiten bieten großes Potenzial, 
+während reich gegliederte Straßenfassaden oft nur eingeschränkt dämmbar sind.</p>
+<h2>Fenster</h2>
+<p>Großflächige Kastenfenster prägen das Erscheinungsbild, sind energetisch jedoch oft ein Schwachpunkt. Sanierung oder Tausch ist wirkungsvoll, aber kostenintensiv und mit Eingriffen in die Wohnungen verbunden.</p>
+<h2>Heizung und Technik</h2>
+<p>Erneuerbare Heizsysteme sind grundsätzlich möglich, werden aber durch Platzbedarf, 
+bestehende Leitungen und die elektrische Infrastruktur begrenzt. Fernwärme ist oft erste Wahl, 
+Wärmepumpen kommen infrage, sofern die Infrastruktur dies zulässt.</p>
+<h2>Photovoltaik</h2>
+<p>PV ist oft durch Dachform, Ausbauten, Schutzzonen und elektrische Kapazitäten begrenzt. 
+Immer objektspezifisch zu prüfen.</p>
+<h2>Kostenschätzung & Förderung</h2>
+<p>Als erster sehr grober Richtwert gelten Durchschnittskosten für Sanierungen von 
+Gründerzeithäusern in Wien von ca. 1.800 €/m² inkl. Nebenkosten. 
+Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
+    },
+    4: {
+      title: "Kurz-Einschätzung Ihres Spätgründerzeithauses",
+      pdf: "https://app.sunsunsun.at/wien/gzh/pdf/GZH_4.pdf",
+      html: `
+<h2>Kurz-Einschätzung Ihres Spätgründerzeithauses</h2>
+<p>Gründerzeithäuser sind ein prägender Teil Wiens und werden bis heute aktiv genutzt. Als Eigentümer:in verwalten oder als Bewohner:in nutzen Sie ein historisch wertvolles, aber technisch anspruchsvolles Gebäude, dessen Eigenschaften stark von seiner Entstehungszeit geprägt sind.</p>
+<h2>Bauzeit und Charakter</h2>
+<p>Ihr Haus stammt aus der Spätgründerzeit (ca. 1890–1918). Typisch sind ruhigere Fassaden, heterogene Bauweisen, erste Haustechnik und veränderte Grundrisse. Viele heutige Probleme resultieren aus späteren Einbauten, nicht aus dem Ursprungsbau.</p>
+<h2>Substanz</h2>
+<p>Diese Häuser sind zumeist gebaut aus Ziegelmauerwerk, Holzbalken- oder Mischdecken, einfache Fundamente ohne Abdichtung. Tragreserven meist vorhanden, aber geringer als bei Hochgründerzeit. Feuchte im Keller ist häufig. </p>
+<h2>Energie  und Sanierung</h2>
+<p>Sanierungen sind stark einzelfallabhängig. Hofseiten, Dächer und Kellerdecken bieten meist das größte Potenzial. Straßenseitige Fassaden sind oft geschützt und nur eingeschränkt dämmbar. Maßnahmen werden in der Praxis kombiniert, nicht flächendeckend umgesetzt.</p>
+<h2>Fenster</h2>
+<p>Wiener Kastenfenster sind prägend und meist erhaltenswert. Sanierung oder Tausch ist energetisch wichtig, kostenintensiv und bedeutet Eingriffe in die Wohnungen.</p>
+<h2>Heizung und Technik</h2>
+<p>Erneuerbare Systeme sind grundsätzlich möglich, werden aber oft durch Platzmangel, alte Leitungen und begrenzte Stromleistung eingeschränkt. Fernwärme ist oft erste Wahl, wenn ein Anschluss möglich ist. Wärmepumpen kommen infrage, wenn Infrastruktur und Gebäudehülle es zulassen.</p>
+<h2>Photovoltaik</h2>
+<p>PV ist oft durch Dachform, Ausbauten, Schutzzonen und elektrische Kapazitäten begrenzt. Immer objektspezifisch zu prüfen.</p>
+<h2>Kostenschätzung & Förderung</h2>
+<p>Als erster sehr grober Richtwert gelten Durchnittskosten für Sanierungen von GZH in Wien von ca. 1.800 €/m² inkl. Nebenkosten. Förderungen können im Schnitt etwa 25 % der Kosten abdecken. </p>`
+    }
+  };
 
+  // 3️⃣ Text + PDF-Link anzeigen
+  setTimeout(() => {
     loader.style.display = "none";
     resultBox.style.display = "block";
 
-    if (res.status !== "ok") {
-      resultBox.innerText = "Fehler: " + (res.message || "Unbekannt");
-      return;
-    }
+    const { html, pdf } = texts[buildingPhase];
 
-    const pdfUrl  = res.url;
-    const pdfName = res.filename;
-    const text    = res.text || "Keine weiteren Informationen verfügbar.";
-
-    /* =====================================================
-       3️⃣ Text + PDF-Link anzeigen
-    ===================================================== */
     resultBox.innerHTML = `
-      <div style="
-          max-width:700px;
-          margin:0 auto 40px auto;
-          padding:0 20px;
-          line-height:1.7;
-          font-size:20px; /* gleiche Größe wie Haupttext */
-          text-align:left;
-          word-wrap:break-word;
-        ">
-        ${text}
-      </div>
-
+      <div>${html}</div>
       <div style="text-align:center;">
-        <a href="${pdfUrl}" download="${pdfName}" style="
-          font-weight:bold;
-          text-decoration:underline;
-          font-size:20px;
-          cursor:pointer;
-          color:#007BFF;
-        ">
-          Langfassung als PDF speichern
-        </a>
+        <a href="${pdf}" download class="pdf-link">Langfassung als PDF speichern</a>
       </div>
     `;
-  })
-  .catch(err => {
-    console.error(err);
-    loader.style.display = "none";
-    resultBox.style.display = "block";
-    resultBox.innerText = "Server nicht erreichbar.";
-  });
+  }, 500); // 0,5 Sekunde Loader
 
 });
 </script>
