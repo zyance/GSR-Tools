@@ -165,13 +165,14 @@ button:hover {
 
 /* Mobile extra großzügig */
 @media (max-width: 600px) {
-  input[type="number"],
-  input[type="text"],
-  select {
-    font-size: 18px;
-    padding: 16px;         /* Input bleibt groß */
-    margin-bottom: 12px;   /* Abstand Input → Input gleich lassen */
+  .row-2 {
+    flex-direction: column; /* Spalten untereinander */
+    gap: 12px;              /* kleiner Abstand */
   }
+  .row-2 .col input {
+    width: 100%;            /* volle Breite innerhalb Spalte */
+  }
+}
 
   button {
     font-size: 18px;
