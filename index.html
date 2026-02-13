@@ -121,14 +121,13 @@ body {
 input[type="number"],
 input[type="text"],
 select {
-  width: 100%;           /* volle Breite */
-  padding: 16px;          /* großzügig für Touch */
-  font-size: 18px;        /* groß genug für Handy */
+  width: 100%;
+  padding: 16px;         /* Input groß lassen */
+  font-size: 18px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
-  margin-top: 6px;
-  margin-bottom: 18px;
+  margin: 0 0 12px 0;    /* nur kleiner Abstand unten, oben 0 */
 }
 
 /* Labels */
@@ -136,7 +135,7 @@ label {
   font-size: 16px;
   font-weight: 500;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;    /* minimaler Abstand Label → Input */
 }
 
 /* Buttons */
@@ -169,7 +168,7 @@ button:hover {
   select,
   button {
     font-size: 18px;
-    padding: 18px;
+    padding: 16px;   /* kein zusätzliches Margin ändern */
   }
 }
 
