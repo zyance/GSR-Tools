@@ -115,42 +115,40 @@ body {
   background: var(--hellgrau);
 }
 
-/* =====================================================
+/* ================================
    FORMULARFELDER
-===================================================== */
+================================ */
 input[type="number"],
 input[type="text"],
 select {
-  width: 42%;
-  padding: 8px;
-  font-size: 1rem;
-
-  border: 1px solid var(--mittelgrau);
-  border-radius: 4px;
-
-  position: relative;
-  z-index: 10;
-  pointer-events: auto;
+  width: 100%;           /* volle Breite */
+  padding: 16px;          /* großzügig für Touch */
+  font-size: 18px;        /* groß genug für Handy */
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 18px;
 }
 
-.form-section {
-  padding: 20px;
+/* Labels */
+label {
+  font-size: 16px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
 }
 
-/* =====================================================
-   BUTTONS
-===================================================== */
+/* Buttons */
 button {
   background: var(--baukult);
   color: #fff;
   border: none;
-  border-radius: 6px;
-
-  padding: 12px 24px;
-  font-size: 1rem;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 18px;
   font-family: "Fira Sans", Arial, sans-serif;
   font-weight: 500;
-
   cursor: pointer;
 }
 
@@ -158,45 +156,20 @@ button:hover {
   background: #5a7a91;
 }
 
+/* Box-Buttons zentrieren */
 .box button {
   display: block;
   margin: 0 auto;
 }
 
-/* ================================
-   MOBILE INPUT FIX
-================================ */
-
-.form-section input,
-.form-section select {
-  width: 100%;
-  padding: 14px 16px;
-  font-size: 18px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-  margin-top: 6px;
-  margin-bottom: 18px;
-}
-
-/* verhindert iOS-Zoom bei Fokus */
-.form-section input,
-.form-section select {
-  font-size: 16px;
-}
-
-/* Labels etwas größer */
-.form-section label {
-  font-size: 15px;
-  font-weight: 500;
-}
-
 /* Mobile extra großzügig */
 @media (max-width: 600px) {
-  .form-section input,
-  .form-section select {
-    padding: 16px;
-    font-size: 17px;
+  input[type="number"],
+  input[type="text"],
+  select,
+  button {
+    font-size: 18px;
+    padding: 18px;
   }
 }
 
