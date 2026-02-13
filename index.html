@@ -116,46 +116,32 @@ body {
 }
 
 /* ================================
-   ROWS
-================================ */
-.row-2 {
-  display: flex;
-  gap: 16px; /* etwas kleiner, passt besser auf Tablets */
-  flex-wrap: wrap; /* damit Inputs nicht rausfallen */
-}
-
-.row-2 .col {
-  flex: 1 1 48%; /* auf Desktop/Tablet: max 2 Spalten, sonst flexibler */
-  min-width: 200px; /* verhindert zu kleine Felder auf Desktop */
-  box-sizing: border-box;
-}
-
-/* ================================
    FORMULARFELDER
 ================================ */
-input[type="number"],
-input[type="text"],
-select {
-  width: 100%;           /* volle Breite innerhalb .col */
-  padding: 16px;         /* großzügig für Touch */
-  font-size: 18px;
+.form-section .field {
+  margin-bottom: 12px;  /* Abstand zwischen den Feldern */
+}
+
+.form-section label {
+  display: block;
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 4px;    /* minimaler Abstand zum Input */
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section select {
+  width: 100%;           /* volle Breite */
+  padding: 16px;         /* groß genug für Touch */
+  font-size: 18px;       /* groß genug für Handy */
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
-  margin: 0 0 8px 0;     /* kleiner Abstand unten, oben 0 */
+  margin: 0;             /* Abstand wird nur über .field gesteuert */
 }
 
-/* Labels */
-label {
-  font-size: 16px;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 4px;    /* minimaler Abstand Label → Input */
-}
-
-/* ================================
-   BUTTONS
-================================ */
+/* Buttons */
 button {
   background: var(--baukult);
   color: #fff;
@@ -177,28 +163,13 @@ button:hover {
   margin: 0 auto;
 }
 
-/* ================================
-   RESPONSIVE
-================================ */
-@media (max-width: 900px) {
-  .row-2 .col {
-    flex: 1 1 48%; /* zwei Spalten auf Tablets */
-  }
-}
-
+/* Mobile extra großzügig */
 @media (max-width: 600px) {
-  .row-2 {
-    flex-direction: column; /* Spalten untereinander auf Handy */
-    gap: 12px;
-  }
-
-  input[type="number"],
-  input[type="text"],
-  select,
+  .form-section input,
+  .form-section select,
   button {
-    width: 100%;
-    padding: 16px;
     font-size: 18px;
+    padding: 18px;
   }
 }
 
