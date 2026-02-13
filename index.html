@@ -116,60 +116,32 @@ body {
 }
 
 /* ================================
-   FORMULAR-BASE
+   FORMULARFELDER
 ================================ */
-.form-section {
-  width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  padding: 20px;
-  box-sizing: border-box;
-  font-family: "Fira Sans", Arial, sans-serif;
+.form-section .field {
+  margin-bottom: 12px;  /* Abstand zwischen den Feldern */
 }
 
-/* Labels */
 .form-section label {
   display: block;
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 4px; /* minimaler Abstand Label → Input */
-}
-
-/* Input / Select */
-.form-section input[type="number"],
-.form-section input[type="text"],
-.form-section select {
-  padding: 12px 14px;
   font-size: 16px;
-  border: 1px solid var(--mittelgrau);
-  border-radius: 6px;
+  font-weight: 500;
+  margin-bottom: 4px;    /* minimaler Abstand zum Input */
+}
+
+.form-section input[type="text"],
+.form-section input[type="number"],
+.form-section select {
+  width: 100%;           /* volle Breite */
+  padding: 16px;         /* groß genug für Touch */
+  font-size: 18px;       /* groß genug für Handy */
+  border: 1px solid #ccc;
+  border-radius: 8px;
   box-sizing: border-box;
-  width: 100%;       /* Full width by default */
-  margin: 0;          /* kein extra Abstand */
+  margin: 0;             /* Abstand wird nur über .field gesteuert */
 }
 
-/* ================================
-   ZWEI-SPALTIGE REIHEN
-================================ */
-.row-2 {
-  display: flex;
-  gap: 4%;             /* horizontaler Abstand */
-  margin-bottom: 16px; /* vertikaler Abstand nach der Zeile */
-}
-
-.row-2 .col {
-  flex: 1;             /* gleiche Breite */
-}
-
-/* Inputs innerhalb von row-2 */
-.row-2 .col input,
-.row-2 .col select {
-  width: 100%;         /* volle Breite der Spalte */
-}
-
-/* ================================
-   BUTTONS
-================================ */
+/* Buttons */
 button {
   background: var(--baukult);
   color: #fff;
@@ -177,36 +149,27 @@ button {
   border-radius: 8px;
   padding: 16px 24px;
   font-size: 18px;
+  font-family: "Fira Sans", Arial, sans-serif;
   font-weight: 500;
   cursor: pointer;
-  font-family: "Fira Sans", Arial, sans-serif;
-  display: block;
-  margin: 0 auto;
 }
 
 button:hover {
   background: #5a7a91;
 }
 
-/* ================================
-   RESPONSIVE
-================================ */
-@media (max-width: 800px) {
-  /* Tablet & Handy: Spalten untereinander */
-  .row-2 {
-    flex-direction: column;
-    gap: 12px; /* vertikaler Abstand */
-    margin-bottom: 16px;
-  }
+.box button {
+  display: block;
+  margin: 0 auto;
 }
 
-@media (max-width: 480px) {
-  .form-section input[type="number"],
-  .form-section input[type="text"],
+/* Mobile extra großzügig */
+@media (max-width: 600px) {
+  .form-section input,
   .form-section select,
   button {
-    font-size: 16px;
-    padding: 14px;
+    font-size: 18px;
+    padding: 18px;
   }
 }
 
