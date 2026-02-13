@@ -115,38 +115,48 @@ body {
   background: var(--hellgrau);
 }
 
-/* =====================================================
+/* ================================
    FORMULARFELDER
-===================================================== */
+================================ */
 input[type="number"],
 input[type="text"],
 select {
-  width: 42%;
-  padding: 8px;
-  font-size: 1rem;
-
+  width: 48%;           /* etwas breiter als vorher */
+  min-width: 120px;     /* verhindert zu kleine Felder */
+  padding: 10px 12px;   /* angenehme Höhe für Desktop & Tablet */
+  font-size: 16px;
   border: 1px solid var(--mittelgrau);
-  border-radius: 4px;
-
-  position: relative;
-  z-index: 10;
-  pointer-events: auto;
+  border-radius: 6px;
+  box-sizing: border-box;
+  margin: 0 4% 12px 0;  /* Abstand rechts unten */
 }
 
-/* =====================================================
+/* Letztes Feld in einer Reihe ohne margin-right */
+.row-2 .col:last-child input,
+.row-2 .col:last-child select {
+  margin-right: 0;
+}
+
+/* Labels */
+label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px;  /* minimaler Abstand Label → Input */
+}
+
+/* ================================
    BUTTONS
-===================================================== */
+================================ */
 button {
   background: var(--baukult);
   color: #fff;
   border: none;
   border-radius: 6px;
-
   padding: 12px 24px;
-  font-size: 1rem;
+  font-size: 16px;
   font-family: "Fira Sans", Arial, sans-serif;
   font-weight: 500;
-
   cursor: pointer;
 }
 
@@ -157,6 +167,18 @@ button:hover {
 .box button {
   display: block;
   margin: 0 auto;
+}
+
+/* ================================
+   RESPONSIVE
+================================ */
+@media (max-width: 800px) {
+  input[type="number"],
+  input[type="text"],
+  select {
+    width: 100%;        /* auf kleineren Tablets/Handys volle Breite */
+    margin-right: 0;
+  }
 }
 
 
