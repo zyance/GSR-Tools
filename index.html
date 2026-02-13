@@ -116,33 +116,55 @@ body {
 }
 
 /* ================================
-   FORMULARFELDER
+   FORMULAR-BASE
 ================================ */
-input[type="number"],
-input[type="text"],
-select {
-  width: 48%;           /* etwas breiter als vorher */
-  min-width: 120px;     /* verhindert zu kleine Felder */
-  padding: 10px 12px;   /* angenehme Höhe für Desktop & Tablet */
+.form-section {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: "Fira Sans", Arial, sans-serif;
+}
+
+/* Labels */
+.form-section label {
+  display: block;
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 4px; /* minimaler Abstand Label → Input */
+}
+
+/* Input / Select */
+.form-section input[type="number"],
+.form-section input[type="text"],
+.form-section select {
+  padding: 12px 14px;
   font-size: 16px;
   border: 1px solid var(--mittelgrau);
   border-radius: 6px;
   box-sizing: border-box;
-  margin: 0 4% 12px 0;  /* Abstand rechts unten */
+  width: 100%;       /* Full width by default */
+  margin: 0;          /* kein extra Abstand */
 }
 
-/* Letztes Feld in einer Reihe ohne margin-right */
-.row-2 .col:last-child input,
-.row-2 .col:last-child select {
-  margin-right: 0;
+/* ================================
+   ZWEI-SPALTIGE REIHEN
+================================ */
+.row-2 {
+  display: flex;
+  gap: 4%;             /* horizontaler Abstand */
+  margin-bottom: 16px; /* vertikaler Abstand nach der Zeile */
 }
 
-/* Labels */
-label {
-  display: block;
-  font-size: 15px;
-  font-weight: 500;
-  margin-bottom: 4px;  /* minimaler Abstand Label → Input */
+.row-2 .col {
+  flex: 1;             /* gleiche Breite */
+}
+
+/* Inputs innerhalb von row-2 */
+.row-2 .col input,
+.row-2 .col select {
+  width: 100%;         /* volle Breite der Spalte */
 }
 
 /* ================================
@@ -152,32 +174,39 @@ button {
   background: var(--baukult);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  padding: 12px 24px;
-  font-size: 16px;
-  font-family: "Fira Sans", Arial, sans-serif;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
+  font-family: "Fira Sans", Arial, sans-serif;
+  display: block;
+  margin: 0 auto;
 }
 
 button:hover {
   background: #5a7a91;
 }
 
-.box button {
-  display: block;
-  margin: 0 auto;
-}
-
 /* ================================
    RESPONSIVE
 ================================ */
 @media (max-width: 800px) {
-  input[type="number"],
-  input[type="text"],
-  select {
-    width: 100%;        /* auf kleineren Tablets/Handys volle Breite */
-    margin-right: 0;
+  /* Tablet & Handy: Spalten untereinander */
+  .row-2 {
+    flex-direction: column;
+    gap: 12px; /* vertikaler Abstand */
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-section input[type="number"],
+  .form-section input[type="text"],
+  .form-section select,
+  button {
+    font-size: 16px;
+    padding: 14px;
   }
 }
 
