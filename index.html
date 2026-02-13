@@ -118,27 +118,25 @@ body {
 /* ================================
    FORMULARFELDER
 ================================ */
-.form-section .field {
-  margin-bottom: 12px;  /* Abstand zwischen den Feldern */
-}
-
-.form-section label {
-  display: block;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;    /* minimaler Abstand zum Input */
-}
-
-.form-section input[type="text"],
-.form-section input[type="number"],
-.form-section select {
+input[type="number"],
+input[type="text"],
+select {
   width: 100%;           /* volle Breite */
-  padding: 16px;         /* groß genug für Touch */
-  font-size: 18px;       /* groß genug für Handy */
+  padding: 16px;          /* großzügig für Touch */
+  font-size: 18px;        /* groß genug für Handy */
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
-  margin: 0;             /* Abstand wird nur über .field gesteuert */
+  margin-top: 6px;
+  margin-bottom: 18px;
+}
+
+/* Labels */
+label {
+  font-size: 16px;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 6px;
 }
 
 /* Buttons */
@@ -158,6 +156,7 @@ button:hover {
   background: #5a7a91;
 }
 
+/* Box-Buttons zentrieren */
 .box button {
   display: block;
   margin: 0 auto;
@@ -165,8 +164,9 @@ button:hover {
 
 /* Mobile extra großzügig */
 @media (max-width: 600px) {
-  .form-section input,
-  .form-section select,
+  input[type="number"],
+  input[type="text"],
+  select,
   button {
     font-size: 18px;
     padding: 18px;
