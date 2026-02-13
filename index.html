@@ -159,6 +159,44 @@ button:hover {
   margin: 0 auto;
 }
 
+/* ================================
+   MOBILE INPUT FIX
+================================ */
+
+.form-section input,
+.form-section select {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 18px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 18px;
+}
+
+/* verhindert iOS-Zoom bei Fokus */
+.form-section input,
+.form-section select {
+  font-size: 16px;
+}
+
+/* Labels etwas größer */
+.form-section label {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Mobile extra großzügig */
+@media (max-width: 600px) {
+  .form-section input,
+  .form-section select {
+    padding: 16px;
+    font-size: 17px;
+  }
+}
+
+
 /* =====================================================
    GRID-BUTTONS
 ===================================================== */
@@ -599,25 +637,6 @@ deshalb ist die Richtung bewusst `to left` gesetzt.
   value="25"
   oninput="updateFensterAlter(this.value)"
 >
-<span id="fensterAlterAnzeige"></span>
-
-<script>
-  function updateFensterAlter(rawValue) {
-    // Slider läuft 1 (neu) → 50 (alt)
-    // Bedeutung soll sein: links alt (50), rechts neu (1)
-    const ageYears = 51 - Number(rawValue);
-
-    // Anzeige neben dem Slider
-    document.getElementById("fensterAlterAnzeige").textContent =
-      `Alter der Fenster: ${ageYears} Jahre`;
-
-    // zentral speichern (für Summary / collectData)
-    window.currentWindowAgeYears = ageYears;
-  }
-
-  // Initial setzen
-  updateFensterAlter(document.getElementById("fensterAlter").value);
-</script>
 
 <div class="slider-label" style="display:flex; justify-content:space-between; margin-top:6px; font-size:14px;">
   <span>sehr alt</span>
@@ -816,6 +835,47 @@ function setupGridButtons(buttonClass, hiddenInputId) {
       }
     });
   });
+}
+/* =====================================================
+   FENSTERALTER INIT
+===================================================== */
+function updateFensterAlter(rawValue) {
+  const ageYears = 51 - Number(rawValue);
+
+  document.getElementById("fensterAlterAnzeige").textContent =
+    `Alter der Fenster: ${ageYears} Jahre`;
+
+  window.currentWindowAgeYears = ageYears;
+}
+
+const fensterSlider = document.getElementById("fensterAlter");
+if (fensterSlider) {
+  fensterSlider.addEventListener("input", function () {
+    updateFensterAlter(this.value);
+  });
+
+  updateFensterAlter(fensterSlider.value);
+}
+
+
+
+
+
+
+/* =====================================================
+   UPDATE SUMMARY → BUTTON EIN-/AUSBLENDEN
+===================================================== */
+function updateSummary() {
+  const bauphase = Number(document.getElementById("bauphase")?.value);
+  const btn = document.getElementById("auswertungBtn");
+
+  console.log("Bauphase aktuell:", bauphase); // Debug
+
+  if (bauphase >= 1 && bauphase <= 4) {
+    btn.style.display = "block";
+  } else {
+    btn.style.display = "none";
+  }
 }
 
 /* =====================================================
