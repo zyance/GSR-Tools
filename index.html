@@ -885,18 +885,18 @@ const auswertungBtn = document.getElementById("auswertungBtn");
 
 auswertungBtn?.addEventListener("click", () => {
   const hiddenInput = document.getElementById("bauphase");
-  const bauphaseValue = Number(hiddenInput?.value);
+  let bauphaseValue = Number(hiddenInput?.value);
 
-  console.log("Bauphase beim Klick:", bauphaseValue); // Debug
-
+  // ❌ Fallback, falls nichts gewählt wurde
   if (!bauphaseValue || bauphaseValue < 1 || bauphaseValue > 4) {
     alert("Bitte zuerst eine Bauphase auswählen!");
     return;
   }
 
-  // Saubere Weiterleitung mit Parameter
-  window.location.href = "result.html?building_phase=" + bauphaseValue;
+  // ✅ Saubere Weiterleitung: sicherstellen, dass 1–4 übergeben wird
+  window.location.href = `result.html?building_phase=${bauphaseValue}`;
 });
+
 
 /* =====================================================
    INIT
