@@ -122,20 +122,22 @@ input[type="number"],
 input[type="text"],
 select {
   width: 100%;
-  padding: 16px;         /* Input groß lassen */
+  padding: 16px;          /* Input groß lassen */
   font-size: 18px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
-  margin: 0 0 12px 0;    /* nur kleiner Abstand unten, oben 0 */
+  margin: 0 0 12px 0;     /* nur kleiner Abstand zwischen Inputs */
+  line-height: 1.4;       /* verhindert zusätzliche Leerzeilen */
 }
 
-/* Labels */
+/* Labels direkt über Input, minimaler Abstand */
 label {
   font-size: 16px;
   font-weight: 500;
   display: block;
-  margin-bottom: 4px;    /* minimaler Abstand Label → Input */
+  margin: 0 0 4px 0;       /* Abstand Label → Input */
+  line-height: 1.2;        /* keine extra Leerzeile */
 }
 
 /* Buttons */
@@ -165,10 +167,15 @@ button:hover {
 @media (max-width: 600px) {
   input[type="number"],
   input[type="text"],
-  select,
+  select {
+    font-size: 18px;
+    padding: 16px;         /* Input bleibt groß */
+    margin-bottom: 12px;   /* Abstand Input → Input gleich lassen */
+  }
+
   button {
     font-size: 18px;
-    padding: 16px;   /* kein zusätzliches Margin ändern */
+    padding: 16px 24px;    /* Buttons unverändert */
   }
 }
 
