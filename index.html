@@ -122,23 +122,24 @@ body {
   margin-bottom: 12px;  /* Abstand zwischen den Feldern */
 }
 
+/* Labels */
 .form-section label {
   display: block;
   font-size: 16px;
   font-weight: 500;
-  margin-bottom: 4px;    /* minimaler Abstand zum Input */
+  margin-bottom: 4px;   /* minimaler Abstand zum Input */
 }
 
+/* Standard Inputfelder */
 .form-section input[type="text"],
 .form-section input[type="number"],
 .form-section select {
-  width: 100%;           /* volle Breite */
-  padding: 16px;         /* groß genug für Touch */
-  font-size: 18px;       /* groß genug für Handy */
+  padding: 16px;        /* groß genug für Touch */
+  font-size: 18px;      /* groß genug für Handy */
   border: 1px solid #ccc;
   border-radius: 8px;
   box-sizing: border-box;
-  margin: 0;             /* Abstand wird nur über .field gesteuert */
+  margin: 0;
 }
 
 /* Buttons */
@@ -163,13 +164,33 @@ button:hover {
   margin: 0 auto;
 }
 
-/* Mobile extra großzügig */
+/* ================================
+   Flexbox für PLZ + Ort / nebeneinander
+================================ */
+.form-section .row {
+  display: flex;
+  gap: 12px;           /* Abstand zwischen den Feldern */
+  flex-wrap: wrap;      /* für Handy: umbrechen, wenn nötig */
+}
+
+.form-section .row .plz {
+  flex: 0 0 35%;        /* ca. 35% Breite */
+  min-width: 80px;      /* verhindert, dass PLZ zu klein wird */
+}
+
+.form-section .row .ort {
+  flex: 1;              /* Rest der Zeile */
+}
+
+/* Mobile Anpassung */
 @media (max-width: 600px) {
-  .form-section input,
-  .form-section select,
-  button {
-    font-size: 18px;
-    padding: 18px;
+  .form-section .row {
+    flex-direction: column; /* nebeneinander → untereinander */
+  }
+
+  .form-section .row .plz,
+  .form-section .row .ort {
+    flex: 1 1 100%;        /* volle Breite auf Handy */
   }
 }
 
