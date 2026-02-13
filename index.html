@@ -115,42 +115,38 @@ body {
   background: var(--hellgrau);
 }
 
-/* ================================
+/* =====================================================
    FORMULARFELDER
-================================ */
-.form-section .field {
-  margin-bottom: 12px;  /* Abstand zwischen den Feldern */
+===================================================== */
+input[type="number"],
+input[type="text"],
+select {
+  width: 42%;
+  padding: 8px;
+  font-size: 1rem;
+
+  border: 1px solid var(--mittelgrau);
+  border-radius: 4px;
+
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
 }
 
-.form-section label {
-  display: block;
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;    /* minimaler Abstand zum Input */
-}
-
-.form-section input[type="text"],
-.form-section input[type="number"],
-.form-section select {
-  width: 100%;           /* volle Breite */
-  padding: 16px;         /* groß genug für Touch */
-  font-size: 18px;       /* groß genug für Handy */
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  box-sizing: border-box;
-  margin: 0;             /* Abstand wird nur über .field gesteuert */
-}
-
-/* Buttons */
+/* =====================================================
+   BUTTONS
+===================================================== */
 button {
   background: var(--baukult);
   color: #fff;
   border: none;
-  border-radius: 8px;
-  padding: 16px 24px;
-  font-size: 18px;
+  border-radius: 6px;
+
+  padding: 12px 24px;
+  font-size: 1rem;
   font-family: "Fira Sans", Arial, sans-serif;
   font-weight: 500;
+
   cursor: pointer;
 }
 
@@ -161,16 +157,6 @@ button:hover {
 .box button {
   display: block;
   margin: 0 auto;
-}
-
-/* Mobile extra großzügig */
-@media (max-width: 600px) {
-  .form-section input,
-  .form-section select,
-  button {
-    font-size: 18px;
-    padding: 18px;
-  }
 }
 
 
