@@ -133,6 +133,10 @@ select {
   pointer-events: auto;
 }
 
+.form-section {
+  padding: 20px;
+}
+
 /* =====================================================
    BUTTONS
 ===================================================== */
@@ -842,13 +846,13 @@ function setupGridButtons(buttonClass, hiddenInputId) {
 function updateFensterAlter(rawValue) {
   const ageYears = 51 - Number(rawValue);
 
-  document.getElementById("fensterAlterAnzeige").textContent =
-    `Alter der Fenster: ${ageYears} Jahre`;
+  document.getElementById("fensterWert").textContent = ageYears;
 
   window.currentWindowAgeYears = ageYears;
 }
 
 const fensterSlider = document.getElementById("fensterAlter");
+
 if (fensterSlider) {
   fensterSlider.addEventListener("input", function () {
     updateFensterAlter(this.value);
@@ -856,10 +860,6 @@ if (fensterSlider) {
 
   updateFensterAlter(fensterSlider.value);
 }
-
-
-
-
 
 
 /* =====================================================
