@@ -141,23 +141,15 @@ a.download:hover {
 </div>
 <script>
 window.addEventListener("load", () => {
-
   const loader = document.getElementById("loader");
   const resultBox = document.getElementById("resultBox");
 
-  /* =====================================================
-     BAUPHASE AUS URL AUSLESEN
-  ====================================================== */
-  function getBuildingPhaseFromURL() {
-    const params = new URLSearchParams(window.location.search);
-    const value = Number(params.get("building_phase"));
-    console.log("Building Phase aus URL:", value); // Debug
-    return value >= 1 && value <= 4 ? value : 0;
-  }
+  // 1️⃣ Bauphase aus URL holen
+  const params = new URLSearchParams(window.location.search);
+  const buildingPhase = Number(params.get("building_phase")) || 0;
+  console.log("Building Phase aus URL:", buildingPhase); // Debug
 
-  const buildingPhase = getBuildingPhaseFromURL();
-
-  if (buildingPhase === 0) {
+  if (buildingPhase < 1 || buildingPhase > 4) {
     resultBox.innerHTML = `
       <div style="color:red; text-align:center; font-size:18px;">
         Keine gültige Bauphase in der URL! Bitte im Formular zuerst eine Bauphase auswählen.
@@ -165,12 +157,11 @@ window.addEventListener("load", () => {
     `;
     loader.style.display = "none";
     resultBox.style.display = "block";
-    return; // Abbruch, kein Zugriff auf texts[buildingPhase]
+    return;
   }
 
-  // 1️⃣ Bauphase aus URL holen, Fallback auf 1
-  const params = new URLSearchParams(window.location.search);
-  const buildingPhase = parseInt(params.get("phase")) || 1;
+
+
 
   // 2️⃣ Texte und PDFs für alle Phasen
   const texts = {
@@ -287,11 +278,11 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
 
   };
 
- // 3️⃣ Loader ausblenden, Text + PDF anzeigen
+ // 3️⃣ Loader ausblenden, Ergebnis anzeigen
   loader.style.display = "none";
   resultBox.style.display = "block";
 
-  const { html, pdf } = texts[buildingPhase]; // texts muss vorher definiert sein
+  const { html, pdf } = texts[buildingPhase];
 
   resultBox.innerHTML = `
     <div class="result-box">
@@ -302,7 +293,6 @@ Förderungen können im Schnitt etwa 25 % der Kosten abdecken.</p>`
         Langfassung als PDF downloaden!
       </a>
     </div>
-
     <div style="text-align:center; margin-top:24px;">
       <button onclick="window.location.href='offer.html'" 
               style="background:#7090a7; color:#fff; border:none; 
